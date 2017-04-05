@@ -1,0 +1,30 @@
+;--- Xpadder Profile File ---
+DataType=Profile
+Version=2015.01.01
+
+[Profile Settings]
+
+[Set Settings]
+
+[Assignments]
+Set1Button1Slots=Media Volume Up
+Set1Button2Slots=Media Volume Down
+Set1Button3Slots=Media Play/Pause
+Set1Button4Slots=F11
+Set1Button5Slots=Left Shift
+Set1Button6Slots=Left Control
+Set1Button7Slots=Left Mouse Button (1)
+Set1Button8Slots=Right Mouse Button (2)
+Set1Button12Slots=Escape
+Set1DPadUpSlots=Arrow Up
+Set1DPadRightSlots=Arrow Right
+Set1DPadDownSlots=Arrow Down
+Set1DPadLeftSlots=Arrow Left
+Set1Stick1UpSlots=Mouse Move Up
+Set1Stick1UpMouseSpeed=32
+Set1Stick1RightSlots=Mouse Move Right
+Set1Stick1RightMouseSpeed=32
+Set1Stick1DownSlots=Mouse Move Down
+Set1Stick1DownMouseSpeed=32
+Set1Stick1LeftSlots=Mouse Move Left
+Set1Stick1LeftMouseSpeed=32

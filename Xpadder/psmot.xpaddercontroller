@@ -1,0 +1,51 @@
+;--- Xpadder Controller File ---
+DataType=Controller
+Version=2015.01.01
+
+[Button Locations]
+Button1Location=257,50
+Button2Location=194,146
+Button3Location=305,145
+Button4Location=193,185
+Button5Location=302,195
+Button6Location=248,163
+Button7Location=136,153
+Button8Location=359,160
+Button9Location=248,225
+Stick1UpLocation=102,42
+Stick1RightLocation=134,74
+Stick1DownLocation=102,106
+Stick1LeftLocation=70,74
+Stick2UpLocation=414,47
+Stick2RightLocation=446,79
+Stick2DownLocation=414,111
+Stick2LeftLocation=382,79
+TriggerLeftLocation=4,4
+TriggerRightLocation=478,4
+
+[Access]
+Stick1XAccess=Axis RY
+Stick1YAccess=Axis RX
+Stick2XAccess=Axis RZ
+TriggerLeftAccess=Slider 1 Full
+
+[Names]
+Button1Name=Button 1
+Button2Name=Button 2
+Button3Name=Button 3
+Button4Name=Button 4
+Button5Name=Button 5
+Button6Name=Button 6
+Button7Name=Button 7
+Button8Name=Button 8
+Button9Name=Button 9
+Stick1Name=Stick 1
+Stick2Name=Stick 2
+StickUpName=Up
+StickRightName=Right
+StickDownName=Down
+StickLeftName=Left
+TriggerLeftName=Trigger Left
+TriggerRightName=Trigger Right
+
+[Image]
