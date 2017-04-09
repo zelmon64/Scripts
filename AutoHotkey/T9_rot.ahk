@@ -74,9 +74,9 @@ Init:
 
   StringSplit Word, Words, `n, `r
   GlobalWordIndex := 1
-  GlobalCapsMode  := 1      ; 123 = abc, Abc, ABC, 123, mt, MT
+  GlobalCapsMode  := 1      ; 123 = abc, Abc, ABC, 123, mt, MT, sym
 
-  CapsModeStrings := "abc,Abc,ABC,123,mt,MT"
+  CapsModeStrings := "abc,Abc,ABC,123,mt,MT,sym"
   StringSplit CapsModeString, CapsModeStrings, `,
 
   ; Map letter to numpad key and default characters for single digit codes
@@ -322,7 +322,7 @@ GlobalCapsModeSet( val ) {
   ;  GlobalCapsMode := val
   ;Else
   ;  GlobalCapsMode := 1
-  If( GlobalCapsMode > 6 )
+  If( GlobalCapsMode > 7 )
     GlobalCapsMode := 1
   If( GlobalCapsMode = 1 )
     Progress, b zh0 fs32, abc
@@ -336,6 +336,8 @@ GlobalCapsModeSet( val ) {
     Progress, b zh0 fs32, mt
   Else If( GlobalCapsMode = 6 )
     Progress, b zh0 fs32, MT
+  Else If( GlobalCapsMode = 7 )
+    Progress, b zh0 fs32, sym
   Else
     Progress, b zh0 fs32, error
   Sleep,1000
@@ -368,47 +370,70 @@ Numpad9::
   ThisCode := SubStr( A_ThisHotkey, 7,1 )
   If( SHOW_INPUT )
     Tooltip [%ThisCode%]
+  TapTimeF := 400
   If( GlobalCapsMode = 5 )
   {
     If( A_ThisHotkey = "Numpad6" )
-      MultiTap(":a:send a, :b:send b, :c:send c, :2:send 2",400)
+      MultiTap(":a:send a, :b:send b, :c:send c, :2:send 2", TapTimeF)
     Else If( A_ThisHotkey = "Numpad3" )
-      MultiTap(":d:send d, :e:send e, :f:send f, :3:send 3",400)
+      MultiTap(":d:send d, :e:send e, :f:send f, :3:send 3", TapTimeF)
     Else If( A_ThisHotkey = "Numpad8" )
-      MultiTap(":g:send g, :h:send h, :i:send i, :4:send 4",400)
+      MultiTap(":g:send g, :h:send h, :i:send i, :4:send 4", TapTimeF)
     Else If( A_ThisHotkey = "Numpad5" )
-      MultiTap(":j:send j, :k:send k, :l:send l, :5:send 5",400)
+      MultiTap(":j:send j, :k:send k, :l:send l, :5:send 5", TapTimeF)
     Else If( A_ThisHotkey = "Numpad2" )
-      MultiTap(":m:send m, :n:send n, :o:send o, :6:send 6",400)
+      MultiTap(":m:send m, :n:send n, :o:send o, :6:send 6", TapTimeF)
     Else If( A_ThisHotkey = "Numpad7" )
-      MultiTap(":p:send p, :q:send q, :r:send r, :s:send s, :7:send 7",400)
+      MultiTap(":p:send p, :q:send q, :r:send r, :s:send s, :7:send 7", TapTimeF)
     Else If( A_ThisHotkey = "Numpad4" )
-      MultiTap(":t:send t, :u:send u, :v:send v, :8:send 8",400)
+      MultiTap(":t:send t, :u:send u, :v:send v, :8:send 8", TapTimeF)
     Else If( A_ThisHotkey = "Numpad1" )
-      MultiTap(":w:send w, :x:send x, :y:send y, :z:send z, :9:send 9",400)
+      MultiTap(":w:send w, :x:send x, :y:send y, :z:send z, :9:send 9", TapTimeF)
     Else If( A_ThisHotkey = "Numpad9" )
-      MultiTap(":-:send {-}, send {:}, :@:send {@}, :.:send {.}, :':send {'}, :0:send {0}, :1:send {1}",400)
+      MultiTap(":':send {'}, :-:send {-}, :0:send {0}, :1:send {1}", TapTimeF)
   }
   Else If( GlobalCapsMode = 6 )
   {
     If( A_ThisHotkey = "Numpad6" )
-      MultiTap(":A:send A, :B:send B, :C:send C, :2:send 2",400)
+      MultiTap(":A:send A, :B:send B, :C:send C, :2:send 2", TapTimeF)
     Else If( A_ThisHotkey = "Numpad3" )
-      MultiTap(":D:send D, :E:send E, :F:send F, :3:send 3",400)
+      MultiTap(":D:send D, :E:send E, :F:send F, :3:send 3", TapTimeF)
     Else If( A_ThisHotkey = "Numpad8" )
-      MultiTap(":G:send G, :H:send H, :I:send I, :4:send 4",400)
+      MultiTap(":G:send G, :H:send H, :I:send I, :4:send 4", TapTimeF)
     Else If( A_ThisHotkey = "Numpad5" )
-      MultiTap(":J:send J, :K:send K, :L:send L, :5:send 5",400)
+      MultiTap(":J:send J, :K:send K, :L:send L, :5:send 5", TapTimeF)
     Else If( A_ThisHotkey = "Numpad2" )
-      MultiTap(":M:send M, :N:send N, :O:send O, :6:send 6",400)
+      MultiTap(":M:send M, :N:send N, :O:send O, :6:send 6", TapTimeF)
     Else If( A_ThisHotkey = "Numpad7" )
-      MultiTap(":P:send P, :Q:send Q, :R:send R, :S:send S, :7:send 7",400)
+      MultiTap(":P:send P, :Q:send Q, :R:send R, :S:send S, :7:send 7", TapTimeF)
     Else If( A_ThisHotkey = "Numpad4" )
-      MultiTap(":T:send T, :U:send U, :V:send V, :8:send 8",400)
+      MultiTap(":T:send T, :U:send U, :V:send V, :8:send 8", TapTimeF)
     Else If( A_ThisHotkey = "Numpad1" )
-      MultiTap(":W:send W, :X:send X, :Y:send Y, :Z:send Z, :9:send 9",400)
+      MultiTap(":W:send W, :X:send X, :Y:send Y, :Z:send Z, :9:send 9", TapTimeF)
     Else If( A_ThisHotkey = "Numpad9" )
-      MultiTap(":_:send {_}, :+:send {+}, :%:send {%}, :#:send {#}, :/:send {/}, :\:send {\}",400)
+      MultiTap(":_:send {_}, :+:send {+}, :0:send {0}, :1:send {1}", TapTimeF)
+  }
+  Else If( GlobalCapsMode = 7 )
+  {
+    TapTimeS := 800
+    If( A_ThisHotkey = "Numpad9" )
+      MultiTap(":_:send {_}, :+:send {+}, :%:send {%}, :#:send {#}, :/:send {/}, :\:send {\}, :7:send 7", TapTimeS)
+    Else If( A_ThisHotkey = "Numpad6" )
+      MultiTap(":A:send A, :8:send 8", TapTimeS)
+    Else If( A_ThisHotkey = "Numpad3" )
+      MultiTap(":D:send D, :9:send 9", TapTimeS)
+    Else If( A_ThisHotkey = "Numpad8" )
+      MultiTap(":G:send G, :4:send 4", TapTimeS)
+    Else If( A_ThisHotkey = "Numpad5" )
+      MultiTap(":J:send J, :5:send 5", TapTimeS)
+    Else If( A_ThisHotkey = "Numpad2" )
+      MultiTap(":M:send M, :6:send 6", TapTimeS)
+    Else If( A_ThisHotkey = "Numpad7" )
+      MultiTap(":P:send P, :1:send {1}", TapTimeS)
+    Else If( A_ThisHotkey = "Numpad4" )
+      MultiTap(":T:send T, :2:send 2", TapTimeS)
+    Else If( A_ThisHotkey = "Numpad1" )
+      MultiTap(":W:send W, :3:send 3", TapTimeS)
   }
   Else
     ManageInput( ThisCode )
@@ -426,7 +451,7 @@ NumpadEnd::NumpadPgDn
 
 NumpadClear::
   ;Esc
-  MultiTap("::Send {Esc}, :save:send ^{s}, :kill:send ^{c}",300)
+  MultiTap(":Esc:Send {Esc}, :save:send ^{s}, :kill:send ^{c}, :switch:send !{Space}",300)
 Return
 NumpadIns::
   ;Send ^f
@@ -437,14 +462,23 @@ NumpadDel::
 Return
 
 Numpad0::
-  If( GlobalWordIndex <> 1 )
-    Gosub HandlePriorityWords
+  If( GlobalCapsMode < 4 )
+  {
+    If( GlobalWordIndex <> 1 )
+      Gosub HandlePriorityWords
 
-  ;Send {Space}
-  MultiTap("Send {Space}, :.:send {.}{Space}, :':send {'}",300)
-  GlobalWordIndex := 1
-  If( SHOW_INPUT )
-    Tooltip [0] - Space
+    ;Send {Space}
+    MultiTap("Send {Space}, :.:send {.}{Space}, :':send {'}", 200)
+    GlobalWordIndex := 1
+    If( SHOW_INPUT )
+      Tooltip [0] - Space
+  }
+  Else If( GlobalCapsMode = 4 )
+    MultiTap(":.:send {.}, :0:send {0}", 200)
+  Else If( GlobalCapsMode = 7 )
+    MultiTap(":.:send {.}, :0:send {0}", 200)
+  Else
+    MultiTap("Send {Space}, :.:send {.}{Space}", 200)
 Return
 
 NumpadSub::
@@ -457,7 +491,7 @@ NumpadSub::
     ManageInput("")
   }
   Else
-    MultiTap("::send {Left}, ::send {Home}", 300)
+    MultiTap("::send {Left}, ::send {Home}", 200)
 Return
 
 NumpadMult::
@@ -469,7 +503,7 @@ NumpadMult::
     ManageInput("")
   }
   Else
-    MultiTap("::send {Up}, ::send {PgUp}", 300)
+    MultiTap("::send {Up}, ::send {PgUp}", 200)
 Return
 
 NumpadDiv::
@@ -481,27 +515,30 @@ NumpadDiv::
     ManageInput("")
   }
   Else
-    MultiTap("::send {Down}, ::send {PgDn}", 300)
+    MultiTap("::send {Down}, ::send {PgDn}", 200)
 Return
 
 NumpadDot::
   ;GlobalCapsMode++
   ;MultiTap("GlobalCapsModeSet( GlobalCapsMode + 1 ), GlobalCapsModeSet( GlobalCapsMode - 1 ), GlobalCapsModeSet( 5 )",400)
-  ; 123 = abc, Abc, ABC, 123, mt, MT, ::GlobalCapsModeSet(  ), :abc:GlobalCapsModeSet( 1 ), :Abc:GlobalCapsModeSet( 2 ), :ABC:GlobalCapsModeSet( 3 ), :123:GlobalCapsModeSet( 4 ), :mt:GlobalCapsModeSet( 5 ), :MT:GlobalCapsModeSet( 6 )
+  ; 123 = abc, Abc, ABC, 123, mt, MT, ::GlobalCapsModeSet(  ), :abc:GlobalCapsModeSet( 1 ), :Abc:GlobalCapsModeSet( 2 ), :ABC:GlobalCapsModeSet( 3 ), :123:GlobalCapsModeSet( 4 ), :mt:GlobalCapsModeSet( 5 ), :MT:GlobalCapsModeSet( 6 ), :sym:GlobalCapsModeSet( 7 )
   ;Progress, b zh0 fs32, % GlobalCapsMode
+
   SwitchModeTime := 800
   If( GlobalCapsMode = 1 )
-    MultiTap(":Abc:GlobalCapsModeSet( 2 ), :ABC:GlobalCapsModeSet( 3 ), :123:GlobalCapsModeSet( 4 ), :mt:GlobalCapsModeSet( 5 ), :MT:GlobalCapsModeSet( 6 )", SwitchModeTime )
+    MultiTap(":Abc:GlobalCapsModeSet( 2 ), :ABC:GlobalCapsModeSet( 3 ), :123:GlobalCapsModeSet( 4 ), :mt:GlobalCapsModeSet( 5 ), :sym:GlobalCapsModeSet( 7 ), :MT:GlobalCapsModeSet( 6 )", SwitchModeTime )
   Else If( GlobalCapsMode = 2 )
-    MultiTap(":abc:GlobalCapsModeSet( 1 ), :ABC:GlobalCapsModeSet( 3 ), :123:GlobalCapsModeSet( 4 ), :mt:GlobalCapsModeSet( 5 ), :MT:GlobalCapsModeSet( 6 )", SwitchModeTime )
+    MultiTap(":abc:GlobalCapsModeSet( 1 ), :ABC:GlobalCapsModeSet( 3 ), :123:GlobalCapsModeSet( 4 ), :mt:GlobalCapsModeSet( 5 ), :sym:GlobalCapsModeSet( 7 ), :MT:GlobalCapsModeSet( 6 )", SwitchModeTime )
   Else If( GlobalCapsMode = 3 )
-    MultiTap(":abc:GlobalCapsModeSet( 1 ), :Abc:GlobalCapsModeSet( 2 ), :123:GlobalCapsModeSet( 4 ), :mt:GlobalCapsModeSet( 5 ), :MT:GlobalCapsModeSet( 6 )", SwitchModeTime )
+    MultiTap(":abc:GlobalCapsModeSet( 1 ), :Abc:GlobalCapsModeSet( 2 ), :123:GlobalCapsModeSet( 4 ), :mt:GlobalCapsModeSet( 5 ), :sym:GlobalCapsModeSet( 7 ), :MT:GlobalCapsModeSet( 6 )", SwitchModeTime )
   Else If( GlobalCapsMode = 4 )
-    MultiTap(":abc:GlobalCapsModeSet( 1 ), :mt:GlobalCapsModeSet( 5 ), :Abc:GlobalCapsModeSet( 2 ), :ABC:GlobalCapsModeSet( 3 ), :MT:GlobalCapsModeSet( 6 )", SwitchModeTime )
+    MultiTap(":abc:GlobalCapsModeSet( 1 ), :mt:GlobalCapsModeSet( 5 ), :sym:GlobalCapsModeSet( 7 ), :Abc:GlobalCapsModeSet( 2 ), :ABC:GlobalCapsModeSet( 3 ), :MT:GlobalCapsModeSet( 6 )", SwitchModeTime )
   Else If( GlobalCapsMode = 5 )
-    MultiTap(":MT:GlobalCapsModeSet( 6 ), :abc:GlobalCapsModeSet( 1 ), :123:GlobalCapsModeSet( 4 ), :Abc:GlobalCapsModeSet( 2 ), :ABC:GlobalCapsModeSet( 3 )", SwitchModeTime )
+    MultiTap(":MT:GlobalCapsModeSet( 6 ), :sym:GlobalCapsModeSet( 7 ), :abc:GlobalCapsModeSet( 1 ), :123:GlobalCapsModeSet( 4 ), :Abc:GlobalCapsModeSet( 2 ), :ABC:GlobalCapsModeSet( 3 )", SwitchModeTime )
   Else If( GlobalCapsMode = 6 )
-    MultiTap(":mt:GlobalCapsModeSet( 5 ), :abc:GlobalCapsModeSet( 1 ), :123:GlobalCapsModeSet( 4 ), :Abc:GlobalCapsModeSet( 2 ), :ABC:GlobalCapsModeSet( 3 )", SwitchModeTime )
+    MultiTap(":mt:GlobalCapsModeSet( 5 ), :sym:GlobalCapsModeSet( 7 ), :abc:GlobalCapsModeSet( 1 ), :123:GlobalCapsModeSet( 4 ), :Abc:GlobalCapsModeSet( 2 ), :ABC:GlobalCapsModeSet( 3 )", SwitchModeTime )
+  Else If( GlobalCapsMode = 7 )
+    MultiTap(":mt:GlobalCapsModeSet( 5 ), :abc:GlobalCapsModeSet( 1 ), :123:GlobalCapsModeSet( 4 ), :MT:GlobalCapsModeSet( 6 ), :Abc:GlobalCapsModeSet( 2 ), :ABC:GlobalCapsModeSet( 3 )", SwitchModeTime )
   Else
     GlobalCapsModeSet( 1 )
 
@@ -529,7 +566,7 @@ NumpadAdd::
     }
   }
   Else
-    MultiTap("::send {Right}, ::send {End}", 300)
+    MultiTap("::send {Right}, ::send {End}", 200)
 Return
 
 NumpadEnter::
