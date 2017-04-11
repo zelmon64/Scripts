@@ -208,7 +208,7 @@ Numpad1 & Numpad4::SendInput, {Raw}#
 ;             │         │ Vol-|End│Mute|AppM│Vol+|PgDn│         │ 7 4 1
 ;             └─────────┴─────────┴─────────┴─────────┴─────────┘
 
-NumpadEnter::SendInput, {Enter}
+NumpadEnter::SendInput, {NumpadEnter}
 NumpadDot::SendInput, {Esc}
 Numpad0::SendInput, {Space}
 
@@ -337,49 +337,57 @@ NumpadMult & Numpad1::SendInput, +^{v}
 Numpad1 & NumpadDiv::SendInput, ^{v}
 NumpadDiv & Numpad1::SendInput, ^{v}
 
+;AutoTrim, Off
+
 NumpadDiv & Numpad3::Progress, Off
 NumpadMult & Numpad3::
 {
-  Progress, b zh0 fs16 ,
-    | 2  3  4 | '  ^  ' | 5  6  7 |`n
-    | 1  a  - | +  n  ! | ?  i  8 |`n
-    | $  E  v | /  l  \ | x  =  E |`n
-    |---------+---------+---------|`n
-    | {  S  / | q  u  p | |  C  } |`n
-    | (  h  k | c  o  b | m  r  ) |`n
-    | [  I  _ | g  d  j | @  N  ] |`n
-    |---------+---------+---------|`n
-    | ~  A  y | "  w  ' | f  &  D |`n
-    | <  t  * | M  e  z | #  s  > |`n
-    | 0  C  V | .  .  : | .  X  9 |
+  Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
+  ,  %A_Space%| 2  3  4 | '  ^  ' | 5  6  7 |`n
+              | 1  a  - | +  n  ! | ?  i  8 |`n
+              | $  E  v | /  l  \ | x  =  E |`n
+              |---------+---------+---------|`n
+              | {  S  / | q  u  p | |  C  } |`n
+              | (  h  k | c  o  b | m  r  ) |`n
+              | [  I  _ | g  d  j | @  N  ] |`n
+              |---------+---------+---------|`n
+              | ~  A  y | "  w  ' | f  &  D |`n
+              | <  t  * | M  e  z | #  s  > |`n
+              | 0  C  V | .  .  : | .  X  9 |
+    , Main,, Courier New
 }
 Return
 Numpad3 & NumpadMult::
 {
-  Progress, b zh0 fs16 ,
-    | ^+T|!+T |  F6|#U  |  ^T|!T  |`n
-    |  ^n|!F4 |  ^t|F11 |  ^w|F12 |`n
-    | +F3|Hm  |  ^f|U   | F3|PgUp |`n
-    |---------+---------+---------|`n
-    |  !L|#L  |  F5|#D  |  !R|#R  |`n
-    |  ^z|#x  |  ^s|^s  |  ^y|^+z |`n
-    |   !z|L  |  !c|D   |  !x|R   |`n
-    |---------+---------+---------|`n
-    |  ^-|#-  |!Spc|#Esc|  ^+|#+  |`n
-    |  Bk|Pr  |  PS|Pa  | Fwd|Nxt |`n
-    |  V-|En |  Mu|AM  |  V+|PD  |
+  Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
+  ,  %A_Space%| ^+T|!+T |  F6|#Up |  ^T|!T  |`n
+              |  ^n|!F4 |  ^t|F11 |  ^w|F12 |`n
+              | +F3|Home|  ^f|Up  | F3|PgUp |`n
+              |---------+---------+---------|`n
+              |!Lft|#Lft|  F5|#Dn | !Rt|#Rt |`n
+              |  ^z|#x  |  ^s|^s  |  ^y|^+z |`n
+              | !z|Lft  |  !c|Dn  |  !x|Rt  |`n
+              |---------+---------+---------|`n
+              |  ^-|#-  |!Spc|#Esc|  ^+|#+  |`n
+              |Back|Prev|PrSc|paus| Fwd|Next|`n
+              |  V-|End |Mute|AppM|  V+|PgDn|
+    , Enter|Dot|0 after|before,, Courier New
 }
 Return
 Numpad3 & NumpadDiv::
 {
-  Progress, b zh0 fs16 ,
-    |  +^Hm   | +^U|+^U |  L1|L2  |`n
-    |  ^Hm    |  ^U|^U  |  L3|off |`n
-    |---------+---------+---------|`n
-    |   +^L   |   +^D   |   +^R   |`n
-    |   ^L    |   ^D    |   ^R    |`n
-    |---------+---------+---------|`n
-    |  +^End  |   ^+C   |   ^+V   |`n
-    |  ^End   |   ^C    |   ^V    |
+  Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
+  ,  %A_Space%| +^Home  |+^Up|+^Up|  L1|L2  |`n
+              |         |         |         |`n
+              |  ^Home  | ^Up|^Up |  off|L3 |`n
+              |---------+---------+---------|`n
+              |  +^Left | +^Down  | +^Right |`n
+              |         |         |         |`n
+              |   ^Left | ^Down   |  ^Right |`n
+              |---------+---------+---------|`n
+              |  +^End  |   ^+C   |   ^+V   |`n
+              |         |         |         |`n
+              |  ^End   |   ^C    |   ^V    |
+    , *|/ before|after,, Courier New
 }
 Return
