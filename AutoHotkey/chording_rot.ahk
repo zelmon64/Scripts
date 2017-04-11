@@ -1,6 +1,6 @@
 ;-------------------------------------------------------------------------------
 ;
-;  chording_rot 0.01                               by: William (aka zelmon64)
+;  chording_rot 0.02                               by: William (aka zelmon64)
 ;  Layout based on MessagEase and modelled after Numpad9 by Danny Ben Shitrit (aka Icarus)
 ;
 ;
@@ -48,9 +48,9 @@
 ;   │         │         │         │         │                   │ 8 5 2
 ;   │         │         │         │         │                   │ 7 4 1
 ;   └─────────┼─────────┼─────────┼─────────┼─────────┬─────────┤
-;             │         │  +^Home │ +^↑|+^↑ │         │         │ 9 6 3
+;             │         │  +^Home │ +^↑|+^↑ │  L1|L2  │         │ 9 6 3
 ;             │    *    │         │         │         │         │ 8 5 2
-;             │         │  ^Home  │  ^↑|^↑  │         │         │ 7 4 1
+;             │         │  ^Home  │  ^↑|^↑  │  L1|off │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
 ;             │         │ +^←|+^← │ +^↓|+^↓ │ +^→|+^→ │         │ 9 6 3
 ;             │    /    │         │         │         │         │ 8 5 2
@@ -281,9 +281,9 @@ Numpad0 & Numpad1::SendInput, {PgDn}
 ;   │         │         │         │         │                   │ 8 5 2
 ;   │         │         │         │         │                   │ 7 4 1
 ;   └─────────┼─────────┼─────────┼─────────┼─────────┬─────────┤
-;             │         │  +^Home │ +^↑|+^↑ │         │         │ 9 6 3
+;             │         │  +^Home │ +^↑|+^↑ │  L1|L2  │         │ 9 6 3
 ;             │    *    │         │         │         │         │ 8 5 2
-;             │         │  ^Home  │  ^↑|^↑  │         │         │ 7 4 1
+;             │         │  ^Home  │  ^↑|^↑  │  L1|off │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
 ;             │         │ +^←|+^← │ +^↓|+^↓ │ +^→|+^→ │         │ 9 6 3
 ;             │    /    │         │         │         │         │ 8 5 2
@@ -336,3 +336,50 @@ Numpad1 & NumpadMult::SendInput, +^{v}
 NumpadMult & Numpad1::SendInput, +^{v}
 Numpad1 & NumpadDiv::SendInput, ^{v}
 NumpadDiv & Numpad1::SendInput, ^{v}
+
+NumpadDiv & Numpad3::Progress, Off
+NumpadMult & Numpad3::
+{
+  Progress, b zh0 fs16 ,
+    | 2  3  4 | '  ^  ' | 5  6  7 |`n
+    | 1  a  - | +  n  ! | ?  i  8 |`n
+    | $  E  v | /  l  \ | x  =  E |`n
+    |---------+---------+---------|`n
+    | {  S  / | q  u  p | |  C  } |`n
+    | (  h  k | c  o  b | m  r  ) |`n
+    | [  I  _ | g  d  j | @  N  ] |`n
+    |---------+---------+---------|`n
+    | ~  A  y | "  w  ' | f  &  D |`n
+    | <  t  * | M  e  z | #  s  > |`n
+    | 0  C  V | .  .  : | .  X  9 |
+}
+Return
+Numpad3 & NumpadMult::
+{
+  Progress, b zh0 fs16 ,
+    | ^+T|!+T |  F6|#U  |  ^T|!T  |`n
+    |  ^n|!F4 |  ^t|F11 |  ^w|F12 |`n
+    | +F3|Hm  |  ^f|U   | F3|PgUp |`n
+    |---------+---------+---------|`n
+    |  !L|#L  |  F5|#D  |  !R|#R  |`n
+    |  ^z|#x  |  ^s|^s  |  ^y|^+z |`n
+    |   !z|L  |  !c|D   |  !x|R   |`n
+    |---------+---------+---------|`n
+    |  ^-|#-  |!Spc|#Esc|  ^+|#+  |`n
+    |  Bk|Pr  |  PS|Pa  | Fwd|Nxt |`n
+    |  V-|En |  Mu|AM  |  V+|PD  |
+}
+Return
+Numpad3 & NumpadDiv::
+{
+  Progress, b zh0 fs16 ,
+    |  +^Hm   | +^U|+^U |  L1|L2  |`n
+    |  ^Hm    |  ^U|^U  |  L3|off |`n
+    |---------+---------+---------|`n
+    |   +^L   |   +^D   |   +^R   |`n
+    |   ^L    |   ^D    |   ^R    |`n
+    |---------+---------+---------|`n
+    |  +^End  |   ^+C   |   ^+V   |`n
+    |  ^End   |   ^C    |   ^V    |
+}
+Return
