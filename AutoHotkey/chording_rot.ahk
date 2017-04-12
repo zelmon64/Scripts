@@ -20,7 +20,7 @@
 ;             ├─────────┼─────────┼─────────┼─────────┤  Space  │
 ;             │ Numlock │ ~ ^A  y │ "  w  ' │ f  &  ° │         │ 9 6 3
 ;             │ On      │ <  t  * │ µ  e  z │ #  s  > │         │ 8 5 2
-;             │         │ 0 ^C ^V │ ,  .  : │ ; ^X  9 │         │ 7 4 1
+;             │         │ 0 +T  T │ ,  .  : │ ;  D  9 │         │ 7 4 1
 ;             └─────────┴─────────┴─────────┴─────────┴─────────┘
 ;
 ;   • Press Enter|Esc|Space after|before to Activate
@@ -33,8 +33,8 @@
 ;             │         │  ^n|!F4 │  ^t|F11 │  ^w|F12 │  Esc    │ 8 5 2
 ;             │         │ +F3|Home│  ^f|↑   │ F3|PgUp │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
-;             │         │  !←|#←  │  F5|#↓  │  !→|#→  │         │ 9 6 3
-;             │         │  ^z|#x  │  ^s|^s  │  ^y|^+z │         │ 8 5 2
+;             │         │  #←|#←  │  F5|#↓  │  #→|#→  │         │ 9 6 3
+;             │         │  #x|#x  │  ^s|^s  │ ^+E|^+E │         │ 8 5 2
 ;             │         │   !z|←  │  !c|↓   │  !x|→   │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┤  Space  │
 ;             │         │  ^-|#-  │!Spc|#Esc│  ^+|#+  │         │ 9 6 3
@@ -42,7 +42,7 @@
 ;             │         │ Vol-|End│Mute|AppM│Vol+|PgDn│         │ 7 4 1
 ;             └─────────┴─────────┴─────────┴─────────┴─────────┘
 ;
-;   • Press *|/ after|before to Activate
+;   • Press *|/ before|after to Activate
 ;   ┌─────────┬─────────┬─────────┬─────────┬───────────────────┐
 ;   │         │         │         │         │                   │ 9 6 3
 ;   │         │         │         │         │                   │ 8 5 2
@@ -50,15 +50,15 @@
 ;   └─────────┼─────────┼─────────┼─────────┼─────────┬─────────┤
 ;             │         │  +^Home │ +^↑|+^↑ │  L1|L2  │         │ 9 6 3
 ;             │    *    │         │         │         │         │ 8 5 2
-;             │         │  ^Home  │  ^↑|^↑  │  L1|off │         │ 7 4 1
+;             │         │  ^Home  │  ^↑|^↑  │  off|L1 │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
 ;             │         │ +^←|+^← │ +^↓|+^↓ │ +^→|+^→ │         │ 9 6 3
 ;             │    /    │         │         │         │         │ 8 5 2
 ;             │         │  ^←|^←  │  ^↓|^↓  │  ^→|^→  │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┤         │
-;             │         │  +^End  │ ^+C|^+C │ ^+V|^+V │         │ 9 6 3
+;             │         │  +^End  │ ^+C|^X  │ ^+V|^+Z │         │ 9 6 3
 ;             │         │         │         │         │         │ 8 5 2
-;             │         │  ^End   │  ^C|^C  │  ^V|^V  │         │ 7 4 1
+;             │         │  ^End   │  ^C|^Z  │  ^V|^Y  │         │ 7 4 1
 ;             └─────────┴─────────┴─────────┴─────────┴─────────┘
 ;
 ;
@@ -156,14 +156,14 @@ Numpad2 & Numpad4::SendInput, {Raw}@
 ;             ├─────────┼─────────┼─────────┼─────────┤  Space  │
 ;             │ Numlock │ ~ ^A  y │ "  w  ' │ f  &  ° │         │ 9 6 3
 ;             │ On      │ <  t  * │ µ  e  z │ #  s  > │         │ 8 5 2
-;             │         │ 0 ^C ^V │ ,  .  : │ ; ^X  9 │         │ 7 4 1
+;             │         │ 0 +T  T │ ,  .  : │ ;  D  9 │         │ 7 4 1
 ;             └─────────┴─────────┴─────────┴─────────┴─────────┘
 
 Numpad7::SendInput, {Raw}t
 Numpad7 & Numpad5::SendInput, {Raw}y
 Numpad7 & Numpad4::SendInput, {Raw}*
-Numpad7 & Numpad6::SendInput, ^{v}
-Numpad7 & Numpad9::SendInput, ^{c}
+Numpad7 & Numpad6::SendInput, {Tab}
+Numpad7 & Numpad9::SendInput, +{Tab}
 Numpad7 & Numpad3::SendInput, {Raw}0
 Numpad7 & Numpad1::SendInput, {Raw}<
 Numpad7 & Numpad2::SendInput, {Raw}~
@@ -185,7 +185,7 @@ Numpad1 & Numpad2::SendInput, {Raw}&
 Numpad1 & Numpad8::SendInput, {U+00B0}
 Numpad1 & Numpad7::SendInput, {Raw}>
 Numpad1 & Numpad9::SendInput, {Raw}9
-Numpad1 & Numpad3::SendInput, ^{x}
+Numpad1 & Numpad3::SendInput, {Delete}
 Numpad1 & Numpad6::SendInput, {U+003B}
 Numpad1 & Numpad4::SendInput, {Raw}#
 
@@ -199,8 +199,8 @@ Numpad1 & Numpad4::SendInput, {Raw}#
 ;             │         │  ^n|!F4 │  ^t|F11 │  ^w|F12 │  Esc    │ 8 5 2
 ;             │         │ +F3|Home│  ^f|↑   │ F3|PgUp │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
-;             │         │  !←|#←  │  F5|#↓  │  !→|#→  │         │ 9 6 3
-;             │         │  ^z|#x  │  ^s|^s  │  ^y|^+z │         │ 8 5 2
+;             │         │  #←|#←  │  F5|#↓  │  #→|#→  │         │ 9 6 3
+;             │         │  #x|#x  │  ^s|^s  │ ^+E|^+E │         │ 8 5 2
 ;             │         │   !z|←  │  !c|↓   │  !x|→   │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┤  Space  │
 ;             │         │  ^-|#-  │!Spc|#Esc│  ^+|#+  │         │ 9 6 3
@@ -233,19 +233,19 @@ Numpad0 & Numpad6::SendInput, {Up}
 Numpad3 & Numpad0::SendInput, {F3}
 Numpad0 & Numpad3::SendInput, {PgUp}
 
-Numpad8 & NumpadEnter::SendInput, !{Left}
+Numpad8 & NumpadEnter::SendInput, #{Left}
 NumpadEnter & Numpad8::SendInput, #{Left}
 Numpad5 & NumpadEnter::SendInput, {F5}
 NumpadEnter & Numpad5::SendInput, #{Down}
-Numpad2 & NumpadEnter::SendInput, !{Right}
+Numpad2 & NumpadEnter::SendInput, #{Right}
 NumpadEnter & Numpad2::SendInput, #{Right}
 
-Numpad8 & NumpadDot::SendInput, ^{z}
+Numpad8 & NumpadDot::SendInput, #{x}
 NumpadDot & Numpad8::SendInput, #{x}
 Numpad5 & NumpadDot::SendInput, ^{s}
 NumpadDot & Numpad5::SendInput, ^{s}
-Numpad2 & NumpadDot::SendInput, ^{y}
-NumpadDot & Numpad2::SendInput, ^{y}
+Numpad2 & NumpadDot::SendInput, ^+{Esc}
+NumpadDot & Numpad2::SendInput, ^+{Esc}
 
 Numpad8 & Numpad0::SendInput, !{z}
 Numpad0 & Numpad8::SendInput, {Left}
@@ -259,7 +259,7 @@ NumpadEnter & Numpad7::SendInput, #{-}
 Numpad4 & NumpadEnter::SendInput, !{Space}
 NumpadEnter & Numpad4::SendInput, #{Esc}
 Numpad1 & NumpadEnter::SendInput, ^{+}
-NumpadEnter & Numpad1::SendInput, #{+}
+NumpadEnter & Numpad1::SendInput, #{=}
 
 Numpad7 & NumpadDot::SendInput, {Browser_Back}
 NumpadDot & Numpad7::SendInput, {Media_Prev}
@@ -275,7 +275,7 @@ Numpad0 & Numpad4::SendInput, {AppsKey}
 Numpad1 & Numpad0::SendInput, {Volume_Up}
 Numpad0 & Numpad1::SendInput, {PgDn}
 
-;   • Press *|/ after|before to Activate
+;   • Press *|/ before|after to Activate
 ;   ┌─────────┬─────────┬─────────┬─────────┬───────────────────┐
 ;   │         │         │         │         │                   │ 9 6 3
 ;   │         │         │         │         │                   │ 8 5 2
@@ -283,15 +283,15 @@ Numpad0 & Numpad1::SendInput, {PgDn}
 ;   └─────────┼─────────┼─────────┼─────────┼─────────┬─────────┤
 ;             │         │  +^Home │ +^↑|+^↑ │  L1|L2  │         │ 9 6 3
 ;             │    *    │         │         │         │         │ 8 5 2
-;             │         │  ^Home  │  ^↑|^↑  │  L1|off │         │ 7 4 1
+;             │         │  ^Home  │  ^↑|^↑  │  off|L1 │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
 ;             │         │ +^←|+^← │ +^↓|+^↓ │ +^→|+^→ │         │ 9 6 3
 ;             │    /    │         │         │         │         │ 8 5 2
 ;             │         │  ^←|^←  │  ^↓|^↓  │  ^→|^→  │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┤         │
-;             │         │  +^End  │ ^+C|^+C │ ^+V|^+V │         │ 9 6 3
+;             │         │  +^End  │ ^+C|^X  │ ^+V|^+Z │         │ 9 6 3
 ;             │         │         │         │         │         │ 8 5 2
-;             │         │  ^End   │  ^C|^C  │  ^V|^V  │         │ 7 4 1
+;             │         │  ^End   │  ^C|^Z  │  ^V|^Y  │         │ 7 4 1
 ;             └─────────┴─────────┴─────────┴─────────┴─────────┘
 
 NumpadMult::SendInput, {NumpadMult}
@@ -327,14 +327,14 @@ NumpadMult & Numpad7::SendInput, +^{End}
 Numpad7 & NumpadDiv::SendInput, ^{End}
 NumpadDiv & Numpad7::SendInput, ^{End}
 
-Numpad4 & NumpadMult::SendInput, +^{c}
+Numpad4 & NumpadMult::SendInput, ^{x}
 NumpadMult & Numpad4::SendInput, +^{c}
-Numpad4 & NumpadDiv::SendInput, ^{c}
+Numpad4 & NumpadDiv::SendInput, ^{z}
 NumpadDiv & Numpad4::SendInput, ^{c}
 
-Numpad1 & NumpadMult::SendInput, +^{v}
+Numpad1 & NumpadMult::SendInput, +^{z}
 NumpadMult & Numpad1::SendInput, +^{v}
-Numpad1 & NumpadDiv::SendInput, ^{v}
+Numpad1 & NumpadDiv::SendInput, ^{y}
 NumpadDiv & Numpad1::SendInput, ^{v}
 
 ;AutoTrim, Off
@@ -343,7 +343,8 @@ NumpadDiv & Numpad3::Progress, Off
 NumpadMult & Numpad3::
 {
   Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
-  ,  %A_Space%| 2  3  4 | '  ^  ' | 5  6  7 |`n
+  ,  %A_Space%|---------+---------+---------|`n
+              | 2  3  4 | '  ^  ' | 5  6  7 |`n
               | 1  a  - | +  n  ! | ?  i  8 |`n
               | $  E  v | /  l  \ | x  =  E |`n
               |---------+---------+---------|`n
@@ -353,41 +354,46 @@ NumpadMult & Numpad3::
               |---------+---------+---------|`n
               | ~  A  y | "  w  ' | f  &  D |`n
               | <  t  * | M  e  z | #  s  > |`n
-              | 0  C  V | .  .  : | .  X  9 |
+              | 0 +T  T | .  .  : | . Del 9 |`n
+              |---------+---------+---------|
     , Main,, Courier New
 }
 Return
 Numpad3 & NumpadMult::
 {
   Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
-  ,  %A_Space%| ^+T|!+T |  F6|#Up |  ^T|!T  |`n
+  ,  %A_Space%|---------+---------+---------|`n
+              | ^+T|!+T |  F6|#Up |  ^T|!T  |`n
               |  ^n|!F4 |  ^t|F11 |  ^w|F12 |`n
               | +F3|Home|  ^f|Up  | F3|PgUp |`n
               |---------+---------+---------|`n
-              |!Lft|#Lft|  F5|#Dn | !Rt|#Rt |`n
-              |  ^z|#x  |  ^s|^s  |  ^y|^+z |`n
+              |   #Lft  |  F5|#Dn |   #Rt   |`n
+              |    #x   |   ^s    |  ^+Esc  |`n
               | !z|Lft  |  !c|Dn  |  !x|Rt  |`n
               |---------+---------+---------|`n
               |  ^-|#-  |!Spc|#Esc|  ^+|#+  |`n
               |Back|Prev|PrSc|paus| Fwd|Next|`n
-              |  V-|End |Mute|AppM|  V+|PgDn|
+              |  V-|End |Mute|AppM|  V+|PgDn|`n
+              |---------+---------+---------|
     , Enter|Dot|0 after|before,, Courier New
 }
 Return
 Numpad3 & NumpadDiv::
 {
   Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
-  ,  %A_Space%| +^Home  |+^Up|+^Up|  L1|L2  |`n
+  ,  %A_Space%|---------+---------+---------|`n
+              | +^Home  |   +^Up  |  L1|L2  |`n
               |         |         |         |`n
-              |  ^Home  | ^Up|^Up |  off|L3 |`n
+              |  ^Home  |   ^Up   | off|L3  |`n
               |---------+---------+---------|`n
               |  +^Left | +^Down  | +^Right |`n
               |         |         |         |`n
-              |   ^Left | ^Down   |  ^Right |`n
+              |  ^Left  | ^Down   |  ^Right |`n
               |---------+---------+---------|`n
-              |  +^End  |   ^+C   |   ^+V   |`n
+              |  +^End  | ^+C|^X  | ^+V|^+Z |`n
               |         |         |         |`n
-              |  ^End   |   ^C    |   ^V    |
+              |  ^End   |  ^C|^Z  |  ^V|^Y  |`n
+              |---------+---------+---------|
     , *|/ before|after,, Courier New
 }
 Return
