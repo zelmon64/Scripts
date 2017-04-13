@@ -14,13 +14,13 @@
 ;             │    *    │ 1  a  - │ +  n  ! │ ?  i  8 │  Esc    │ 8 5 2
 ;             │         │ $  £  v │ /  l  \ │ x  =  € │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
-;             │         │ {  S  % │ q  u  p │ |  C  } │         │ 9 6 3
+;             │         │ {  N  % │ q  u  p │ |  C  } │         │ 9 6 3
 ;             │    /    │ (  h  k │ c  o  b │ m  r  ) │         │ 8 5 2
-;             │         │ [  I  _ │ g  d  j │ @  N  ] │         │ 7 4 1
+;             │         │ [  I  _ │ g  d  j │ @  S  ] │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┤  Space  │
 ;             │ Numlock │ ~ ^A  y │ "  w  ' │ f  &  ° │         │ 9 6 3
 ;             │ On      │ <  t  * │ µ  e  z │ #  s  > │         │ 8 5 2
-;             │         │ 0 +T  T │ ,  .  : │ ;  D  9 │         │ 7 4 1
+;             │         │ 0 BS +T │ ,  .  : │ ;  D  9 │         │ 7 4 1
 ;             └─────────┴─────────┴─────────┴─────────┴─────────┘
 ;
 ;   • Press Enter|Esc|Space after|before to Activate
@@ -87,8 +87,20 @@ SetStoreCapslockMode, Off
 ;             │         │ $  £  v │ /  l  \ │ x  =  € │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
 
-Numpad9::SendInput, {Raw}a
-Numpad9 & Numpad5::SendInput, {Raw}v
+Numpad9::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}A
+  } Else
+    SendInput, {Raw}a
+Return
+Numpad9 & Numpad5::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}V
+  } Else
+    SendInput, {Raw}v
+Return
 Numpad9 & Numpad6::SendInput, {Raw}-
 Numpad9 & Numpad8::SendInput, {U+00A3}
 Numpad9 & Numpad2::SendInput, {Raw}$
@@ -97,8 +109,20 @@ Numpad9 & Numpad1::SendInput, {Raw}2
 Numpad9 & Numpad7::SendInput, {Raw}3
 Numpad9 & Numpad4::SendInput, {Raw}4
 
-Numpad6::SendInput, {Raw}n
-Numpad6 & Numpad5::SendInput, {Raw}l
+Numpad6::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}N
+  } Else
+    SendInput, {Raw}n
+Return
+Numpad6 & Numpad5::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}L
+  } Else
+    SendInput, {Raw}l
+Return
 Numpad6 & Numpad9::SendInput, {Raw}+
 Numpad6 & Numpad3::SendInput, {Raw}!
 Numpad6 & Numpad7::SendInput, {U+0060}
@@ -107,8 +131,20 @@ Numpad6 & Numpad8::SendInput, {Raw}/
 Numpad6 & Numpad2::SendInput, {Raw}\
 Numpad6 & Numpad4::SendInput, {Raw}^
 
-Numpad3::SendInput, {Raw}i
-Numpad3 & Numpad5::SendInput, {Raw}x
+Numpad3::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}I
+  } Else
+    SendInput, {Raw}i
+Return
+Numpad3 & Numpad5::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}X
+  } Else
+    SendInput, {Raw}x
+Return
 Numpad3 & Numpad6::SendInput, {Raw}?
 Numpad3 & Numpad4::SendInput, {Raw}5
 Numpad3 & Numpad1::SendInput, {Raw}6
@@ -118,69 +154,189 @@ Numpad3 & Numpad8::SendInput, {Raw}€
 Numpad3 & Numpad2::SendInput, {Raw}=
 
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
-;             │         │ {  S  % │ q  u  p │ |  C  } │         │ 9 6 3
+;             │         │ {  N  % │ q  u  p │ |  C  } │         │ 9 6 3
 ;             │    /    │ (  h  k │ c  o  b │ m  r  ) │         │ 8 5 2
-;             │         │ [  I  _ │ g  d  j │ @  N  ] │         │ 7 4 1
+;             │         │ [  I  _ │ g  d  j │ @  S  ] │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┤  Space  │
 
-Numpad8::SendInput, {Raw}h
-Numpad8 & Numpad5::SendInput, {Raw}k
+Numpad8::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}H
+  } Else
+    SendInput, {Raw}h
+Return
+Numpad8 & Numpad5::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}K
+  } Else
+    SendInput, {Raw}k
+Return
 Numpad8 & Numpad4::SendInput, {Raw}_
 Numpad8 & Numpad7::SendInput, {Insert}
 Numpad8 & Numpad1::SendInput, {Raw}[
 Numpad8 & Numpad2::SendInput, {Raw}(
 Numpad8 & Numpad3::SendInput, {Raw}{
-Numpad8 & Numpad9::SendInput, {ScrollLock}
+Numpad8 & Numpad9::SendInput, {NumLock}
 Numpad8 & Numpad6::SendInput, {U+0025}
 
-Numpad5::SendInput, {Raw}o
-Numpad5 & Numpad7::SendInput, {Raw}g
-Numpad5 & Numpad8::SendInput, {Raw}c
-Numpad5 & Numpad9::SendInput, {Raw}q
-Numpad5 & Numpad6::SendInput, {Raw}u
-Numpad5 & Numpad3::SendInput, {Raw}p
-Numpad5 & Numpad2::SendInput, {Raw}b
-Numpad5 & Numpad1::SendInput, {Raw}j
-Numpad5 & Numpad4::SendInput, {Raw}d
+Numpad5::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}O
+  } Else
+    SendInput, {Raw}o
+Return
+Numpad5 & Numpad7::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}G
+  } Else
+    SendInput, {Raw}g
+Return
+Numpad5 & Numpad8::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}C
+  } Else
+    SendInput, {Raw}c
+Return
+Numpad5 & Numpad9::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}Q
+  } Else
+    SendInput, {Raw}q
+Return
+Numpad5 & Numpad6::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}U
+  } Else
+    SendInput, {Raw}u
+Return
+Numpad5 & Numpad3::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}P
+  } Else
+    SendInput, {Raw}p
+Return
+Numpad5 & Numpad2::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}B
+  } Else
+    SendInput, {Raw}b
+Return
+Numpad5 & Numpad1::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}J
+  } Else
+    SendInput, {Raw}j
+Return
+Numpad5 & Numpad4::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}D
+  } Else
+    SendInput, {Raw}d
+Return
 
-Numpad2::SendInput, {Raw}r
-Numpad2 & Numpad5::SendInput, {Raw}m
+Numpad2::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}R
+  } Else
+    SendInput, {Raw}r
+Return
+Numpad2 & Numpad5::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}M
+  } Else
+    SendInput, {Raw}m
+Return
 Numpad2 & Numpad6::SendInput, {Raw}|
 Numpad2 & Numpad3::SendInput, {Capslock}
 Numpad2 & Numpad9::SendInput, {Raw}}
 Numpad2 & Numpad8::SendInput, {Raw})
 Numpad2 & Numpad7::SendInput, {Raw}]
-Numpad2 & Numpad1::SendInput, {NumLock}
+Numpad2 & Numpad1::SendInput, {ScrollLock}
 Numpad2 & Numpad4::SendInput, {Raw}@
 
 ;             ├─────────┼─────────┼─────────┼─────────┤  Space  │
 ;             │ Numlock │ ~ ^A  y │ "  w  ' │ f  &  ° │         │ 9 6 3
 ;             │ On      │ <  t  * │ µ  e  z │ #  s  > │         │ 8 5 2
-;             │         │ 0 +T  T │ ,  .  : │ ;  D  9 │         │ 7 4 1
+;             │         │ 0 BS +T │ ,  .  : │ ;  D  9 │         │ 7 4 1
 ;             └─────────┴─────────┴─────────┴─────────┴─────────┘
 
-Numpad7::SendInput, {Raw}t
-Numpad7 & Numpad5::SendInput, {Raw}y
+Numpad7::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}T
+  } Else
+    SendInput, {Raw}t
+Return
+Numpad7 & Numpad5::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}Y
+  } Else
+    SendInput, {Raw}y
+Return
 Numpad7 & Numpad4::SendInput, {Raw}*
-Numpad7 & Numpad6::SendInput, {Tab}
-Numpad7 & Numpad9::SendInput, +{Tab}
+Numpad7 & Numpad6::SendInput, +{Tab}
+Numpad7 & Numpad9::SendInput, {Backspace}
 Numpad7 & Numpad3::SendInput, {Raw}0
 Numpad7 & Numpad1::SendInput, {Raw}<
 Numpad7 & Numpad2::SendInput, {Raw}~
 Numpad7 & Numpad8::SendInput, ^{a}
 
-Numpad4::SendInput, {Raw}e
-Numpad4 & Numpad5::SendInput, {Raw}w
+Numpad4::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}E
+  } Else
+    SendInput, {Raw}e
+Return
+Numpad4 & Numpad5::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}W
+  } Else
+    SendInput, {Raw}w
+Return
 Numpad4 & Numpad2::SendInput, {Raw}'
-Numpad4 & Numpad1::SendInput, {Raw}z
+Numpad4 & Numpad1::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}Z
+  } Else
+    SendInput, {Raw}z
+Return
 Numpad4 & Numpad3::SendInput, {Raw}:
 Numpad4 & Numpad6::SendInput, {Raw}.
 Numpad4 & Numpad9::SendInput, {Raw},
 Numpad4 & Numpad7::SendInput, {U+03BC}
 Numpad4 & Numpad8::SendInput, {Raw}"
 
-Numpad1::SendInput, {Raw}s
-Numpad1 & Numpad5::SendInput, {Raw}f
+Numpad1::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}S
+  } Else
+    SendInput, {Raw}s
+Return
+Numpad1 & Numpad5::
+  If ( GetKeyState("ScrollLock", "T") ) {
+    SetScrollLockState, Off
+    SendInput, {Raw}F
+  } Else
+    SendInput, {Raw}f
+Return
 Numpad1 & Numpad2::SendInput, {Raw}&
 Numpad1 & Numpad8::SendInput, {U+00B0}
 Numpad1 & Numpad7::SendInput, {Raw}>
@@ -263,7 +419,7 @@ NumpadEnter & Numpad1::SendInput, #{=}
 
 Numpad7 & NumpadDot::SendInput, {Browser_Back}
 NumpadDot & Numpad7::SendInput, {Media_Prev}
-Numpad4 & NumpadDot::SendInput, {PrintScreen}
+Numpad4 & NumpadDot::SendInput, !{PrintScreen}
 NumpadDot & Numpad4::SendInput, {Media_Play_Pause}
 Numpad1 & NumpadDot::SendInput, {Browser_Forward}
 NumpadDot & Numpad1::SendInput, {Media_Next}
@@ -348,13 +504,13 @@ NumpadMult & Numpad3::
               | 1  a  - | +  n  ! | ?  i  8 |`n
               | $  E  v | /  l  \ | x  =  E |`n
               |---------+---------+---------|`n
-              | {  S  / | q  u  p | |  C  } |`n
+              | {  N  / | q  u  p | |  C  } |`n
               | (  h  k | c  o  b | m  r  ) |`n
-              | [  I  _ | g  d  j | @  N  ] |`n
+              | [  I  _ | g  d  j | @  S  ] |`n
               |---------+---------+---------|`n
               | ~  A  y | "  w  ' | f  &  D |`n
               | <  t  * | M  e  z | #  s  > |`n
-              | 0 +T  T | .  .  : | . Del 9 |`n
+              | 0 BS +T | .  .  : | . Del 9 |`n
               |---------+---------+---------|
     , Main,, Courier New
 }
