@@ -11,7 +11,7 @@
 ;   │         │         │         │         │                   │ 7 4 1
 ;   └─────────┼─────────┼─────────┼─────────┼─────────┬─────────┤
 ;             │         │ 2  3  4 │ `  ^  ´ │ 5  6  7 │         │ 9 6 3
-;             │    *    │ 1  a  - │ +  n  ! │ ?  i  8 │  Esc    │ 8 5 2
+;             │    *    │Del a  - │ +  n  ! │ ?  i  BS│  Esc    │ 8 5 2
 ;             │         │ $  £  v │ /  l  \ │ x  =  € │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
 ;             │         │ {  N  % │ q  u  p │ |  C  } │         │ 9 6 3
@@ -20,7 +20,7 @@
 ;             ├─────────┼─────────┼─────────┼─────────┤  Space  │
 ;             │ Numlock │ ~ ^A  y │ "  w  ' │ f  &  ° │         │ 9 6 3
 ;             │ On      │ <  t  * │ µ  e  z │ #  s  > │         │ 8 5 2
-;             │         │ 0 BS +T │ ,  .  : │ ;  D  9 │         │ 7 4 1
+;             │         │ 0  1 +T │ ,  .  : │ ;  8  9 │         │ 7 4 1
 ;             └─────────┴─────────┴─────────┴─────────┴─────────┘
 ;
 ;   • Press Enter|Esc|Space after|before to Activate
@@ -83,7 +83,7 @@ SetStoreCapslockMode, Off
 
 ;   └─────────┼─────────┼─────────┼─────────┼─────────┬─────────┤
 ;             │         │ 2  3  4 │ `  ^  ´ │ 5  6  7 │         │ 9 6 3
-;             │    *    │ 1  a  - │ +  n  ! │ ?  i  8 │  Esc    │ 8 5 2
+;             │    *    │Del a  - │ +  n  ! │ ?  i  BS│  Esc    │ 8 5 2
 ;             │         │ $  £  v │ /  l  \ │ x  =  € │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
 
@@ -104,7 +104,7 @@ Return
 Numpad9 & Numpad6::SendInput, {Raw}-
 Numpad9 & Numpad8::SendInput, {U+00A3}
 Numpad9 & Numpad2::SendInput, {Raw}$
-Numpad9 & Numpad3::SendInput, {Raw}1
+Numpad9 & Numpad3::SendInput, {Delete}
 Numpad9 & Numpad1::SendInput, {Raw}2
 Numpad9 & Numpad7::SendInput, {Raw}3
 Numpad9 & Numpad4::SendInput, {Raw}4
@@ -149,8 +149,8 @@ Numpad3 & Numpad6::SendInput, {Raw}?
 Numpad3 & Numpad4::SendInput, {Raw}5
 Numpad3 & Numpad1::SendInput, {Raw}6
 Numpad3 & Numpad7::SendInput, {Raw}7
-Numpad3 & Numpad9::SendInput, {Raw}8
-Numpad3 & Numpad8::SendInput, {Raw}€
+Numpad3 & Numpad9::SendInput, {Backspace}
+Numpad3 & Numpad8::SendInput, {U+20AC}
 Numpad3 & Numpad2::SendInput, {Raw}=
 
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
@@ -270,7 +270,7 @@ Numpad2 & Numpad4::SendInput, {Raw}@
 ;             ├─────────┼─────────┼─────────┼─────────┤  Space  │
 ;             │ Numlock │ ~ ^A  y │ "  w  ' │ f  &  ° │         │ 9 6 3
 ;             │ On      │ <  t  * │ µ  e  z │ #  s  > │         │ 8 5 2
-;             │         │ 0 BS +T │ ,  .  : │ ;  D  9 │         │ 7 4 1
+;             │         │ 0  1 +T │ ,  .  : │ ;  8  9 │         │ 7 4 1
 ;             └─────────┴─────────┴─────────┴─────────┴─────────┘
 
 Numpad7::
@@ -289,7 +289,7 @@ Numpad7 & Numpad5::
 Return
 Numpad7 & Numpad4::SendInput, {Raw}*
 Numpad7 & Numpad6::SendInput, +{Tab}
-Numpad7 & Numpad9::SendInput, {Backspace}
+Numpad7 & Numpad9::SendInput, {Raw}1
 Numpad7 & Numpad3::SendInput, {Raw}0
 Numpad7 & Numpad1::SendInput, {Raw}<
 Numpad7 & Numpad2::SendInput, {Raw}~
@@ -341,7 +341,7 @@ Numpad1 & Numpad2::SendInput, {Raw}&
 Numpad1 & Numpad8::SendInput, {U+00B0}
 Numpad1 & Numpad7::SendInput, {Raw}>
 Numpad1 & Numpad9::SendInput, {Raw}9
-Numpad1 & Numpad3::SendInput, {Delete}
+Numpad1 & Numpad3::SendInput, {Raw}8
 Numpad1 & Numpad6::SendInput, {U+003B}
 Numpad1 & Numpad4::SendInput, {Raw}#
 
@@ -501,8 +501,8 @@ NumpadMult & Numpad3::
   Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
   ,  %A_Space%|---------+---------+---------|`n
               | 2  3  4 | '  ^  ' | 5  6  7 |`n
-              | 1  a  - | +  n  ! | ?  i  8 |`n
-              | $  E  v | /  l  \ | x  =  E |`n
+              |Del a  - | +  n  ! | ?  i BS |`n
+              | $ GBP v | /  l  \ | x  = EUR|`n
               |---------+---------+---------|`n
               | {  N  / | q  u  p | |  C  } |`n
               | (  h  k | c  o  b | m  r  ) |`n
@@ -510,7 +510,7 @@ NumpadMult & Numpad3::
               |---------+---------+---------|`n
               | ~  A  y | "  w  ' | f  &  D |`n
               | <  t  * | M  e  z | #  s  > |`n
-              | 0 BS +T | .  .  : | . Del 9 |`n
+              | 0  1 +T | .  .  : | .  8  9 |`n
               |---------+---------+---------|
     , Main,, Courier New
 }
