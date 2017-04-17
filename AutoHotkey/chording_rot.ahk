@@ -34,7 +34,7 @@
 ;             │         │ +F3|Home│  ^f|↑   │ F3|PgUp │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
 ;             │         │  #←|#←  │  F5|#↓  │  #→|#→  │         │ 9 6 3
-;             │         │  #x|#x  │  ^s|^s  │ ^+E|^+E │         │ 8 5 2
+;             │         │  ^r|#x  │  ^s|^s  │ ^+E|^+E │         │ 8 5 2
 ;             │         │   !z|←  │  !c|↓   │  !x|→   │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┤  Space  │
 ;             │         │  ^-|#-  │!Spc|#Esc│  ^+|#+  │         │ 9 6 3
@@ -356,7 +356,7 @@ Numpad1 & Numpad4::SendInput, {Raw}#
 ;             │         │ +F3|Home│  ^f|↑   │ F3|PgUp │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┼─────────┤
 ;             │         │  #←|#←  │  F5|#↓  │  #→|#→  │         │ 9 6 3
-;             │         │  #x|#x  │  ^s|^s  │ ^+E|^+E │         │ 8 5 2
+;             │         │  ^r|#x  │  ^s|^s  │ ^+E|^+E │         │ 8 5 2
 ;             │         │   !z|←  │  !c|↓   │  !x|→   │         │ 7 4 1
 ;             ├─────────┼─────────┼─────────┼─────────┤  Space  │
 ;             │         │  ^-|#-  │!Spc|#Esc│  ^+|#+  │         │ 9 6 3
@@ -368,12 +368,12 @@ NumpadEnter::SendInput, {NumpadEnter}
 NumpadDot::SendInput, {Esc}
 Numpad0::SendInput, {Space}
 
-Numpad9 & NumpadEnter::SendInput, ^+{Tab}
-NumpadEnter & Numpad9::SendInput, !+{Tab}
+Numpad9 & NumpadEnter::SendInput, {Control DownTemp}+{Tab}
+NumpadEnter & Numpad9::SendInput, {Alt DownTemp}+{Tab}
 Numpad6 & NumpadEnter::SendInput, {F6}
 NumpadEnter & Numpad6::SendInput, #{Up}
-Numpad3 & NumpadEnter::SendInput, ^{Tab}
-NumpadEnter & Numpad3::SendInput, !{Tab}
+Numpad3 & NumpadEnter::SendInput, {Control DownTemp}{Tab}
+NumpadEnter & Numpad3::SendInput, {Alt DownTemp}{Tab}
 
 Numpad9 & NumpadDot::SendInput, ^{n}
 NumpadDot & Numpad9::SendInput, !{F4}
@@ -396,7 +396,7 @@ NumpadEnter & Numpad5::SendInput, #{Down}
 Numpad2 & NumpadEnter::SendInput, #{Right}
 NumpadEnter & Numpad2::SendInput, #{Right}
 
-Numpad8 & NumpadDot::SendInput, #{x}
+Numpad8 & NumpadDot::SendInput, ^{r}
 NumpadDot & Numpad8::SendInput, #{x}
 Numpad5 & NumpadDot::SendInput, ^{s}
 NumpadDot & Numpad5::SendInput, ^{s}
@@ -524,7 +524,7 @@ Numpad3 & NumpadMult::
               | +F3|Home|  ^f|Up  | F3|PgUp |`n
               |---------+---------+---------|`n
               |   #Lft  |  F5|#Dn |   #Rt   |`n
-              |    #x   |   ^s    |  ^+Esc  |`n
+              |  ^r|#x  |   ^s    |  ^+Esc  |`n
               | !z|Lft  |  !c|Dn  |  !x|Rt  |`n
               |---------+---------+---------|`n
               |  ^-|#-  |!Spc|#Esc|  ^+|#+  |`n
