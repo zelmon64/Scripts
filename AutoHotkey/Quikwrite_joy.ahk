@@ -1,5 +1,5 @@
 ; Quikwriting modeled input with a joystick
-;	v0.02
+;	v0.03
 ;
 ;   █▲►▼◄●
 ;   ─│┌┐└┘├┤┬┴┼
@@ -41,16 +41,17 @@ all_characters%ArrayIndex2% := Object()
 all_characters%ArrayIndex3% := Object()
 all_characters%ArrayIndex4% := Object()
 */
+;																					█ Chr(219) ▲ Chr(30) ► Chr(16) ▼ Chr(31) ◄ Chr(17) ● Chr(7)
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_1_characters =  %A_Space%              ,,,,,,,,,
 mode_1_characters =  %mode_1_characters%a,a,s,k,m,,,q,,,
-mode_1_characters =  %mode_1_characters%L,S,L,U,,,,,,,
+mode_1_characters =  %mode_1_characters%BS,Sy,BS,UC,,,,,,,
 mode_1_characters =  %mode_1_characters%n,p,f,n,,,l,,,x,
 mode_1_characters =  %mode_1_characters%e,h,,,e,,,c,,,
 mode_1_characters =  %mode_1_characters%,,,,,,,,,,
 mode_1_characters =  %mode_1_characters%t,,,u,,,t,,,y,
 mode_1_characters =  %mode_1_characters%o,v,,,w,,,o,g,z,
-mode_1_characters =  %mode_1_characters%R,,,,,,,D,R,C,
+mode_1_characters =  %mode_1_characters%Sp,,,,,,,En,Sp,No,
 mode_1_characters =  %mode_1_characters%i,,,j,,,r,b,d,i,
 ;StringSplit, mode_1_character, mode_1_characters, `,
 StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
@@ -58,13 +59,13 @@ StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_2_characters =   %A_Space%             ,,,,,,,,,
 mode_2_characters =  %mode_2_characters%A,A,S,K,M,,,Q,,,
-mode_2_characters =  %mode_2_characters%L,S,L,U,,,,,,,
+mode_2_characters =  %mode_2_characters%BS,Sy,BS,UC,,,,,,,
 mode_2_characters =  %mode_2_characters%N,P,F,N,,,L,,,X,
 mode_2_characters =  %mode_2_characters%E,H,,,E,,,C,,,
 mode_2_characters =  %mode_2_characters%,,,,,,,,,,
 mode_2_characters =  %mode_2_characters%T,,,U,,,T,,,Y,
 mode_2_characters =  %mode_2_characters%O,V,,,W,,,O,G,Z,
-mode_2_characters =  %mode_2_characters%R,,,,,,,D,R,C,
+mode_2_characters =  %mode_2_characters%Sp,,,,,,,En,Sp,No,
 mode_2_characters =  %mode_2_characters%I,,,J,,,R,B,D,I,
 ;StringSplit, mode_2_character, mode_2_characters, `,
 StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
@@ -72,30 +73,38 @@ StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_3_characters =    %A_Space%            ,,,,,,,,,
 mode_3_characters =  %mode_3_characters%/,/,\,|,@,,,@,,,
-mode_3_characters =  %mode_3_characters%L,S,L,U,,,,,,,
+mode_3_characters =  %mode_3_characters%BS,Sy,BS,UC,,,,,,,
 mode_3_characters =  %mode_3_characters%C,(,),C,,,[,,,],
 mode_3_characters =  %mode_3_characters%;,#,,,;,,,:,,,
 mode_3_characters =  %mode_3_characters%,,,,,,,,,,
 mode_3_characters =  %mode_3_characters%',,,",,,',,,&,
 mode_3_characters =  %mode_3_characters%*,^,,,*,,,*,{,},
-mode_3_characters =  %mode_3_characters%R,,,,,,,D,R,C,
+mode_3_characters =  %mode_3_characters%Sp,,,,,,,En,Sp,No,
 mode_3_characters =  %mode_3_characters%.,,,!,,,?,_,-,.,
 ;StringSplit, mode_3_character, mode_3_characters, `,
 StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
+ArrayIndex := 30
+all_characters%ArrayIndex3%%ArrayIndex% := ","
+ArrayIndex := 33
+all_characters%ArrayIndex3%%ArrayIndex% := ","
 ;
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_4_characters =  %A_Space%            ,,,,,,,,,
 mode_4_characters =  %mode_4_characters%0,0,<,>,1,,,2,,,
-mode_4_characters =  %mode_4_characters%L,S,L,U,,,,,,,
+mode_4_characters =  %mode_4_characters%BS,Sy,BS,UC,,,,,,,
 mode_4_characters =  %mode_4_characters%C,(,),C,,,[,,,],
 mode_4_characters =  %mode_4_characters%3,#,,,3,,,4,,,
 mode_4_characters =  %mode_4_characters%,,,,,,,,,,
 mode_4_characters =  %mode_4_characters%=,,,+,,,=,,,-,
 mode_4_characters =  %mode_4_characters%5,/,,,*,,,5,6,7,
-mode_4_characters =  %mode_4_characters%R,,,,,,,D,R,C,
+mode_4_characters =  %mode_4_characters%Sp,,,,,,,En,Sp,No,
 mode_4_characters =  %mode_4_characters%.,,,9,,,8,$,P,.,
 ;StringSplit, mode_4_character, mode_4_characters, `,
 StringSplit, all_characters%ArrayIndex4%, mode_4_characters, `,
+ArrayIndex := 30
+all_characters%ArrayIndex4%%ArrayIndex% := ","
+ArrayIndex := 33
+all_characters%ArrayIndex4%%ArrayIndex% := ","
 ;
 ;
 
@@ -129,8 +138,11 @@ if JoystickNumber <= 0
 
 character_code = 0
 character_code_pre = 0
+button_click_pre = 0
 this_code = 0
 character_mode = 1
+character_mode_lists = Lowercase,Uppercase,Symbols,Numbers
+StringSplit, character_mode_list, character_mode_lists, `,
 
 New_Code(character_code, this_code)
 {
@@ -204,54 +216,92 @@ Loop
 		}
 	}
 
-  tol = 25
+	If (joyp = 0)
+		SendInput, {Up}
+	Else If (joyp = 9000)
+		SendInput, {Right}
+	Else If (joyp = 18000)
+		SendInput, {Down}
+	Else If (joyp = 27000)
+		SendInput, {Left}
 
-  If (joyx < 50 - tol)
-  {
-    If (joyy < 50 - tol)
-    {
-      this_code = 1
-      character_code := New_Code(character_code, this_code)
-    }
-    Else If (joyy > 50 + tol)
-    {
-      this_code = 7
-      character_code := New_Code(character_code, this_code)
-    }
-    Else
-    {
-      this_code = 4
-      character_code := New_Code(character_code, this_code)
-    }
-  }
-  Else If (joyx > 50 + tol)
-  {
-    If (joyy < 50 - tol)
-    {
-      this_code = 3
-      character_code := New_Code(character_code, this_code)
-    }
-    Else If (joyy > 50 + tol)
-    {
-      this_code = 9
-      character_code := New_Code(character_code, this_code)
-    }
-    Else
-    {
-      this_code = 6
-      character_code := New_Code(character_code, this_code)
-    }
-  }
-  Else If (joyy < 50 - tol)
-  {
-    this_code = 2
-    character_code := New_Code(character_code, this_code)
-  }
-  Else If (joyy > 50 + tol)
-  {
-    this_code = 8
-    character_code := New_Code(character_code, this_code)
-  }
+  tol = 25
+	joyx -= 50
+	joyy -= 50
+
+	If (joyz > 60)
+	{
+		MouseMove, joyx * abs(joyx / 3), joyy * abs(joyx / 3), , R
+		GetKeyState, joy5, %JoystickNumber%joy5
+		MouseClick, Left,,,,, %joy5%
+		/*
+		If (joy5 = D)
+		{
+			;If (button_click_pre = 0)
+			{
+				;button_click_pre := 1
+				MouseClick, Left,,,,, D
+			}
+		}
+		Else If (joy5 = U)
+		{
+			;If (button_click_pre = 1)
+			{
+				;button_click_pre := 0
+				MouseClick, Left,,,,, U
+			}
+		}
+		*/
+	}
+	Else If (joyx*joyx + joyy*joyy > tol*tol)
+	{
+		If (joyx < - tol / 2)
+	  {
+	    If (joyy < - tol / 2)
+	    {
+	      this_code = 1
+	      character_code := New_Code(character_code, this_code)
+	    }
+	    Else If (joyy > + tol / 2)
+	    {
+	      this_code = 7
+	      character_code := New_Code(character_code, this_code)
+	    }
+	    Else
+	    {
+	      this_code = 4
+	      character_code := New_Code(character_code, this_code)
+	    }
+	  }
+	  Else If (joyx > + tol / 2)
+	  {
+	    If (joyy < - tol / 2)
+	    {
+	      this_code = 3
+	      character_code := New_Code(character_code, this_code)
+	    }
+	    Else If (joyy > + tol / 2)
+	    {
+	      this_code = 9
+	      character_code := New_Code(character_code, this_code)
+	    }
+	    Else
+	    {
+	      this_code = 6
+	      character_code := New_Code(character_code, this_code)
+	    }
+	  }
+	  Else If (joyy < - tol / 2)
+	  {
+	    this_code = 2
+	    character_code := New_Code(character_code, this_code)
+	  }
+	  Else If (joyy > + tol / 2)
+	  {
+	    this_code = 8
+	    character_code := New_Code(character_code, this_code)
+	  }
+	}
   Else
   {
     ;If (character_code <> 0 && character_code // 10 <> Mod(character_code, 10))
@@ -330,44 +380,54 @@ Loop
 
     {
       ;character := % mode_1_character%character_code%
-	    character11 := A_Space
-	    character12 := A_Space
-	    character13 := A_Space
-	    character14 := A_Space
-	    character17 := A_Space
-	    character21 := A_Space
-	    character22 := A_Space
-	    character23 := A_Space
-	    character31 := A_Space
-	    character32 := A_Space
-	    character33 := A_Space
-	    character36 := A_Space
-	    character39 := A_Space
-	    character41 := A_Space
-	    character44 := A_Space
-	    character47 := A_Space
-	    character63 := A_Space
-	    character66 := A_Space
-	    character69 := A_Space
-	    character71 := A_Space
-	    character74 := A_Space
-	    character77 := A_Space
-	    character78 := A_Space
-	    character79 := A_Space
-	    character87 := A_Space
-	    character88 := A_Space
-	    character89 := A_Space
-	    character93 := A_Space
-	    character96 := A_Space
-	    character97 := A_Space
-	    character98 := A_Space
-	    character99 := A_Space
+			{
+		    character11 := A_Space
+		    character12 := A_Space
+		    character13 := A_Space
+		    character14 := A_Space
+		    character17 := A_Space
+		    character21 := A_Space
+		    character22 := A_Space
+		    character23 := A_Space
+		    character31 := A_Space
+		    character32 := A_Space
+		    character33 := A_Space
+		    character36 := A_Space
+		    character39 := A_Space
+		    character41 := A_Space
+		    character44 := A_Space
+		    character47 := A_Space
+		    character63 := A_Space
+		    character66 := A_Space
+		    character69 := A_Space
+		    character71 := A_Space
+		    character74 := A_Space
+		    character77 := A_Space
+		    character78 := A_Space
+		    character79 := A_Space
+		    character87 := A_Space
+		    character88 := A_Space
+		    character89 := A_Space
+		    character93 := A_Space
+		    character96 := A_Space
+		    character97 := A_Space
+		    character98 := A_Space
+		    character99 := A_Space
+				option1 := A_Space
+				option2 := A_Space
+				option3 := A_Space
+				option4 := A_Space
+				option6 := A_Space
+				option7 := A_Space
+				option8 := A_Space
+				option9 := A_Space
+			}
 
 			character := % all_characters%character_mode%%character_code%
 			If (character = "")
 	    	character := A_Space
 
-			If (character_code < 20)
+
 	    {
 				character_index := 11
 				character11 := % all_characters%character_mode%%character_index%
@@ -380,7 +440,7 @@ Loop
 				character_index += 3
 				character17 = % all_characters%character_mode%%character_index%
 			}
-			Else If (character_code < 30)
+
 	    {
 				character_index := 21
 				character21 := % all_characters%character_mode%%character_index%
@@ -389,7 +449,7 @@ Loop
 				character_index++
 				character23 := % all_characters%character_mode%%character_index%
 			}
-			Else If (character_code < 40)
+
 	    {
 				character_index := 31
 				character31 := % all_characters%character_mode%%character_index%
@@ -402,7 +462,7 @@ Loop
 				character_index += 3
 				character39 := % all_characters%character_mode%%character_index%
 			}
-			Else If (character_code < 60)
+
 	    {
 				character_index := 41
 				character41 := % all_characters%character_mode%%character_index%
@@ -411,7 +471,7 @@ Loop
 				character_index += 3
 				character47 := % all_characters%character_mode%%character_index%
 			}
-			Else If (character_code < 70)
+
 	    {
 				character_index := 63
 				character63 := % all_characters%character_mode%%character_index%
@@ -420,7 +480,7 @@ Loop
 				character_index += 3
 				character69 := % all_characters%character_mode%%character_index%
 			}
-			Else If (character_code < 80)
+
 	    {
 				character_index := 71
 				character71 := % all_characters%character_mode%%character_index%
@@ -433,7 +493,7 @@ Loop
 				character_index++
 				character79 := % all_characters%character_mode%%character_index%
 			}
-			Else If (character_code < 90)
+
 	    {
 				character_index := 87
 				character87 := % all_characters%character_mode%%character_index%
@@ -442,7 +502,7 @@ Loop
 				character_index++
 				character89 := % all_characters%character_mode%%character_index%
 			}
-			Else
+
 	    {
 				character_index := 93
 				character93 := % all_characters%character_mode%%character_index%
@@ -456,21 +516,144 @@ Loop
 				character99 := % all_characters%character_mode%%character_index%
 			}
 
+			If (character_code < 20)
+	    {
+				character_index := 11
+				option1 := % all_characters%character_mode%%character_index%
+				option2 := % all_characters%character_mode%%character_index%
+				character_index++
+				option3 := % all_characters%character_mode%%character_index%
+				character_index++
+				option4 := % all_characters%character_mode%%character_index%
+				character_index += 3
+				option7 = % all_characters%character_mode%%character_index%
+			}
+			Else If (character_code < 30)
+	    {
+				character_index := 21
+				option1 := % all_characters%character_mode%%character_index%
+				character_index++
+				option2 := % all_characters%character_mode%%character_index%
+				character_index++
+				option3 := % all_characters%character_mode%%character_index%
+			}
+			Else If (character_code < 40)
+	    {
+				character_index := 31
+				option1 := % all_characters%character_mode%%character_index%
+				character_index++
+				option2 := % all_characters%character_mode%%character_index%
+				character_index++
+				option3 := % all_characters%character_mode%%character_index%
+				character_index += 3
+				option6 := % all_characters%character_mode%%character_index%
+				character_index += 3
+				option9 := % all_characters%character_mode%%character_index%
+			}
+			Else If (character_code < 60)
+	    {
+				character_index := 41
+				option1 := % all_characters%character_mode%%character_index%
+				character_index += 3
+				option4 := % all_characters%character_mode%%character_index%
+				character_index += 3
+				option7 := % all_characters%character_mode%%character_index%
+			}
+			Else If (character_code < 70)
+	    {
+				character_index := 63
+				option3 := % all_characters%character_mode%%character_index%
+				character_index += 3
+				option6 := % all_characters%character_mode%%character_index%
+				character_index += 3
+				option9 := % all_characters%character_mode%%character_index%
+			}
+			Else If (character_code < 80)
+	    {
+				character_index := 71
+				option1 := % all_characters%character_mode%%character_index%
+				character_index += 3
+				option4 := % all_characters%character_mode%%character_index%
+				character_index += 3
+				option7 := % all_characters%character_mode%%character_index%
+				character_index++
+				option8 := % all_characters%character_mode%%character_index%
+				character_index++
+				option9 := % all_characters%character_mode%%character_index%
+			}
+			Else If (character_code < 90)
+	    {
+				character_index := 87
+				option7 := % all_characters%character_mode%%character_index%
+				character_index++
+				option8 := % all_characters%character_mode%%character_index%
+				character_index++
+				option9 := % all_characters%character_mode%%character_index%
+			}
+			Else
+	    {
+				character_index := 93
+				option3 := % all_characters%character_mode%%character_index%
+				character_index += 3
+				option6 := % all_characters%character_mode%%character_index%
+				character_index++
+				option7 := % all_characters%character_mode%%character_index%
+				character_index++
+				option8 := % all_characters%character_mode%%character_index%
+				character_index++
+				option9 := % all_characters%character_mode%%character_index%
+			}
+			/*
       Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
       ,  %A_Space%|---------+---------+---------|`n
                   | %character11%  %character12%  %character13% | %character21%  %character22%  %character23% | %character31%  %character32%  %character33% |`n
                   | %character14%       |         |       %character36% |`n
                   | %character17%       |         |       %character39% |`n
                   |---------+---------+---------|`n
-                  | %character41%       |         |       %character63% |`n
-                  | %character44%       |    %character%    |       %character66% |`n
-                  | %character47%       |         |       %character69% |`n
+                  | %character41%       | %option1%  %option2%  %option3% |       %character63% |`n
+                  | %character44%       | %option4%  %character%  %option6% |       %character66% |`n
+                  | %character47%       | %option7%  %option8%  %option9% |       %character69% |`n
                   |---------+---------+---------|`n
                   | %character71%       |         |       %character93% |`n
                   | %character74%       |         |       %character96% |`n
                   | %character77%  %character78%  %character79% | %character87%  %character88%  %character89% | %character97%  %character98%  %character99% |`n
                   |---------+---------+---------|
-        ,,, Courier New
+        , % character_mode_list%character_mode%,, Courier New
+			*/
+			/*
+      Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
+      ,  %A_Space%|---------+---------+---------|`n
+                  | %character11%  %character12%  %character13% | %character21%  %character22%  %character23% | %character31%  %character32%  %character33% |`n
+                  | %character14%       |         |       %character36% |`n
+                  | %character17%     %option1% |    %option2%    | %option3%     %character39% |`n
+                  |---------+---------+---------|`n
+                  | %character41%       |         |       %character63% |`n
+                  | %character44%     %option4% |    %character%    | %option6%     %character66% |`n
+                  | %character47%       |         |       %character69% |`n
+                  |---------+---------+---------|`n
+                  | %character71%     %option7% |    %option8%    | %option9%     %character93% |`n
+                  | %character74%       |         |       %character96% |`n
+                  | %character77%  %character78%  %character79% | %character87%  %character88%  %character89% | %character97%  %character98%  %character99% |`n
+                  |---------+---------+---------|
+        , % character_mode_list%character_mode%,, Courier New
+			*/
+
+      Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
+      ,  %A_Space%|---------+---------+---------|`n
+                  | %character11%  %character12%  %character13% |%character21% %character22% %character23% | %character31%  %character32%  %character33% |`n
+                  | %character14%       |         |       %character36% |`n
+                  | %character17%     %option1% |    %option2%    | %option3%     %character39% |`n
+                  |---------+---------+---------|`n
+                  | %character41%       |         |       %character63% |`n
+                  | %character44%     %option4% |    %character%    | %option6%     %character66% |`n
+                  | %character47%       |         |       %character69% |`n
+                  |---------+---------+---------|`n
+                  | %character71%     %option7% |    %option8%    | %option9%     %character93% |`n
+                  | %character74%       |         |       %character96% |`n
+                  | %character77%  %character78%  %character79% |%character87% %character88% %character89% | %character97%  %character98%  %character99% |`n
+                  |---------+---------+---------|
+        , % character_mode_list%character_mode%,, Courier New
+
     }
   }
 
