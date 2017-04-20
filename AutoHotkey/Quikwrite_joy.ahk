@@ -35,76 +35,81 @@ ArrayIndex1 := 1
 ArrayIndex2 := 2
 ArrayIndex3 := 3
 ArrayIndex4 := 4
-/*
-all_characters%ArrayIndex1% := Object()
-all_characters%ArrayIndex2% := Object()
-all_characters%ArrayIndex3% := Object()
-all_characters%ArrayIndex4% := Object()
-*/
-;																					█ Chr(219) ▲ Chr(30) ► Chr(16) ▼ Chr(31) ◄ Chr(17) ● Chr(7)
+ArrayIndex5 := 5
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_1_characters =  %A_Space%              ,,,,,,,,,
-mode_1_characters =  %mode_1_characters%a,a,s,k,m,,,q,,,
+mode_1_characters =  %mode_1_characters% a, a, s, k, m,,, q,,,
 mode_1_characters =  %mode_1_characters%BS,Sy,BS,UC,Sy,,UC,,,,
-mode_1_characters =  %mode_1_characters%n,p,f,n,,,l,,,x,
-mode_1_characters =  %mode_1_characters%e,h,,,e,,,c,,,
+mode_1_characters =  %mode_1_characters% n, p, f, n,,, l,,, x,
+mode_1_characters =  %mode_1_characters% e, h,,, e,,, c,,,
 mode_1_characters =  %mode_1_characters%,,,,,,,,,,
-mode_1_characters =  %mode_1_characters%t,,,u,,,t,,,y,
-mode_1_characters =  %mode_1_characters%o,v,,,w,,,o,g,z,
+mode_1_characters =  %mode_1_characters% t,,, u,,, t,,, y,
+mode_1_characters =  %mode_1_characters% o, v,,, w,,, o, g, z,
 mode_1_characters =  %mode_1_characters%Sp,,,,En,,No,En,Sp,No,
-mode_1_characters =  %mode_1_characters%i,,,j,,,r,b,d,i,
-;StringSplit, mode_1_character, mode_1_characters, `,
+mode_1_characters =  %mode_1_characters% i,,, j,,, r, b, d, i,
 StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
 ;
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_2_characters =   %A_Space%             ,,,,,,,,,
-mode_2_characters =  %mode_2_characters%A,A,S,K,M,,,Q,,,
+mode_2_characters =  %mode_2_characters% A, A, S, K, M,,, Q,,,
 mode_2_characters =  %mode_2_characters%BS,Sy,BS,UC,Sy,,UC,,,,
-mode_2_characters =  %mode_2_characters%N,P,F,N,,,L,,,X,
-mode_2_characters =  %mode_2_characters%E,H,,,E,,,C,,,
+mode_2_characters =  %mode_2_characters% N, P, F, N,,, L,,, X,
+mode_2_characters =  %mode_2_characters% E, H,,, E,,, C,,,
 mode_2_characters =  %mode_2_characters%,,,,,,,,,,
-mode_2_characters =  %mode_2_characters%T,,,U,,,T,,,Y,
-mode_2_characters =  %mode_2_characters%O,V,,,W,,,O,G,Z,
+mode_2_characters =  %mode_2_characters% T,,, U,,, T,,, Y,
+mode_2_characters =  %mode_2_characters% O, V,,, W,,, O, G, Z,
 mode_2_characters =  %mode_2_characters%Sp,,,,En,,No,En,Sp,No,
-mode_2_characters =  %mode_2_characters%I,,,J,,,R,B,D,I,
-;StringSplit, mode_2_character, mode_2_characters, `,
+mode_2_characters =  %mode_2_characters% I,,, J,,, R, B, D, I,
 StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
 ;
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_3_characters =    %A_Space%            ,,,,,,,,,
-mode_3_characters =  %mode_3_characters%/,/,\,|,@,,,@,,,
+mode_3_characters =  %mode_3_characters% /, /, \, |, @,,, @,,,
 mode_3_characters =  %mode_3_characters%BS,Sy,BS,UC,Sy,,UC,,,,
-mode_3_characters =  %mode_3_characters%C,(,),C,,,[,,,],
-mode_3_characters =  %mode_3_characters%;,#,,,;,,,:,,,
+mode_3_characters =  %mode_3_characters% C, (, ), C,,, [,,, ],
+mode_3_characters =  %mode_3_characters%%A_Space%;,%A_Space%#,,,%A_Space%;,,,%A_Space%:,,,
 mode_3_characters =  %mode_3_characters%,,,,,,,,,,
-mode_3_characters =  %mode_3_characters%',,,",,,',,,&,
-mode_3_characters =  %mode_3_characters%*,^,,,Tb,,,*,{,},
+mode_3_characters =  %mode_3_characters% ',,, ",,, ',,, &,
+mode_3_characters =  %mode_3_characters% *, ^,,,Tb,,, *, {, },
 mode_3_characters =  %mode_3_characters%Sp,,,,En,,No,En,Sp,No,
-mode_3_characters =  %mode_3_characters%.,,,!,,,?,_,-,.,
-;StringSplit, mode_3_character, mode_3_characters, `,
+mode_3_characters =  %mode_3_characters% .,,, !,,, ?, _, -, .,
 StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
 ArrayIndex := 30
-all_characters%ArrayIndex3%%ArrayIndex% := ","
+all_characters%ArrayIndex3%%ArrayIndex% := " ,"
 ArrayIndex := 33
-all_characters%ArrayIndex3%%ArrayIndex% := ","
+all_characters%ArrayIndex3%%ArrayIndex% := " ,"
 ;
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_4_characters =  %A_Space%            ,,,,,,,,,
-mode_4_characters =  %mode_4_characters%0,0,<,>,1,,,2,,,
+mode_4_characters =  %mode_4_characters% 0, 0, <, >, 1,,, 2,,,
 mode_4_characters =  %mode_4_characters%BS,Sy,BS,UC,Sy,,UC,,,,
-mode_4_characters =  %mode_4_characters%C,(,),C,,,[,,,],
-mode_4_characters =  %mode_4_characters%3,#,,,3,,,4,,,
+mode_4_characters =  %mode_4_characters% C, (, ), C,,, [,,, ],
+mode_4_characters =  %mode_4_characters% 3, #,,, 3,,, 4,,,
 mode_4_characters =  %mode_4_characters%,,,,,,,,,,
-mode_4_characters =  %mode_4_characters%=,,,+,,,=,,,-,
-mode_4_characters =  %mode_4_characters%5,/,,,*,,,5,6,7,
+mode_4_characters =  %mode_4_characters% =,,, +,,, =,,, -,
+mode_4_characters =  %mode_4_characters% 5, /,,, *,,, 5, 6, 7,
 mode_4_characters =  %mode_4_characters%Sp,,,,En,,No,En,Sp,No,
-mode_4_characters =  %mode_4_characters%.,,,9,,,8,$,P,.,
-;StringSplit, mode_4_character, mode_4_characters, `,
+mode_4_characters =  %mode_4_characters%.,,, 9,,, 8, $, P, .,
 StringSplit, all_characters%ArrayIndex4%, mode_4_characters, `,
 ArrayIndex := 30
-all_characters%ArrayIndex4%%ArrayIndex% := ","
+all_characters%ArrayIndex4%%ArrayIndex% := " ,"
 ArrayIndex := 33
-all_characters%ArrayIndex4%%ArrayIndex% := ","
+all_characters%ArrayIndex4%%ArrayIndex% := " ,"
+ArrayIndex := 98
+all_characters%ArrayIndex4%%ArrayIndex% := " %"
+;
+;                                       0 1 2 3 4 5 6 7 8 9
+mode_5_characters =  %A_Space%            ,,,,,,,,,
+mode_5_characters =  %mode_5_characters%0,0,<,>,1,,,2,,,
+mode_5_characters =  %mode_5_characters%BS,Sy,BS,UC,Sy,,UC,,,,
+mode_5_characters =  %mode_5_characters%C,(,),C,,,[,,,],
+mode_5_characters =  %mode_5_characters%3,#,,,3,,,4,,,
+mode_5_characters =  %mode_5_characters%,,,,,,,,,,
+mode_5_characters =  %mode_5_characters%=,,,+,,,=,,,-,
+mode_5_characters =  %mode_5_characters%5,/,,,*,,,5,6,7,
+mode_5_characters =  %mode_5_characters%Sp,,,,En,,No,En,Sp,No,
+mode_5_characters =  %mode_5_characters%.,,,9,,,8,$,P,.,
+StringSplit, all_characters%ArrayIndex5%, mode_5_characters, `,
 ;
 ;
 
@@ -610,7 +615,7 @@ Loop
       }
       Else
       {
-				SendRaw, % all_characters%ch_mode%%character_code%
+				SendRaw, % SubStr(all_characters%ch_mode%%character_code%, 2, 1)
 				If (character_mode > 20)
         	character_mode := 1
 			}
@@ -680,19 +685,19 @@ Loop
 		    character97 := A_Space
 		    character98 := A_Space
 		    character99 := A_Space
-				option1 := A_Space
-				option2 := A_Space
-				option3 := A_Space
-				option4 := A_Space
-				option6 := A_Space
-				option7 := A_Space
-				option8 := A_Space
-				option9 := A_Space
+				option1 := "  "
+				option2 := "  "
+				option3 := "  "
+				option4 := "  "
+				option6 := "  "
+				option7 := "  "
+				option8 := "  "
+				option9 := "  "
 			}
 
 			character := % all_characters%ch_mode%%character_code%
 			If (character = "")
-	    	character := A_Space
+	    	character := "  "
 
 			; Outer Ring
 			{
@@ -892,7 +897,7 @@ Loop
 					option9 := % all_characters%ch_mode%%character_index%
 				}
 			}
-
+			/*
       Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
       ,  %A_Space%|---------+---------+---------|`n
                   | %character11%  %character12%  %character13% |%character21% %character22% %character23% | %character31%  %character32%  %character33% |`n
@@ -908,7 +913,22 @@ Loop
                   | %character77%  %character78%  %character79% |%character87% %character88% %character89% | %character97%  %character98%  %character99% |`n
                   |---------+---------+---------|
         , % character_mode_list%ch_mode%,, Courier New
-
+			*/
+      Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
+      ,  %A_Space%|---------+---------+---------|`n
+                  |%character11% %character12% %character13% |%character21% %character22% %character23% |%character31% %character32% %character33% |`n
+                  |%character14%       |         |      %character36% |`n
+                  |%character17%    %option1% |   %option2%    |%option3%    %character39% |`n
+                  |---------+---------+---------|`n
+                  |%character41%       |         |      %character63% |`n
+                  |%character44%    %option4% |   %character%    |%option6%    %character66% |`n
+                  |%character47%       |         |      %character69% |`n
+                  |---------+---------+---------|`n
+                  |%character71%    %option7% |   %option8%    |%option9%    %character93% |`n
+                  |%character74%       |         |      %character96% |`n
+                  |%character77% %character78% %character79% |%character87% %character88% %character89% |%character97% %character98% %character99% |`n
+                  |---------+---------+---------|
+        , % character_mode_list%ch_mode%,, Courier New
     }
   }
 
