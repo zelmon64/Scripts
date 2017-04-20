@@ -1,5 +1,5 @@
 ; Quikwriting modeled input with a joystick
-;	v0.05
+;	v0.06
 ;
 ;   █▲►▼◄●
 ;   ─│┌┐└┘├┤┬┴┼
@@ -146,6 +146,7 @@ loop_count_skip := 3
 this_code = 0
 stick_mode := 1
 character_mode = 1
+ch_mode := 1
 character_mode_lists = Lowercase,Uppercase,Symbols,Numbers
 StringSplit, character_mode_list, character_mode_lists, `,
 
@@ -461,6 +462,8 @@ Loop
 		}
 	}
 
+	ch_mode := mod(character_mode, 10)
+
 	If (stick_mode = 2)
 	{
 		mdz := 5
@@ -521,54 +524,6 @@ Loop
 	}
 	Else If (joyx*joyx + joyy*joyy > dz*dz)
 	{
-		/*
-			If (joyx < - tol / 2)
-		  {
-		    If (joyy < - tol / 2)
-		    {
-		      this_code = 1
-		      character_code := New_Code(character_code, this_code)
-		    }
-		    Else If (joyy > + tol / 2)
-		    {
-		      this_code = 7
-		      character_code := New_Code(character_code, this_code)
-		    }
-		    Else
-		    {
-		      this_code = 4
-		      character_code := New_Code(character_code, this_code)
-		    }
-		  }
-		  Else If (joyx > + tol / 2)
-		  {
-		    If (joyy < - tol / 2)
-		    {
-		      this_code = 3
-		      character_code := New_Code(character_code, this_code)
-		    }
-		    Else If (joyy > + tol / 2)
-		    {
-		      this_code = 9
-		      character_code := New_Code(character_code, this_code)
-		    }
-		    Else
-		    {
-		      this_code = 6
-		      character_code := New_Code(character_code, this_code)
-		    }
-		  }
-		  Else If (joyy < - tol / 2)
-		  {
-		    this_code = 2
-		    character_code := New_Code(character_code, this_code)
-		  }
-		  Else If (joyy > + tol / 2)
-		  {
-		    this_code = 8
-		    character_code := New_Code(character_code, this_code)
-		  }
-		*/
 		If (theta < region / 2 || theta > 2 * pi - region / 2)
 		{
 			character_code := New_Code(character_code, 6)
@@ -616,15 +571,19 @@ Loop
       {
 				If (character_mode = 3)
         	character_mode := 1
-				Else
+				Else If (character_mode = 33)
         	character_mode := 3
+				Else
+        	character_mode := 33
       }
       Else If (character_code = 23 || character_code = 26)
       {
 				If (character_mode = 2)
         	character_mode := 1
-				Else
+				Else If (character_mode = 22)
         	character_mode := 2
+				Else
+        	character_mode := 22
       }
       Else If (character_code = 80 || character_code = 88)
       {
@@ -638,16 +597,22 @@ Loop
       {
 				If (character_mode = 4)
         	character_mode := 1
-				Else
+				Else If (character_mode = 44)
         	character_mode := 4
+				Else
+        	character_mode := 44
       }
-      Else If (all_characters%character_mode%%character_code% = "Tb")
+      Else If (all_characters%ch_mode%%character_code% = "Tb")
       {
 				SendInput, {Tab}
+				If (character_mode > 20)
+        	character_mode := 1
       }
       Else
       {
-				SendRaw, % all_characters%character_mode%%character_code%
+				SendRaw, % all_characters%ch_mode%%character_code%
+				If (character_mode > 20)
+        	character_mode := 1
 			}
 
 	    character_code = 0
@@ -725,7 +690,7 @@ Loop
 				option9 := A_Space
 			}
 
-			character := % all_characters%character_mode%%character_code%
+			character := % all_characters%ch_mode%%character_code%
 			If (character = "")
 	    	character := A_Space
 
@@ -733,98 +698,98 @@ Loop
 			{
 	    	{
 					character_index := 11
-					character11 := % all_characters%character_mode%%character_index%
+					character11 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character12 := % all_characters%character_mode%%character_index%
+					character12 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character13 := % all_characters%character_mode%%character_index%
+					character13 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character14 := % all_characters%character_mode%%character_index%
+					character14 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					character17 = % all_characters%character_mode%%character_index%
+					character17 = % all_characters%ch_mode%%character_index%
 				}
 
 		    {
 					character_index := 21
-					character21 := % all_characters%character_mode%%character_index%
+					character21 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character22 := % all_characters%character_mode%%character_index%
+					character22 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character23 := % all_characters%character_mode%%character_index%
+					character23 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character24 := % all_characters%character_mode%%character_index%
+					character24 := % all_characters%ch_mode%%character_index%
 					character_index += 2
-					character26 := % all_characters%character_mode%%character_index%
+					character26 := % all_characters%ch_mode%%character_index%
 				}
 
 		    {
 					character_index := 31
-					character31 := % all_characters%character_mode%%character_index%
+					character31 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character32 := % all_characters%character_mode%%character_index%
+					character32 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character33 := % all_characters%character_mode%%character_index%
+					character33 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					character36 := % all_characters%character_mode%%character_index%
+					character36 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					character39 := % all_characters%character_mode%%character_index%
+					character39 := % all_characters%ch_mode%%character_index%
 				}
 
 		    {
 					character_index := 41
-					character41 := % all_characters%character_mode%%character_index%
+					character41 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					character44 := % all_characters%character_mode%%character_index%
+					character44 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					character47 := % all_characters%character_mode%%character_index%
+					character47 := % all_characters%ch_mode%%character_index%
 				}
 
 		    {
 					character_index := 63
-					character63 := % all_characters%character_mode%%character_index%
+					character63 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					character66 := % all_characters%character_mode%%character_index%
+					character66 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					character69 := % all_characters%character_mode%%character_index%
+					character69 := % all_characters%ch_mode%%character_index%
 				}
 
 		    {
 					character_index := 71
-					character71 := % all_characters%character_mode%%character_index%
+					character71 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					character74 := % all_characters%character_mode%%character_index%
+					character74 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					character77 := % all_characters%character_mode%%character_index%
+					character77 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character78 := % all_characters%character_mode%%character_index%
+					character78 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character79 := % all_characters%character_mode%%character_index%
+					character79 := % all_characters%ch_mode%%character_index%
 				}
 
 		    {
 					character_index := 84
-					character84 := % all_characters%character_mode%%character_index%
+					character84 := % all_characters%ch_mode%%character_index%
 					character_index += 2
-					character86 := % all_characters%character_mode%%character_index%
+					character86 := % all_characters%ch_mode%%character_index%
 					character_index := 87
-					character87 := % all_characters%character_mode%%character_index%
+					character87 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character88 := % all_characters%character_mode%%character_index%
+					character88 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character89 := % all_characters%character_mode%%character_index%
+					character89 := % all_characters%ch_mode%%character_index%
 				}
 
 		    {
 					character_index := 93
-					character93 := % all_characters%character_mode%%character_index%
+					character93 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					character96 := % all_characters%character_mode%%character_index%
+					character96 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character97 := % all_characters%character_mode%%character_index%
+					character97 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character98 := % all_characters%character_mode%%character_index%
+					character98 := % all_characters%ch_mode%%character_index%
 					character_index++
-					character99 := % all_characters%character_mode%%character_index%
+					character99 := % all_characters%ch_mode%%character_index%
 				}
 			}
 
@@ -833,98 +798,98 @@ Loop
 				If (character_code < 20)
 		    {
 					character_index := 11
-					option1 := % all_characters%character_mode%%character_index%
+					option1 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option2 := % all_characters%character_mode%%character_index%
+					option2 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option3 := % all_characters%character_mode%%character_index%
+					option3 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option4 := % all_characters%character_mode%%character_index%
+					option4 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					option7 = % all_characters%character_mode%%character_index%
+					option7 = % all_characters%ch_mode%%character_index%
 				}
 				Else If (character_code < 30)
 		    {
 					character_index := 21
-					option1 := % all_characters%character_mode%%character_index%
+					option1 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option2 := % all_characters%character_mode%%character_index%
+					option2 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option3 := % all_characters%character_mode%%character_index%
+					option3 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option4 := % all_characters%character_mode%%character_index%
+					option4 := % all_characters%ch_mode%%character_index%
 					character_index += 2
-					option6 := % all_characters%character_mode%%character_index%
+					option6 := % all_characters%ch_mode%%character_index%
 				}
 				Else If (character_code < 40)
 		    {
 					character_index := 31
-					option1 := % all_characters%character_mode%%character_index%
+					option1 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option2 := % all_characters%character_mode%%character_index%
+					option2 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option3 := % all_characters%character_mode%%character_index%
+					option3 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					option6 := % all_characters%character_mode%%character_index%
+					option6 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					option9 := % all_characters%character_mode%%character_index%
+					option9 := % all_characters%ch_mode%%character_index%
 				}
 				Else If (character_code < 60)
 		    {
 					character_index := 41
-					option1 := % all_characters%character_mode%%character_index%
+					option1 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					option4 := % all_characters%character_mode%%character_index%
+					option4 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					option7 := % all_characters%character_mode%%character_index%
+					option7 := % all_characters%ch_mode%%character_index%
 				}
 				Else If (character_code < 70)
 		    {
 					character_index := 63
-					option3 := % all_characters%character_mode%%character_index%
+					option3 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					option6 := % all_characters%character_mode%%character_index%
+					option6 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					option9 := % all_characters%character_mode%%character_index%
+					option9 := % all_characters%ch_mode%%character_index%
 				}
 				Else If (character_code < 80)
 		    {
 					character_index := 71
-					option1 := % all_characters%character_mode%%character_index%
+					option1 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					option4 := % all_characters%character_mode%%character_index%
+					option4 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					option7 := % all_characters%character_mode%%character_index%
+					option7 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option8 := % all_characters%character_mode%%character_index%
+					option8 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option9 := % all_characters%character_mode%%character_index%
+					option9 := % all_characters%ch_mode%%character_index%
 				}
 				Else If (character_code < 90)
 		    {
 					character_index := 84
-					option4 := % all_characters%character_mode%%character_index%
+					option4 := % all_characters%ch_mode%%character_index%
 					character_index += 2
-					option6 := % all_characters%character_mode%%character_index%
+					option6 := % all_characters%ch_mode%%character_index%
 					character_index := 87
-					option7 := % all_characters%character_mode%%character_index%
+					option7 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option8 := % all_characters%character_mode%%character_index%
+					option8 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option9 := % all_characters%character_mode%%character_index%
+					option9 := % all_characters%ch_mode%%character_index%
 				}
 				Else
 		    {
 					character_index := 93
-					option3 := % all_characters%character_mode%%character_index%
+					option3 := % all_characters%ch_mode%%character_index%
 					character_index += 3
-					option6 := % all_characters%character_mode%%character_index%
+					option6 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option7 := % all_characters%character_mode%%character_index%
+					option7 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option8 := % all_characters%character_mode%%character_index%
+					option8 := % all_characters%ch_mode%%character_index%
 					character_index++
-					option9 := % all_characters%character_mode%%character_index%
+					option9 := % all_characters%ch_mode%%character_index%
 				}
 			}
 
@@ -942,7 +907,7 @@ Loop
                   | %character74%       |         |       %character96% |`n
                   | %character77%  %character78%  %character79% |%character87% %character88% %character89% | %character97%  %character98%  %character99% |`n
                   |---------+---------+---------|
-        , % character_mode_list%character_mode%,, Courier New
+        , % character_mode_list%ch_mode%,, Courier New
 
     }
   }
