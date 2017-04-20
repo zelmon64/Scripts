@@ -1,5 +1,5 @@
 ; Quikwriting modeled input with a joystick
-;	v0.03
+;	v0.04
 ;
 ;   █▲►▼◄●
 ;   ─│┌┐└┘├┤┬┴┼
@@ -45,13 +45,13 @@ all_characters%ArrayIndex4% := Object()
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_1_characters =  %A_Space%              ,,,,,,,,,
 mode_1_characters =  %mode_1_characters%a,a,s,k,m,,,q,,,
-mode_1_characters =  %mode_1_characters%BS,Sy,BS,UC,,,,,,,
+mode_1_characters =  %mode_1_characters%BS,Sy,BS,UC,Sy,,UC,,,,
 mode_1_characters =  %mode_1_characters%n,p,f,n,,,l,,,x,
 mode_1_characters =  %mode_1_characters%e,h,,,e,,,c,,,
 mode_1_characters =  %mode_1_characters%,,,,,,,,,,
 mode_1_characters =  %mode_1_characters%t,,,u,,,t,,,y,
 mode_1_characters =  %mode_1_characters%o,v,,,w,,,o,g,z,
-mode_1_characters =  %mode_1_characters%Sp,,,,,,,En,Sp,No,
+mode_1_characters =  %mode_1_characters%Sp,,,,En,,No,En,Sp,No,
 mode_1_characters =  %mode_1_characters%i,,,j,,,r,b,d,i,
 ;StringSplit, mode_1_character, mode_1_characters, `,
 StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
@@ -59,13 +59,13 @@ StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_2_characters =   %A_Space%             ,,,,,,,,,
 mode_2_characters =  %mode_2_characters%A,A,S,K,M,,,Q,,,
-mode_2_characters =  %mode_2_characters%BS,Sy,BS,UC,,,,,,,
+mode_2_characters =  %mode_2_characters%BS,Sy,BS,UC,Sy,,UC,,,,
 mode_2_characters =  %mode_2_characters%N,P,F,N,,,L,,,X,
 mode_2_characters =  %mode_2_characters%E,H,,,E,,,C,,,
 mode_2_characters =  %mode_2_characters%,,,,,,,,,,
 mode_2_characters =  %mode_2_characters%T,,,U,,,T,,,Y,
 mode_2_characters =  %mode_2_characters%O,V,,,W,,,O,G,Z,
-mode_2_characters =  %mode_2_characters%Sp,,,,,,,En,Sp,No,
+mode_2_characters =  %mode_2_characters%Sp,,,,En,,No,En,Sp,No,
 mode_2_characters =  %mode_2_characters%I,,,J,,,R,B,D,I,
 ;StringSplit, mode_2_character, mode_2_characters, `,
 StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
@@ -73,13 +73,13 @@ StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_3_characters =    %A_Space%            ,,,,,,,,,
 mode_3_characters =  %mode_3_characters%/,/,\,|,@,,,@,,,
-mode_3_characters =  %mode_3_characters%BS,Sy,BS,UC,,,,,,,
+mode_3_characters =  %mode_3_characters%BS,Sy,BS,UC,Sy,,UC,,,,
 mode_3_characters =  %mode_3_characters%C,(,),C,,,[,,,],
 mode_3_characters =  %mode_3_characters%;,#,,,;,,,:,,,
 mode_3_characters =  %mode_3_characters%,,,,,,,,,,
 mode_3_characters =  %mode_3_characters%',,,",,,',,,&,
 mode_3_characters =  %mode_3_characters%*,^,,,*,,,*,{,},
-mode_3_characters =  %mode_3_characters%Sp,,,,,,,En,Sp,No,
+mode_3_characters =  %mode_3_characters%Sp,,,,En,,No,En,Sp,No,
 mode_3_characters =  %mode_3_characters%.,,,!,,,?,_,-,.,
 ;StringSplit, mode_3_character, mode_3_characters, `,
 StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
@@ -91,13 +91,13 @@ all_characters%ArrayIndex3%%ArrayIndex% := ","
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_4_characters =  %A_Space%            ,,,,,,,,,
 mode_4_characters =  %mode_4_characters%0,0,<,>,1,,,2,,,
-mode_4_characters =  %mode_4_characters%BS,Sy,BS,UC,,,,,,,
+mode_4_characters =  %mode_4_characters%BS,Sy,BS,UC,Sy,,UC,,,,
 mode_4_characters =  %mode_4_characters%C,(,),C,,,[,,,],
 mode_4_characters =  %mode_4_characters%3,#,,,3,,,4,,,
 mode_4_characters =  %mode_4_characters%,,,,,,,,,,
 mode_4_characters =  %mode_4_characters%=,,,+,,,=,,,-,
 mode_4_characters =  %mode_4_characters%5,/,,,*,,,5,6,7,
-mode_4_characters =  %mode_4_characters%Sp,,,,,,,En,Sp,No,
+mode_4_characters =  %mode_4_characters%Sp,,,,En,,No,En,Sp,No,
 mode_4_characters =  %mode_4_characters%.,,,9,,,8,$,P,.,
 ;StringSplit, mode_4_character, mode_4_characters, `,
 StringSplit, all_characters%ArrayIndex4%, mode_4_characters, `,
@@ -138,8 +138,13 @@ if JoystickNumber <= 0
 
 character_code = 0
 character_code_pre = 0
-button_click_pre = 0
+button_click_pre := -1
+mouse_click_pre := 0
+loop_count := 0
+loop_count_repeat := 10
+loop_count_skip := 3
 this_code = 0
+stick_mode := 1
 character_mode = 1
 character_mode_lists = Lowercase,Uppercase,Symbols,Numbers
 StringSplit, character_mode_list, character_mode_lists, `,
@@ -171,7 +176,7 @@ New_Code(character_code, this_code)
 }
 
 #SingleInstance
-SetFormat, float, 03  ; Omit decimal point from axis position percentages.
+SetFormat, float, 03.3  ; Omit decimal point from axis position percentages. (03)
 GetKeyState, joy_buttons, %JoystickNumber%JoyButtons
 GetKeyState, joy_name, %JoystickNumber%JoyName
 GetKeyState, joy_info, %JoystickNumber%JoyInfo
@@ -216,91 +221,464 @@ Loop
 		}
 	}
 
-	If (joyp = 0)
-		SendInput, {Up}
-	Else If (joyp = 9000)
-		SendInput, {Right}
-	Else If (joyp = 18000)
-		SendInput, {Down}
-	Else If (joyp = 27000)
-		SendInput, {Left}
+	tdz := 60
 
-  tol = 25
-	joyx -= 50
-	joyy -= 50
-
-	If (joyz > 60)
+	;If (joyz < tdz)
+	If (stick_mode = 1)
 	{
-		MouseMove, joyx * abs(joyx / 3), joyy * abs(joyx / 3), , R
-		GetKeyState, joy5, %JoystickNumber%joy5
-		MouseClick, Left,,,,, %joy5%
-		/*
-		If (joy5 = D)
+		If (joy9 <> "U")
 		{
-			;If (button_click_pre = 0)
+			If (button_click_pre <> 9)
 			{
-				;button_click_pre := 1
-				MouseClick, Left,,,,, D
+				button_click_pre := 9
+				stick_mode := 2
 			}
 		}
-		Else If (joy5 = U)
+		Else If (button_click_pre = 9)
+			button_click_pre := -1
+
+		loop_count_skip := 2
+		If (joyp = 0)
 		{
-			;If (button_click_pre = 1)
+			If (button_click_pre <> 1)
 			{
-				;button_click_pre := 0
-				MouseClick, Left,,,,, U
+				button_click_pre := 1
+				SendInput, {Up}
+				loop_count := 1
+				;Send, {Up down}
+			}
+			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0) ; || joyz > 80)
+			{
+				SendInput, {Up}
+			}
+			loop_count++
+		}
+		Else If (joyp = 9000)
+		{
+			If (button_click_pre <> 9000)
+			{
+				button_click_pre := 9000
+				SendInput, {Right}
+				loop_count := 1
+				;Send, {Right down}
+			}
+			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0) ; || joyz > 80)
+			{
+				SendInput, {Right}
+			}
+			loop_count++
+		}
+		Else If (joyp = 18000)
+		{
+			If (button_click_pre <> 18000)
+			{
+				button_click_pre := 18000
+				SendInput, {Down}
+				loop_count := 1
+				;Send, {Down down}
+			}
+			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0) ; || joyz > 80)
+			{
+				SendInput, {Down}
+			}
+			loop_count++
+		}
+		Else If (joyp = 27000)
+		{
+			If (button_click_pre <> 27000)
+			{
+				button_click_pre := 27000
+				SendInput, {Left}
+				loop_count := 1
+				;Send, {Left down}
+			}
+			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0) ; || joyz > 80)
+			{
+				SendInput, {Left}
+			}
+			loop_count++
+		}
+		Else ;If (joyp = -1)
+		{
+			If (button_click_pre <> -1 && button_click_pre <> 9)
+				{
+					button_click_pre := -1
+					/*
+						SendInput, {Up up}
+						SendInput, {Down up}
+						SendInput, {Left up}
+						SendInput, {Right up}
+					*/
+				}
+		}
+	}
+	Else
+	{
+		If (joy9 <> "U")
+		{
+			If (button_click_pre <> 9)
+			{
+				button_click_pre := 9
+				stick_mode := 1
+			}
+		}
+		Else If (button_click_pre = 9)
+			button_click_pre := -1
+
+		loop_count_skip := 1
+		If (joyp = 0)
+		{
+			If (button_click_pre <> 1)
+			{
+				button_click_pre := 1
+				SendInput, {WheelUp}
+				loop_count := 1
+				;Send, {Up down}
+			}
+			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+			{
+				SendInput, {WheelUp}
+			}
+			loop_count++
+		}
+		Else If (joyp = 9000)
+		{
+			If (button_click_pre <> 9000)
+			{
+				button_click_pre := 9000
+				SendInput, +{WheelDown}
+				;SendInput, {WheelRight}
+				loop_count := 1
+				;Send, {Right down}
+			}
+			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0) ; || joyz > 80)
+			{
+				SendInput, +{WheelDown}
+				;SendInput, {WheelRight}
+			}
+			loop_count++
+		}
+		Else If (joyp = 18000)
+		{
+			If (button_click_pre <> 18000)
+			{
+				button_click_pre := 18000
+				SendInput, {WheelDown}
+				loop_count := 1
+				;Send, {Down down}
+			}
+			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0) ; || joyz > 80)
+			{
+				SendInput, {WheelDown}
+			}
+			loop_count++
+		}
+		Else If (joyp = 27000)
+		{
+			If (button_click_pre <> 27000)
+			{
+				button_click_pre := 27000
+				SendInput, +{WheelUp}
+				;SendInput, {WheelLeft}
+				loop_count := 1
+				;Send, {Left down}
+			}
+			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0) ; || joyz > 80)
+			{
+				SendInput, +{WheelUp}
+				;SendInput, {WheelLeft}
+			}
+			loop_count++
+		}
+		Else ;If (joyp = -1)
+		{
+			If (button_click_pre <> -1 && button_click_pre <> 9)
+				{
+					button_click_pre := -1
+					/*
+						SendInput, {Up up}
+						SendInput, {Down up}
+						SendInput, {Left up}
+						SendInput, {Right up}
+					*/
+				}
+		}
+	}
+
+  tol = 25
+	dz = 25
+	joyx -= 50
+	joyy -= 50
+	theta := 0
+	pi := 4 * atan(1)
+	region := 45 * pi / 180
+
+	If (joyx*joyx + joyy*joyy > dz*dz)
+	{
+		theta := atan( abs(joyy / joyx) )
+		If (joyy > 0)
+		{
+			If (joyx < 0)
+			{
+				theta := pi + theta
+			}
+			Else
+			{
+				theta := 2 * pi - theta
+			}
+		}
+		Else
+		{
+			If (joyx < 0)
+			{
+				theta := pi - theta
+			}
+			Else
+			{
+				;theta := pi + theta
+				;theta := 2 * pi - theta
+			}
+		}
+	}
+
+	;If (joyz > tdz)
+	If (stick_mode = 2)
+	{
+		;MouseMove, joyx * abs(joyx / 3), joyy * abs(joyx / 3), , R
+		;MouseMove, joyx, joyy, , R
+		;MouseMove, joyx, joyy, (joyx * joyx + joyy * joyy) / 50, R
+		mdz := 5
+		ms := 10
+		ms := 0.5
+		If (joyx*joyx + joyy*joyy > mdz*mdz)
+		{
+			SetMouseDelay, -1  ; Makes movement smoother.
+			;MouseMove, joyx * abs(joyx / ms), joyy * abs(joyx / ms), 0, R
+			MouseMove, joyx * ms, joyy * ms, 0, R
+			;MouseMove, joyx, joyy,, R
+		}
+		;GetKeyState, joy5, %JoystickNumber%Joy5
+		;MouseClick, Left,,,,, %joy5%
+		;If (GetKeyState( %JoystickNumber%Joy5 ))
+		;If (%joy5% = D)
+		;If (joy5 <> "U")
+		If (joyz > 55)
+		{
+			If (mouse_click_pre <> 1)
+			{
+				mouse_click_pre := 1
+				MouseClick, Left,,, 1, 0, D  ; Hold down the left mouse button.
+				;MouseClick, Left,,,,, D
+			}
+		}
+		Else If (joy5 <> "U")
+		{
+			If (mouse_click_pre <> 2)
+			{
+				mouse_click_pre := 2
+				MouseClick, Right,,, 1, 0, D  ; Hold down the left mouse button.
+				;MouseClick, Left,,,,, D
+			}
+		}
+		Else If (joy2 <> "U")
+		{
+			If (mouse_click_pre <> 3)
+			{
+				mouse_click_pre := 3
+				MouseClick, Middle,,, 1, 0, D  ; Hold down the left mouse button.
+				;MouseClick, Left,,,,, D
+			}
+		}
+		Else If (joy1 <> "U")
+		{
+			If (mouse_click_pre <> 4)
+			{
+				mouse_click_pre := 4
+				MouseClick, X1,,, 1, 0, D  ; Hold down the left mouse button.
+				;MouseClick, Left,,,,, D
+			}
+		}
+		Else
+		{
+			If (mouse_click_pre <> -1)
+			{
+				If (mouse_click_pre = 1)
+					MouseClick, Left,,, 1, 0, U  ; Release the mouse button.
+				Else If (mouse_click_pre = 2)
+					MouseClick, Right,,, 1, 0, U  ; Release the mouse button.
+				Else If (mouse_click_pre = 3)
+					MouseClick, Middle,,, 1, 0, U  ; Release the mouse button.
+				Else If (mouse_click_pre = 4)
+					MouseClick, X1,,, 1, 0, U  ; Release the mouse button.
+				mouse_click_pre := -1
+			}
+		}
+		/*
+		If (%joy5% = "D")
+		{
+			If (button_click_pre <> 1)
+			{
+				button_click_pre := 1
+				MouseClick, Left,,,,, %joy5%
+			}
+		}
+		Else
+		{
+			If (button_click_pre <> 0)
+			{
+				button_click_pre := 0
+				MouseClick, Left,,,,, %joy5%
 			}
 		}
 		*/
+		;If (GetKeyState(%JoystickNumber%joy5))
+		;If (joy5 = D)
+		/*
+		If (GetKeyState(%JoystickNumber%joy5))
+		{
+			If (button_click_pre <> 1)
+			{
+				button_click_pre := 1
+				MouseClick, left,,, 1, 0, D  ; Hold down the left mouse button.
+				;MouseClick, Left,,,,, %joy5%
+			}
+		}
+		Else
+		{
+			If (button_click_pre <> -1)
+			{
+				button_click_pre := -1
+				;MouseClick, Left,,,,, %joy5%
+				MouseClick, left,,, 1, 0, U  ; Release the mouse button.
+			}
+		}
+		*/
+		/*
+			If (joy5 = D)
+			{
+				If (button_click_pre <> 1)
+				{
+					button_click_pre := 1
+					MouseClick, Left,,,,, D
+				}
+			}
+			Else If (joy5 = U)
+			{
+				If (button_click_pre <> -1)
+				{
+					button_click_pre := -1
+					MouseClick, Left,,,,, U
+				}
+			}
+			Else
+			{
+				If (button_click_pre <> 0)
+				{
+					button_click_pre := 0
+				}
+			}
+		*/
+		/*
+			If (joy5 = D)
+			{
+				;If (button_click_pre = 0)
+				{
+					;button_click_pre := 1
+					MouseClick, Left,,,,, D
+				}
+			}
+			Else If (joy5 = U)
+			{
+				;If (button_click_pre = 1)
+				{
+					;button_click_pre := 0
+					MouseClick, Left,,,,, U
+				}
+			}
+		*/
 	}
-	Else If (joyx*joyx + joyy*joyy > tol*tol)
+	Else If (joyx*joyx + joyy*joyy > dz*dz)
 	{
-		If (joyx < - tol / 2)
-	  {
-	    If (joyy < - tol / 2)
-	    {
-	      this_code = 1
-	      character_code := New_Code(character_code, this_code)
-	    }
-	    Else If (joyy > + tol / 2)
-	    {
-	      this_code = 7
-	      character_code := New_Code(character_code, this_code)
-	    }
-	    Else
-	    {
-	      this_code = 4
-	      character_code := New_Code(character_code, this_code)
-	    }
-	  }
-	  Else If (joyx > + tol / 2)
-	  {
-	    If (joyy < - tol / 2)
-	    {
-	      this_code = 3
-	      character_code := New_Code(character_code, this_code)
-	    }
-	    Else If (joyy > + tol / 2)
-	    {
-	      this_code = 9
-	      character_code := New_Code(character_code, this_code)
-	    }
-	    Else
-	    {
-	      this_code = 6
-	      character_code := New_Code(character_code, this_code)
-	    }
-	  }
-	  Else If (joyy < - tol / 2)
-	  {
-	    this_code = 2
-	    character_code := New_Code(character_code, this_code)
-	  }
-	  Else If (joyy > + tol / 2)
-	  {
-	    this_code = 8
-	    character_code := New_Code(character_code, this_code)
-	  }
+		/*
+			If (joyx < - tol / 2)
+		  {
+		    If (joyy < - tol / 2)
+		    {
+		      this_code = 1
+		      character_code := New_Code(character_code, this_code)
+		    }
+		    Else If (joyy > + tol / 2)
+		    {
+		      this_code = 7
+		      character_code := New_Code(character_code, this_code)
+		    }
+		    Else
+		    {
+		      this_code = 4
+		      character_code := New_Code(character_code, this_code)
+		    }
+		  }
+		  Else If (joyx > + tol / 2)
+		  {
+		    If (joyy < - tol / 2)
+		    {
+		      this_code = 3
+		      character_code := New_Code(character_code, this_code)
+		    }
+		    Else If (joyy > + tol / 2)
+		    {
+		      this_code = 9
+		      character_code := New_Code(character_code, this_code)
+		    }
+		    Else
+		    {
+		      this_code = 6
+		      character_code := New_Code(character_code, this_code)
+		    }
+		  }
+		  Else If (joyy < - tol / 2)
+		  {
+		    this_code = 2
+		    character_code := New_Code(character_code, this_code)
+		  }
+		  Else If (joyy > + tol / 2)
+		  {
+		    this_code = 8
+		    character_code := New_Code(character_code, this_code)
+		  }
+		*/
+		If (theta < region / 2 || theta > 2 * pi - region / 2)
+		{
+			character_code := New_Code(character_code, 6)
+		}
+	  Else If (theta < region * 3 / 2)
+		{
+			character_code := New_Code(character_code, 3)
+		}
+	  Else If (theta < region * 5 / 2)
+		{
+			character_code := New_Code(character_code, 2)
+		}
+	  Else If (theta < region * 7 / 2)
+		{
+			character_code := New_Code(character_code, 1)
+		}
+	  Else If (theta < region * 9 / 2)
+		{
+			character_code := New_Code(character_code, 4)
+		}
+	  Else If (theta < region * 11 / 2)
+		{
+			character_code := New_Code(character_code, 7)
+		}
+	  Else If (theta < region * 13 / 2)
+		{
+			character_code := New_Code(character_code, 8)
+		}
+	  Else If (theta < region * 15 / 2)
+		{
+			character_code := New_Code(character_code, 9)
+		}
 	}
   Else
   {
@@ -312,14 +690,14 @@ Loop
       {
         SendInput, {Backspace}
       }
-      Else If (character_code = 21)
+      Else If (character_code = 21 || character_code = 24)
       {
 				If (character_mode = 3)
         	character_mode := 1
 				Else
         	character_mode := 3
       }
-      Else If (character_code = 23)
+      Else If (character_code = 23 || character_code = 26)
       {
 				If (character_mode = 2)
         	character_mode := 1
@@ -330,11 +708,11 @@ Loop
       {
         SendInput, {Space}
       }
-      Else If (character_code = 87)
+      Else If (character_code = 87 || character_code = 84)
       {
         SendInput, {Enter}
       }
-      Else If (character_code = 89)
+      Else If (character_code = 89 || character_code = 86)
       {
 				If (character_mode = 4)
         	character_mode := 1
@@ -448,6 +826,10 @@ Loop
 				character22 := % all_characters%character_mode%%character_index%
 				character_index++
 				character23 := % all_characters%character_mode%%character_index%
+				character_index++
+				character24 := % all_characters%character_mode%%character_index%
+				character_index += 2
+				character26 := % all_characters%character_mode%%character_index%
 			}
 
 	    {
@@ -495,6 +877,10 @@ Loop
 			}
 
 	    {
+				character_index := 84
+				character84 := % all_characters%character_mode%%character_index%
+				character_index += 2
+				character86 := % all_characters%character_mode%%character_index%
 				character_index := 87
 				character87 := % all_characters%character_mode%%character_index%
 				character_index++
@@ -520,6 +906,7 @@ Loop
 	    {
 				character_index := 11
 				option1 := % all_characters%character_mode%%character_index%
+				character_index++
 				option2 := % all_characters%character_mode%%character_index%
 				character_index++
 				option3 := % all_characters%character_mode%%character_index%
@@ -536,6 +923,10 @@ Loop
 				option2 := % all_characters%character_mode%%character_index%
 				character_index++
 				option3 := % all_characters%character_mode%%character_index%
+				character_index++
+				option4 := % all_characters%character_mode%%character_index%
+				character_index += 2
+				option6 := % all_characters%character_mode%%character_index%
 			}
 			Else If (character_code < 40)
 	    {
@@ -583,6 +974,10 @@ Loop
 			}
 			Else If (character_code < 90)
 	    {
+				character_index := 84
+				option4 := % all_characters%character_mode%%character_index%
+				character_index += 2
+				option6 := % all_characters%character_mode%%character_index%
 				character_index := 87
 				option7 := % all_characters%character_mode%%character_index%
 				character_index++
@@ -657,7 +1052,7 @@ Loop
     }
   }
 
-	;ToolTip, %joy_name% (#%JoystickNumber%):`n%axis_info%`nButtons Down: %buttons_down%`n`n(right-click the tray icon to exit)`n(character_code: )%character_code%
-	Sleep, 100
+	;ToolTip, %joy_name% (#%JoystickNumber%):`n%axis_info%`nButtons Down: %buttons_down%`n`n(right-click the tray icon to exit)`ncharacter_code: %character_code%%A_Space%theta: %theta%%A_Space%loop_count: %loop_count%
+	Sleep, 25
 }
 return
