@@ -101,36 +101,35 @@ all_characters%ArrayIndex4%%ArrayIndex% := " %"
 ;
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_5_characters =  %A_Space%            ,,,,,,,,,
-mode_5_characters =  %mode_5_characters%^s,^s,^o,^n,^t,,,^w,,,
+mode_5_characters =  %mode_5_characters%^s,^s,Hm,Ed,PU,,,PD,,,
 mode_5_characters =  %mode_5_characters%BS,Sy,BS,UC,Sy,,UC,,Fn,,
 mode_5_characters =  %mode_5_characters%VM,V+,V-,VM,,,#x,,,F4,
 mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,^h,,,
 mode_5_characters =  %mode_5_characters%,,,,,,,,,,
 mode_5_characters =  %mode_5_characters%!c,,,!z,,,!c,,,!x,
-; mode_5_characters =  %mode_5_characters%Sr,PW,,,PT,,,Sr,NT,NW,
-mode_5_characters =  %mode_5_characters%Sr,<W,,,<T,,,Sr,T>,W>,
+mode_5_characters =  %mode_5_characters%Sr,Z-,,,Z+,,,Sr,CT,CW,
 mode_5_characters =  %mode_5_characters%Sp,,,,En,,No,En,Sp,No,
 mode_5_characters =  %mode_5_characters%12,,,F6,,,F5,11,TM,12,
 StringSplit, all_characters%ArrayIndex5%, mode_5_characters, `,
 ;mode_5_characters_long = %mode_5_characters%
 StringReplace, mode_5_characters_long, mode_5_characters, F3 , {F3} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, F4 , {F4} , All
+StringReplace, mode_5_characters_long, mode_5_characters_long, F4 , !{F4} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, F5 , {F5} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, F6 , {F6} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, 11 , {F11} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, 12 , {F12} , All
+StringReplace, mode_5_characters_long, mode_5_characters_long, Hm , {Home} , All
+StringReplace, mode_5_characters_long, mode_5_characters_long, Ed , {End} , All
+StringReplace, mode_5_characters_long, mode_5_characters_long, PU , {PgUp} , All
+StringReplace, mode_5_characters_long, mode_5_characters_long, PD , {PgDn} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, VM , {Volume_Mute} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, V+ , {Volume_Up} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, V- , {Volume_Down} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, Sr , !{Space} , All
-; StringReplace, mode_5_characters_long, mode_5_characters_long, PW , {Alt DownTemp}+{Tab} , All
-; StringReplace, mode_5_characters_long, mode_5_characters_long, NW , {Alt DownTemp}{Tab} , All
-; StringReplace, mode_5_characters_long, mode_5_characters_long, PT , {Control DownTemp}+{Tab} , All
-; StringReplace, mode_5_characters_long, mode_5_characters_long, NT , {Control DownTemp}{Tab} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, <W , {Alt DownTemp}+{Tab} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, W> , {Alt DownTemp}{Tab} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, <T , {Control DownTemp}+{Tab} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, T> , {Control DownTemp}{Tab} , All
+StringReplace, mode_5_characters_long, mode_5_characters_long, CW , {Alt DownTemp}{Tab} , All
+StringReplace, mode_5_characters_long, mode_5_characters_long, CT , {Control DownTemp}{Tab} , All
+StringReplace, mode_5_characters_long, mode_5_characters_long, Z+ , ^{=} , All
+StringReplace, mode_5_characters_long, mode_5_characters_long, Z- , ^{-} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, TM , ^+{Escape} , All
 StringSplit, all_characters_long%ArrayIndex5%, mode_5_characters_long, `,
 
