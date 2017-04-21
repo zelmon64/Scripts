@@ -1,6 +1,8 @@
 ; Quikwriting modeled input with a joystick
 ;	v0.07
 ;
+JoystickNumber = 0
+;
 ;   █▲►▼◄●
 ;   ─│┌┐└┘├┤┬┴┼
 ;
@@ -17,6 +19,7 @@
 ;   4 w       │         │       r 6
 ;     o  g  z │ ▼  ►  ● │ b  d  i
 ;   0    8  9   7  0  9   7  8    0
+;
 ;                                       0 1 2 3 4 5 6 7 8 9
 /*
 mode_1_characters =                        , , , , , , , , ,
@@ -123,8 +126,8 @@ StringReplace, mode_5_characters_long, mode_5_characters_long, Ed , {End} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, PU , {PgUp} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, PD , {PgDn} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, VM , {Volume_Mute} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, V+ , {Volume_Up} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, V- , {Volume_Down} , All
+StringReplace, mode_5_characters_long, mode_5_characters_long, V+ , {Volume_Up 5} , All
+StringReplace, mode_5_characters_long, mode_5_characters_long, V- , {Volume_Down 5} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, Sr , !{Space} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, CW , {Alt DownTemp}{Tab} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, CT , {Control DownTemp}{Tab} , All
@@ -140,7 +143,7 @@ StringSplit, all_characters_long%ArrayIndex5%, mode_5_characters_long, `,
 ; If you want to unconditionally use a specific joystick number, change
 ; the following value from 0 to the number of the joystick (1-16).
 ; A value of 0 causes the joystick number to be auto-detected:
-JoystickNumber = 2
+;JoystickNumber = 0
 
 ; END OF CONFIG SECTION. Do not make changes below this point unless
 ; you wish to alter the basic functionality of the script.
