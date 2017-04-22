@@ -1,5 +1,5 @@
 ; Quikwriting modeled input with a joystick
-;	v0.07
+;	v0.08
 ;
 JoystickNumber = 0
 ;
@@ -68,13 +68,13 @@ StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
 ;
 ;                                       0 1 2 3 4 5 6 7 8 9
 mode_3_characters =    %A_Space%            ,,,,,,,,,
-mode_3_characters =  %mode_3_characters% /, /, \, |, @,,, @,,,
+mode_3_characters =  %mode_3_characters% *, *, {, }, @,,,In,,,
 mode_3_characters =  %mode_3_characters%BS,Sy,BS,UC,Sy,,UC,,Fn,,
 mode_3_characters =  %mode_3_characters% C, (, ), C,,, [,,, ],
 mode_3_characters =  %mode_3_characters%%A_Space%;,%A_Space%#,,,%A_Space%;,,,%A_Space%:,,,
 mode_3_characters =  %mode_3_characters%,,,,,,,,,,
 mode_3_characters =  %mode_3_characters% ',,, ",,, ',,, &,
-mode_3_characters =  %mode_3_characters% *, ^,,,Tb,,, *, {, },
+mode_3_characters =  %mode_3_characters% |,Tb,,, ^,,, |, /, \,
 mode_3_characters =  %mode_3_characters%Sp,,,,En,,No,En,Sp,No,
 mode_3_characters =  %mode_3_characters% .,,, !,,, ?, _, -, .,
 StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
@@ -110,7 +110,7 @@ mode_5_characters =  %mode_5_characters%VM,V+,V-,VM,,,#x,,,F4,
 mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,^h,,,
 mode_5_characters =  %mode_5_characters%,,,,,,,,,,
 mode_5_characters =  %mode_5_characters%!c,,,!z,,,!c,,,!x,
-mode_5_characters =  %mode_5_characters%Sr,Z-,,,Z+,,,Sr,CT,CW,
+mode_5_characters =  %mode_5_characters%Sr,PS,,,Z+,,,Sr,CT,CW,
 mode_5_characters =  %mode_5_characters%Sp,,,,En,,No,En,Sp,No,
 mode_5_characters =  %mode_5_characters%12,,,F6,,,F5,11,TM,12,
 StringSplit, all_characters%ArrayIndex5%, mode_5_characters, `,
@@ -125,6 +125,7 @@ StringReplace, mode_5_characters_long, mode_5_characters_long, Hm , {Home} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, Ed , {End} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, PU , {PgUp} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, PD , {PgDn} , All
+StringReplace, mode_5_characters_long, mode_5_characters_long, PS , !{PrintScreen} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, VM , {Volume_Mute} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, V+ , {Volume_Up 5} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, V- , {Volume_Down 5} , All
@@ -267,110 +268,126 @@ Loop
 		}
 		Else If (button_click_pre = 9)
 			button_click_pre := -1
-
-		loop_count_skip := 2
-		If (joyp = 0)
-		{
-			If (button_click_pre <> 0)
-			{
-				button_click_pre := 0
-				SendInput, {Up}
-				loop_count := 1
-			}
-			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-			{
-				SendInput, {Up}
-			}
-			loop_count++
-		}
-		Else If (joyp = 9000)
-		{
-			If (button_click_pre <> 9000)
-			{
-				button_click_pre := 9000
-				SendInput, {Right}
-				loop_count := 1
-			}
-			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-			{
-				SendInput, {Right}
-			}
-			loop_count++
-		}
-		Else If (joyp = 18000)
-		{
-			If (button_click_pre <> 18000)
-			{
-				button_click_pre := 18000
-				SendInput, {Down}
-				loop_count := 1
-			}
-			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-			{
-				SendInput, {Down}
-			}
-			loop_count++
-		}
-		Else If (joyp = 27000)
-		{
-			If (button_click_pre <> 27000)
-			{
-				button_click_pre := 27000
-				SendInput, {Left}
-				loop_count := 1
-			}
-			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-			{
-				SendInput, {Left}
-			}
-			loop_count++
-		}
-		Else If (joy5 = "D")
-		{
-			If (button_click_pre <> 5)
-			{
-				button_click_pre := 5
-				SendInput, {Control down}
-			}
-		}
-		Else If (joyz > 55)
-		{
-			If (button_click_pre <> 2)
-			{
-				button_click_pre := 2
-				SendInput, {Shift down}
-			}
-		}
-		Else If (joy1 = "D")
-		{
-			If (button_click_pre <> 1)
-			{
-				button_click_pre := 1
-				SendInput, {LWin down}
-			}
-		}
-		Else If (joy2 = "D")
-		{
-			If (button_click_pre <> 3)
-			{
-				button_click_pre := 3
-				SendInput, {Escape down}
-			}
-		}
 		Else
 		{
-			If (button_click_pre <> -1 && button_click_pre <> 9)
+
+			loop_count_skip := 2
+			If (joyp = 0)
+			{
+				If (button_click_pre <> 0)
 				{
-					If (button_click_pre = 5)
-						SendInput, {Control up}
-					Else If (button_click_pre = 2)
-						SendInput, {Shift up}
-					Else If (button_click_pre = 1)
-						SendInput, {LWin up}
-					Else If (button_click_pre = 3)
-						SendInput, {Escape up}
-					button_click_pre := -1
+					button_click_pre := 0
+					SendInput, {Up}
+					loop_count := 1
 				}
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, {Up}
+				}
+				loop_count++
+			}
+			Else If (joyp = 9000)
+			{
+				If (button_click_pre <> 9000)
+				{
+					button_click_pre := 9000
+					SendInput, {Right}
+					loop_count := 1
+				}
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, {Right}
+				}
+				loop_count++
+			}
+			Else If (joyp = 18000)
+			{
+				If (button_click_pre <> 18000)
+				{
+					button_click_pre := 18000
+					SendInput, {Down}
+					loop_count := 1
+				}
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, {Down}
+				}
+				loop_count++
+			}
+			Else If (joyp = 27000)
+			{
+				If (button_click_pre <> 27000)
+				{
+					button_click_pre := 27000
+					SendInput, {Left}
+					loop_count := 1
+				}
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, {Left}
+				}
+				loop_count++
+			}
+			;Else
+			If (joy5 = "D")
+			{
+				If (button_click_pre <> 5)
+				{
+					button_click_pre := 5
+					SendInput, {Control down}
+				}
+			}
+			;Else
+			If (joyz > 55)
+			{
+				If (button_click_pre <> 2)
+				{
+					button_click_pre := 2
+					SendInput, {Shift down}
+				}
+			}
+			;Else
+			If (joy1 = "D")
+			{
+				If (button_click_pre <> 1)
+				{
+					button_click_pre := 1
+					SendInput, {LWin down}
+				}
+			}
+			;Else
+			If (joy2 = "D")
+			{
+				If (button_click_pre <> 3)
+				{
+					button_click_pre := 3
+					SendInput, {Escape down}
+				}
+			}
+			;Else
+			{
+				If (joyp = -1 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
+					{
+						/*
+						If (button_click_pre = 5)
+							SendInput, {Control up}
+						Else If (button_click_pre = 2)
+							SendInput, {Shift up}
+						Else If (button_click_pre = 1)
+							SendInput, {LWin up}
+						Else If (button_click_pre = 3)
+							SendInput, {Escape up}
+						*/
+						If (button_click_pre > 0 && button_click_pre < 9)
+						{
+							SendInput, {Control up}
+							SendInput, {Shift up}
+							SendInput, {LWin up}
+							SendInput, {Escape up}
+						}
+						button_click_pre := -1
+					}
+			}
 		}
 	}
 	Else
@@ -381,79 +398,131 @@ Loop
 			{
 				button_click_pre := 9
 				stick_mode := 1
-
 			}
 		}
 		Else If (button_click_pre = 9)
 			button_click_pre := -1
-
-		loop_count_skip := 1
-		If (joyp = 0)
-		{
-			If (button_click_pre <> 0)
-			{
-				button_click_pre := 0
-				SendInput, {WheelUp}
-				loop_count := 1
-			}
-			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-			{
-				SendInput, {WheelUp}
-			}
-			loop_count++
-		}
-		Else If (joyp = 9000)
-		{
-			If (button_click_pre <> 9000)
-			{
-				button_click_pre := 9000
-				SendInput, +{WheelDown}
-				;SendInput, {WheelRight}
-				loop_count := 1
-			}
-			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-			{
-				SendInput, +{WheelDown}
-				;SendInput, {WheelRight}
-			}
-			loop_count++
-		}
-		Else If (joyp = 18000)
-		{
-			If (button_click_pre <> 18000)
-			{
-				button_click_pre := 18000
-				SendInput, {WheelDown}
-				loop_count := 1
-			}
-			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-			{
-				SendInput, {WheelDown}
-			}
-			loop_count++
-		}
-		Else If (joyp = 27000)
-		{
-			If (button_click_pre <> 27000)
-			{
-				button_click_pre := 27000
-				SendInput, +{WheelUp}
-				;SendInput, {WheelLeft}
-				loop_count := 1
-			}
-			Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-			{
-				SendInput, +{WheelUp}
-				;SendInput, {WheelLeft}
-			}
-			loop_count++
-		}
 		Else
 		{
-			If (button_click_pre <> -1 && button_click_pre <> 9)
+			loop_count_skip := 1
+			If (joyp = 0)
+			{
+				If (button_click_pre <> 0)
 				{
-					button_click_pre := -1
+					button_click_pre := 0
+					SendInput, {WheelUp}
+					loop_count := 1
 				}
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, {WheelUp}
+				}
+				loop_count++
+			}
+			Else If (joyp = 9000)
+			{
+				If (button_click_pre <> 9000)
+				{
+					button_click_pre := 9000
+					SendInput, +{WheelDown}
+					;SendInput, {WheelRight}
+					loop_count := 1
+				}
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, +{WheelDown}
+					;SendInput, {WheelRight}
+				}
+				loop_count++
+			}
+			Else If (joyp = 18000)
+			{
+				If (button_click_pre <> 18000)
+				{
+					button_click_pre := 18000
+					SendInput, {WheelDown}
+					loop_count := 1
+				}
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, {WheelDown}
+				}
+				loop_count++
+			}
+			Else If (joyp = 27000)
+			{
+				If (button_click_pre <> 27000)
+				{
+					button_click_pre := 27000
+					SendInput, +{WheelUp}
+					;SendInput, {WheelLeft}
+					loop_count := 1
+				}
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, +{WheelUp}
+					;SendInput, {WheelLeft}
+				}
+				loop_count++
+			}
+
+			If (joyz > 55)
+			{
+				If (mouse_click_pre <> 1)
+				{
+					mouse_click_pre := 1
+					MouseClick, Left,,, 1, 0, D  ; Hold down the left mouse button.
+				}
+			}
+			;Else
+			If (joy5 = "D")
+			{
+				If (mouse_click_pre <> 2)
+				{
+					mouse_click_pre := 2
+					MouseClick, Right,,, 1, 0, D
+				}
+			}
+			;Else
+			If (joy2 = "D")
+			{
+				If (mouse_click_pre <> 3)
+				{
+					mouse_click_pre := 3
+					MouseClick, Middle,,, 1, 0, D
+				}
+			}
+			;Else
+			If (joy1 = "D")
+			{
+				If (mouse_click_pre <> 4)
+				{
+					mouse_click_pre := 4
+					MouseClick, X1,,, 1, 0, D
+				}
+			}
+			;Else
+			{
+				If (joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && mouse_click_pre <> -1)
+				{
+					If (mouse_click_pre = 1)
+						MouseClick, Left,,, 1, 0, U  ; Release the mouse button.
+					Else If (mouse_click_pre = 2)
+						MouseClick, Right,,, 1, 0, U  ; Release the mouse button.
+					Else If (mouse_click_pre = 3)
+						MouseClick, Middle,,, 1, 0, U  ; Release the mouse button.
+					Else If (mouse_click_pre = 4)
+						MouseClick, X1,,, 1, 0, U  ; Release the mouse button.
+					mouse_click_pre := -1
+				}
+			}
+			;Else
+			{
+				If (joyp = -1 && button_click_pre <> -1 && button_click_pre <> 9)
+					{
+						button_click_pre := -1
+					}
+			}
 		}
 	}
 
@@ -505,6 +574,7 @@ Loop
 			SetMouseDelay, -1  ; Makes movement smoother.
 			MouseMove, joyx * abs(joyx) * ms, joyy * abs(joyy) * ms, 0, R
 		}
+		/*
 		If (joyz > 55)
 		{
 			If (mouse_click_pre <> 1)
@@ -552,6 +622,7 @@ Loop
 				mouse_click_pre := -1
 			}
 		}
+		*/
 	}
 	Else If (joyx*joyx + joyy*joyy > dz*dz)
 	{
@@ -648,6 +719,12 @@ Loop
 				If (character_mode > 20)
         	character_mode := 1
       }
+      Else If (all_characters%ch_mode%%character_code% = "In")
+      {
+				SendInput, {Insert}
+				If (character_mode > 20)
+        	character_mode := 1
+      }
       Else
       {
 				If (all_characters%ch_mode%%character_code% <> "")
@@ -658,6 +735,7 @@ Loop
 					}
 		      Else
 		      {
+						Progress, Off
 						SendInput, % all_characters_long%ch_mode%%character_code%
 					}
 					If (character_mode > 20)
