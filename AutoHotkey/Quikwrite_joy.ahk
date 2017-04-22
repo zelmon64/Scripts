@@ -1,5 +1,5 @@
 ; Quikwriting modeled input with a joystick
-;	v0.08
+;	v0.09
 ;
 JoystickNumber = 0
 ;
@@ -736,6 +736,7 @@ Loop
 		      Else
 		      {
 						Progress, Off
+				    Progress, 2:Off
 						SendInput, % all_characters_long%ch_mode%%character_code%
 					}
 					If (character_mode > 20)
@@ -745,6 +746,7 @@ Loop
 
 	    character_code = 0
 	    Progress, Off
+	    Progress, 2:Off
     }
   }
 
@@ -775,6 +777,7 @@ Loop
     character_code_pre := character_code
 
     {
+			; Space
 			{
 		    character11 := A_Space
 		    character12 := A_Space
@@ -1032,7 +1035,29 @@ Loop
 				mode_title = %mode_title% Latch
 			}
 
-      Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
+			DetectHiddenWindows, on
+			bar_TransValue := 200
+			IfWinNotExist, HUDbackground
+			{
+				Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
+	      ,  %A_Space%|---------+---------+---------|`n
+	                  |%character11% %character12% %character13% |%character21% %character22% %character23% |%character31% %character32% %character33% |`n
+	                  |%character14%       |   %character28%    |      %character36% |`n
+	                  |%character17%    %option1% |   %option2%    |%option3%    %character39% |`n
+	                  |---------+---------+---------|`n
+	                  |%character41%       |         |      %character63% |`n
+	                  |%character44%    %option4% |         |%option6%    %character66% |`n
+	                  |%character47%       |         |      %character69% |`n
+	                  |---------+---------+---------|`n
+	                  |%character71%    %option7% |   %option8%    |%option9%    %character93% |`n
+	                  |%character74%       |         |      %character96% |`n
+	                  |%character77% %character78% %character79% |%character87% %character88% %character89% |%character97% %character98% %character99% |`n
+	                  |---------+---------+---------|
+	        , % mode_title, HUDbackground, Courier New
+				;WinSet, Transparent, %bar_TransValue%, BrightnessOSDxyz
+			}
+			/*
+			Progress, 2:b zh0 fm32 fs28 w800 ctRed cwBlack
       ,  %A_Space%|---------+---------+---------|`n
                   |%character11% %character12% %character13% |%character21% %character22% %character23% |%character31% %character32% %character33% |`n
                   |%character14%       |   %character28%    |      %character36% |`n
@@ -1046,7 +1071,12 @@ Loop
                   |%character74%       |         |      %character96% |`n
                   |%character77% %character78% %character79% |%character87% %character88% %character89% |%character97% %character98% %character99% |`n
                   |---------+---------+---------|
-        , % mode_title,, Courier New
+        , % mode_title, , Courier New
+			*/
+			Progress, 2:b zh0 fm32 fs28 w800 ctRed cwBlack
+      , `n`n`n`n`n`n%A_Space%|         |   %character%    |         |`n`n`n`n`n`n
+        , % mode_title, HUDforeground, Courier New
+			WinSet, TransColor, On, HUDforeground
     }
   }
 
