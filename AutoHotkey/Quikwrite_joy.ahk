@@ -1,5 +1,5 @@
 ; Quikwriting modeled input with a joystick
-;	v0.09
+;	v0.10
 ;
 JoystickNumber = 0
 ;
@@ -114,7 +114,7 @@ mode_5_characters =  %mode_5_characters%Sr,PS,,,Z+,,,Sr,CT,CW,
 mode_5_characters =  %mode_5_characters%Sp,,,,En,,No,En,Sp,No,
 mode_5_characters =  %mode_5_characters%12,,,F6,,,F5,11,TM,12,
 StringSplit, all_characters%ArrayIndex5%, mode_5_characters, `,
-;mode_5_characters_long = %mode_5_characters%
+
 StringReplace, mode_5_characters_long, mode_5_characters, F3 , {F3} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, F4 , !{F4} , All
 StringReplace, mode_5_characters_long, mode_5_characters_long, F5 , {F5} , All
@@ -368,16 +368,6 @@ Loop
 			{
 				If (joyp = -1 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
 					{
-						/*
-						If (button_click_pre = 5)
-							SendInput, {Control up}
-						Else If (button_click_pre = 2)
-							SendInput, {Shift up}
-						Else If (button_click_pre = 1)
-							SendInput, {LWin up}
-						Else If (button_click_pre = 3)
-							SendInput, {Escape up}
-						*/
 						If (button_click_pre > 0 && button_click_pre < 9)
 						{
 							SendInput, {Control up}
@@ -527,14 +517,17 @@ Loop
 	}
 
   tol = 25
-	dz = 25
+	dz = 15
 	joyx -= 50
 	joyy -= 50
 	theta := 0
 	pi := 4 * atan(1)
 	region := 45 * pi / 180
+	radius2 := joyx*joyx + joyy*joyy
+	radius := sqrt(radius2)
+	tol := 20 * pi / 180 * exp((dz - radius) * 3 / (50 - dz))
 
-	If (joyx*joyx + joyy*joyy > dz*dz)
+	If (radius2 > dz*dz)
 	{
 		theta := atan( abs(joyy / joyx) )
 		If (joyy > 0)
@@ -554,11 +547,6 @@ Loop
 			{
 				theta := pi - theta
 			}
-			Else
-			{
-				;theta := pi + theta
-				;theta := 2 * pi - theta
-			}
 		}
 	}
 
@@ -569,92 +557,43 @@ Loop
 		mdz := 5
 		ms := 10
 		ms := 0.03
-		If (joyx*joyx + joyy*joyy > mdz*mdz)
+		If (radius2 > mdz*mdz)
 		{
 			SetMouseDelay, -1  ; Makes movement smoother.
 			MouseMove, joyx * abs(joyx) * ms, joyy * abs(joyy) * ms, 0, R
 		}
-		/*
-		If (joyz > 55)
-		{
-			If (mouse_click_pre <> 1)
-			{
-				mouse_click_pre := 1
-				MouseClick, Left,,, 1, 0, D  ; Hold down the left mouse button.
-			}
-		}
-		Else If (joy5 = "D")
-		{
-			If (mouse_click_pre <> 2)
-			{
-				mouse_click_pre := 2
-				MouseClick, Right,,, 1, 0, D
-			}
-		}
-		Else If (joy2 = "D")
-		{
-			If (mouse_click_pre <> 3)
-			{
-				mouse_click_pre := 3
-				MouseClick, Middle,,, 1, 0, D
-			}
-		}
-		Else If (joy1 = "D")
-		{
-			If (mouse_click_pre <> 4)
-			{
-				mouse_click_pre := 4
-				MouseClick, X1,,, 1, 0, D
-			}
-		}
-		Else
-		{
-			If (mouse_click_pre <> -1)
-			{
-				If (mouse_click_pre = 1)
-					MouseClick, Left,,, 1, 0, U  ; Release the mouse button.
-				Else If (mouse_click_pre = 2)
-					MouseClick, Right,,, 1, 0, U  ; Release the mouse button.
-				Else If (mouse_click_pre = 3)
-					MouseClick, Middle,,, 1, 0, U  ; Release the mouse button.
-				Else If (mouse_click_pre = 4)
-					MouseClick, X1,,, 1, 0, U  ; Release the mouse button.
-				mouse_click_pre := -1
-			}
-		}
-		*/
 	}
-	Else If (joyx*joyx + joyy*joyy > dz*dz)
+	Else If (radius2 > dz*dz)
 	{
-		If (theta < region / 2 || theta > 2 * pi - region / 2)
+		If (theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol)
 		{
 			character_code := New_Code(character_code, 6)
 		}
-	  Else If (theta < region * 3 / 2)
+	  Else If (theta < region * 3 / 2 - tol && theta > region / 2 + tol)
 		{
 			character_code := New_Code(character_code, 3)
 		}
-	  Else If (theta < region * 5 / 2)
+	  Else If (theta < region * 5 / 2 - tol && theta > region * 3 / 2 + tol)
 		{
 			character_code := New_Code(character_code, 2)
 		}
-	  Else If (theta < region * 7 / 2)
+	  Else If (theta < region * 7 / 2 - tol && theta > region * 5 / 2 + tol)
 		{
 			character_code := New_Code(character_code, 1)
 		}
-	  Else If (theta < region * 9 / 2)
+	  Else If (theta < region * 9 / 2 - tol && theta > region * 7 / 2 + tol)
 		{
 			character_code := New_Code(character_code, 4)
 		}
-	  Else If (theta < region * 11 / 2)
+	  Else If (theta < region * 11 / 2 - tol && theta > region * 9 / 2 + tol)
 		{
 			character_code := New_Code(character_code, 7)
 		}
-	  Else If (theta < region * 13 / 2)
+	  Else If (theta < region * 13 / 2 - tol && theta > region * 11 / 2 + tol)
 		{
 			character_code := New_Code(character_code, 8)
 		}
-	  Else If (theta < region * 15 / 2)
+	  Else If (theta < region * 15 / 2 - tol && theta > region * 13 / 2 + tol)
 		{
 			character_code := New_Code(character_code, 9)
 		}
@@ -1036,7 +975,7 @@ Loop
 			}
 
 			DetectHiddenWindows, on
-			bar_TransValue := 200
+			bar_TransValue := 180
 			IfWinNotExist, HUDbackground
 			{
 				Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
@@ -1054,7 +993,8 @@ Loop
 	                  |%character77% %character78% %character79% |%character87% %character88% %character89% |%character97% %character98% %character99% |`n
 	                  |---------+---------+---------|
 	        , % mode_title, HUDbackground, Courier New
-				;WinSet, Transparent, %bar_TransValue%, BrightnessOSDxyz
+				WinSet, Transparent, %bar_TransValue%, HUDbackground
+				;WinSet, TransColor, Black %bar_TransValue%, HUDbackground
 			}
 			/*
 			Progress, 2:b zh0 fm32 fs28 w800 ctRed cwBlack
@@ -1074,9 +1014,10 @@ Loop
         , % mode_title, , Courier New
 			*/
 			Progress, 2:b zh0 fm32 fs28 w800 ctRed cwBlack
-      , `n`n`n`n`n`n%A_Space%|         |   %character%    |         |`n`n`n`n`n`n
-        , % mode_title, HUDforeground, Courier New
+      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+        , %A_Space%, HUDforeground, Courier New
 			WinSet, TransColor, On, HUDforeground
+			; , `n`n`n`n`n`n%A_Space%|         |   %character%    |         |`n`n`n`n`n`n
     }
   }
 
