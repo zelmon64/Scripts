@@ -256,14 +256,63 @@ Loop
 
 	tdz := 60
 
-	If (stick_mode = 1)
+	If (stick_mode = 3)
 	{
 		If (joy9 = "D")
 		{
 			If (button_click_pre <> 9)
 			{
 				button_click_pre := 9
-				stick_mode := 2
+				stick_mode := 1
+				SendInput, !{Space}
+			}
+		}
+		Else If (button_click_pre = 9)
+			button_click_pre := -1
+		Else
+		{
+			If (joyp = 18000)
+			{
+				If (button_click_pre <> 95)
+				{
+					button_click_pre := 95
+				}
+			}
+			Else If (joyz > 95)
+			{
+				If (button_click_pre = 95)
+				{
+					button_click_pre := 2
+				}
+			}
+			Else If (joyz > 55)
+			{
+				If (button_click_pre <> 2 && button_click_pre <> 95)
+				{
+					button_click_pre := 2
+					SetKeyDelay, 300
+					Send {Blind}{F12 DownTemp}
+					Send {Blind}{F12 Up}
+					SetKeyDelay, -1
+				}
+			}
+			Else If (button_click_pre <> -1 && button_click_pre <> 9 && button_click_pre <> 95)
+				{
+					button_click_pre := -1
+				}
+		}
+	}
+	Else If (stick_mode = 1)
+	{
+		If (joy9 = "D")
+		{
+			If (button_click_pre <> 9)
+			{
+				If (joyp = 000)
+					stick_mode := 3
+				Else
+					stick_mode := 2
+				button_click_pre := 9
 			}
 		}
 		Else If (button_click_pre = 9)
@@ -386,8 +435,11 @@ Loop
 		{
 			If (button_click_pre <> 9)
 			{
+				If (joyp = 000)
+					stick_mode := 3
+				Else
+					stick_mode := 1
 				button_click_pre := 9
-				stick_mode := 1
 			}
 		}
 		Else If (button_click_pre = 9)
@@ -563,7 +615,7 @@ Loop
 			MouseMove, joyx * abs(joyx) * ms, joyy * abs(joyy) * ms, 0, R
 		}
 	}
-	Else If (radius2 > dz*dz)
+	Else If (stick_mode = 1 && radius2 > dz*dz)
 	{
 		If (theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol)
 		{
