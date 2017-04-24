@@ -1,5 +1,5 @@
 ; Quikwriting modeled input with a joystick
-;	v0.10
+;	v0.11
 ;
 JoystickNumber = 0
 ;
@@ -175,6 +175,9 @@ mouse_click_pre := 0
 loop_count := 0
 loop_count_repeat := 10
 loop_count_skip := 3
+HUD_loop_count := 0
+HUD_loop_count_repeat := 10
+HUD_loop_count_skip := 3
 this_code = 0
 stick_mode := 1
 character_mode = 1
@@ -617,37 +620,402 @@ Loop
 	}
 	Else If (stick_mode = 1 && radius2 > dz*dz)
 	{
-		If (theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol)
+		character_code_pre := character_code
 		{
-			character_code := New_Code(character_code, 6)
+			If (theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol)
+			{
+				character_code := New_Code(character_code, 6)
+			}
+		  Else If (theta < region * 3 / 2 - tol && theta > region / 2 + tol)
+			{
+				character_code := New_Code(character_code, 3)
+			}
+		  Else If (theta < region * 5 / 2 - tol && theta > region * 3 / 2 + tol)
+			{
+				character_code := New_Code(character_code, 2)
+			}
+		  Else If (theta < region * 7 / 2 - tol && theta > region * 5 / 2 + tol)
+			{
+				character_code := New_Code(character_code, 1)
+			}
+		  Else If (theta < region * 9 / 2 - tol && theta > region * 7 / 2 + tol)
+			{
+				character_code := New_Code(character_code, 4)
+			}
+		  Else If (theta < region * 11 / 2 - tol && theta > region * 9 / 2 + tol)
+			{
+				character_code := New_Code(character_code, 7)
+			}
+		  Else If (theta < region * 13 / 2 - tol && theta > region * 11 / 2 + tol)
+			{
+				character_code := New_Code(character_code, 8)
+			}
+		  Else If (theta < region * 15 / 2 - tol && theta > region * 13 / 2 + tol)
+			{
+				character_code := New_Code(character_code, 9)
+			}
 		}
-	  Else If (theta < region * 3 / 2 - tol && theta > region / 2 + tol)
+
 		{
-			character_code := New_Code(character_code, 3)
-		}
-	  Else If (theta < region * 5 / 2 - tol && theta > region * 3 / 2 + tol)
-		{
-			character_code := New_Code(character_code, 2)
-		}
-	  Else If (theta < region * 7 / 2 - tol && theta > region * 5 / 2 + tol)
-		{
-			character_code := New_Code(character_code, 1)
-		}
-	  Else If (theta < region * 9 / 2 - tol && theta > region * 7 / 2 + tol)
-		{
-			character_code := New_Code(character_code, 4)
-		}
-	  Else If (theta < region * 11 / 2 - tol && theta > region * 9 / 2 + tol)
-		{
-			character_code := New_Code(character_code, 7)
-		}
-	  Else If (theta < region * 13 / 2 - tol && theta > region * 11 / 2 + tol)
-		{
-			character_code := New_Code(character_code, 8)
-		}
-	  Else If (theta < region * 15 / 2 - tol && theta > region * 13 / 2 + tol)
-		{
-			character_code := New_Code(character_code, 9)
+		  If (character_code > 9)
+		  {
+			  If (character_code_pre = 0)
+			  {
+					; Space
+					{
+				    character11 := A_Space
+				    character12 := A_Space
+				    character13 := A_Space
+				    character14 := A_Space
+				    character17 := A_Space
+				    character21 := A_Space
+				    character22 := A_Space
+				    character23 := A_Space
+				    character28 := A_Space
+				    character31 := A_Space
+				    character32 := A_Space
+				    character33 := A_Space
+				    character36 := A_Space
+				    character39 := A_Space
+				    character41 := A_Space
+				    character44 := A_Space
+				    character47 := A_Space
+				    character63 := A_Space
+				    character66 := A_Space
+				    character69 := A_Space
+				    character71 := A_Space
+				    character74 := A_Space
+				    character77 := A_Space
+				    character78 := A_Space
+				    character79 := A_Space
+				    character87 := A_Space
+				    character88 := A_Space
+				    character89 := A_Space
+				    character93 := A_Space
+				    character96 := A_Space
+				    character97 := A_Space
+				    character98 := A_Space
+				    character99 := A_Space
+						option1 := "  "
+						option2 := "  "
+						option3 := "  "
+						option4 := "  "
+						option6 := "  "
+						option7 := "  "
+						option8 := "  "
+						option9 := "  "
+					}
+
+					; Outer Ring
+					{
+			    	{
+							character_index := 11
+							character11 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character12 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character13 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character14 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							character17 = % all_characters%ch_mode%%character_index%
+						}
+
+				    {
+							character_index := 21
+							character21 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character22 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character23 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character24 := % all_characters%ch_mode%%character_index%
+							character_index += 2
+							character26 := % all_characters%ch_mode%%character_index%
+							character_index += 2
+							character28 := % all_characters%ch_mode%%character_index%
+						}
+
+				    {
+							character_index := 31
+							character31 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character32 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character33 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							character36 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							character39 := % all_characters%ch_mode%%character_index%
+						}
+
+				    {
+							character_index := 41
+							character41 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							character44 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							character47 := % all_characters%ch_mode%%character_index%
+						}
+
+				    {
+							character_index := 63
+							character63 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							character66 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							character69 := % all_characters%ch_mode%%character_index%
+						}
+
+				    {
+							character_index := 71
+							character71 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							character74 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							character77 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character78 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character79 := % all_characters%ch_mode%%character_index%
+						}
+
+				    {
+							character_index := 84
+							character84 := % all_characters%ch_mode%%character_index%
+							character_index += 2
+							character86 := % all_characters%ch_mode%%character_index%
+							character_index := 87
+							character87 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character88 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character89 := % all_characters%ch_mode%%character_index%
+						}
+
+				    {
+							character_index := 93
+							character93 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							character96 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character97 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character98 := % all_characters%ch_mode%%character_index%
+							character_index++
+							character99 := % all_characters%ch_mode%%character_index%
+						}
+					}
+
+					; Inner Ring
+					{
+						If (character_code < 20)
+				    {
+							character_index := 11
+							option1 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option2 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option3 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option4 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							option7 = % all_characters%ch_mode%%character_index%
+						}
+						Else If (character_code < 30)
+				    {
+							character_index := 21
+							option1 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option2 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option3 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option4 := % all_characters%ch_mode%%character_index%
+							character_index += 2
+							option6 := % all_characters%ch_mode%%character_index%
+							character_index += 2
+							option8 := % all_characters%ch_mode%%character_index%
+						}
+						Else If (character_code < 40)
+				    {
+							character_index := 31
+							option1 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option2 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option3 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							option6 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							option9 := % all_characters%ch_mode%%character_index%
+						}
+						Else If (character_code < 60)
+				    {
+							character_index := 41
+							option1 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							option4 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							option7 := % all_characters%ch_mode%%character_index%
+						}
+						Else If (character_code < 70)
+				    {
+							character_index := 63
+							option3 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							option6 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							option9 := % all_characters%ch_mode%%character_index%
+						}
+						Else If (character_code < 80)
+				    {
+							character_index := 71
+							option1 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							option4 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							option7 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option8 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option9 := % all_characters%ch_mode%%character_index%
+						}
+						Else If (character_code < 90)
+				    {
+							character_index := 84
+							option4 := % all_characters%ch_mode%%character_index%
+							character_index += 2
+							option6 := % all_characters%ch_mode%%character_index%
+							character_index := 87
+							option7 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option8 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option9 := % all_characters%ch_mode%%character_index%
+						}
+						Else
+				    {
+							character_index := 93
+							option3 := % all_characters%ch_mode%%character_index%
+							character_index += 3
+							option6 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option7 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option8 := % all_characters%ch_mode%%character_index%
+							character_index++
+							option9 := % all_characters%ch_mode%%character_index%
+						}
+					}
+			  }
+
+				character := % all_characters%ch_mode%%character_code%
+				If (character = "")
+					character := "  "
+
+				mode_title := % character_mode_list%ch_mode%
+				If (character_mode > 20)
+				{
+					mode_title = %mode_title% Latch
+				}
+
+				SubText = %A_Space%|---------+---------+---------|`n
+										|%character11% %character12% %character13% |%character21% %character22% %character23% |%character31% %character32% %character33% |`n
+										|%character14%       |   %character28%    |      %character36% |`n
+										|%character17%    %option1% |   %option2%    |%option3%    %character39% |`n
+										|---------+---------+---------|`n
+										|%character41%       |         |      %character63% |`n
+										|%character44%    %option4% |         |%option6%    %character66% |`n
+										|%character47%       |         |      %character69% |`n
+										|---------+---------+---------|`n
+										|%character71%    %option7% |   %option8%    |%option9%    %character93% |`n
+										|%character74%       |         |      %character96% |`n
+										|%character77% %character78% %character79% |%character87% %character88% %character89% |%character97% %character98% %character99% |`n
+										|---------+---------+---------|
+
+				HUD_loop_count++
+
+				DetectHiddenWindows, on
+				bar_TransValue_steps := 15
+				bar_TransValue := 255 / bar_TransValue_steps
+				HUD_loop_count_skip := 10
+
+				If (mod(HUD_loop_count, HUD_loop_count_skip) = 0)
+				{
+					bar_TransValue_step := HUD_loop_count / HUD_loop_count_skip
+					If (bar_TransValue_step < bar_TransValue_steps + 1)
+					{
+						bar_TransValue_current := bar_TransValue * bar_TransValue_step
+						If (mod(bar_TransValue_step, 3) = 1)
+						{
+							IfWinNotExist, HUDbackground1
+							{
+								;Progress, 1:OFF
+								Progress, 1:b zh0 fm32 fs28 w800 ctRed cwBlack
+					      , %A_Space%%SubText% , % mode_title, HUDbackground1, Courier New
+								WinSet, Transparent, % bar_TransValue_current, HUDbackground1
+								Progress, 9:b zh0 fm32 fs28 w800 ctRed cwBlack
+					      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+					        , %A_Space%, HUDforeground2, Courier New
+								WinSet, TransColor, 000000, HUDforeground2
+							}
+							;Progress, 2:OFF
+							;Progress, 8:OFF
+							Progress, 3:OFF
+							Progress, 7:OFF
+						}
+						Else If (mod(bar_TransValue_step, 3) = 2)
+						{
+							IfWinNotExist, HUDbackground3
+							{
+								;Progress, 1:OFF
+								Progress, 3:b zh0 fm32 fs28 w800 ctRed cwBlack
+					      , %A_Space%%SubText% , % mode_title, HUDbackground3, Courier New
+								WinSet, Transparent, % bar_TransValue_current, HUDbackground3
+								Progress, 7:b zh0 fm32 fs28 w800 ctRed cwBlack
+					      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+					        , %A_Space%, HUDforeground3, Courier New
+								WinSet, TransColor, 000000, HUDforeground3
+							}
+							;Progress, 1:OFF
+							;Progress, 9:OFF
+							Progress, 2:OFF
+							Progress, 8:OFF
+						}
+						Else
+						{
+							IfWinNotExist, HUDbackground2
+							{
+								;Progress, 2:OFF
+								Progress, 2:b zh0 fm32 fs28 w800 ctRed cwBlack
+					      , %A_Space%%SubText% , % mode_title, HUDbackground2, Courier New
+								WinSet, Transparent, % bar_TransValue_current, HUDbackground2
+								Progress, 8:b zh0 fm32 fs28 w800 ctRed cwBlack
+					      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+					        , %A_Space%, HUDforeground3, Courier New
+								WinSet, TransColor, 000000, HUDforeground3
+							}
+							Progress, 1:OFF
+							Progress, 9:OFF
+							;Progress, 3:OFF
+							;Progress, 7:OFF
+						}
+					}
+				}
+
+				If (character_code <> character_code_pre)
+				{
+					Progress, 7:OFF
+					Progress, 8:OFF
+					Progress, 9:OFF
+					Progress, 10:b zh0 fm32 fs28 w800 ctRed cwBlack
+		      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+		        , %A_Space%, HUDforeground, Courier New
+					;WinSet, TransColor, On, HUDforeground
+					WinSet, TransColor, 000000, HUDforeground
+				}
+		  }
 		}
 	}
   Else
@@ -726,8 +1094,16 @@ Loop
 					}
 		      Else
 		      {
-						Progress, Off
+						Progress, 1:Off
 				    Progress, 2:Off
+						Progress, 3:Off
+						Progress, 4:Off
+						Progress, 5:Off
+						Progress, 6:Off
+						Progress, 7:Off
+						Progress, 8:Off
+						Progress, 9:Off
+						Progress, 10:Off
 						SendInput, % all_characters_long%ch_mode%%character_code%
 					}
 					If (character_mode > 20)
@@ -736,343 +1112,19 @@ Loop
 			}
 
 	    character_code = 0
-	    Progress, Off
+			HUD_loop_count = 0
+	    Progress, 1:Off
 	    Progress, 2:Off
+			Progress, 3:Off
+			Progress, 4:Off
+			Progress, 5:Off
+			Progress, 6:Off
+			Progress, 7:Off
+			Progress, 8:Off
+			Progress, 9:Off
+			Progress, 10:Off
     }
   }
-
-  /*
-  Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
-  ,  %A_Space%|---------+---------+---------|`n
-              | a  s  k | S  L  U | p  f  m |`n
-              | m       |         |       l |`n
-              | q       |         |       x |`n
-              |---------+---------+---------|`n
-              | h       |         |       u |`n
-              | e       |         |       t |`n
-              | c       |         |       y |`n
-              |---------+---------+---------|`n
-              | v       |         |       j |`n
-              | w       |         |       r |`n
-              | o  g  z | D  R  C | b  d  i |`n
-              |---------+---------+---------|
-    ,,, Courier New
-  */
-
-  If (character_code < 10 || character_code = character_code_pre)
-  {
-    character_code_pre := character_code
-  }
-  Else
-  {
-    character_code_pre := character_code
-
-    {
-			; Space
-			{
-		    character11 := A_Space
-		    character12 := A_Space
-		    character13 := A_Space
-		    character14 := A_Space
-		    character17 := A_Space
-		    character21 := A_Space
-		    character22 := A_Space
-		    character23 := A_Space
-		    character28 := A_Space
-		    character31 := A_Space
-		    character32 := A_Space
-		    character33 := A_Space
-		    character36 := A_Space
-		    character39 := A_Space
-		    character41 := A_Space
-		    character44 := A_Space
-		    character47 := A_Space
-		    character63 := A_Space
-		    character66 := A_Space
-		    character69 := A_Space
-		    character71 := A_Space
-		    character74 := A_Space
-		    character77 := A_Space
-		    character78 := A_Space
-		    character79 := A_Space
-		    character87 := A_Space
-		    character88 := A_Space
-		    character89 := A_Space
-		    character93 := A_Space
-		    character96 := A_Space
-		    character97 := A_Space
-		    character98 := A_Space
-		    character99 := A_Space
-				option1 := "  "
-				option2 := "  "
-				option3 := "  "
-				option4 := "  "
-				option6 := "  "
-				option7 := "  "
-				option8 := "  "
-				option9 := "  "
-			}
-
-			character := % all_characters%ch_mode%%character_code%
-			If (character = "")
-	    	character := "  "
-
-			; Outer Ring
-			{
-	    	{
-					character_index := 11
-					character11 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character12 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character13 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character14 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					character17 = % all_characters%ch_mode%%character_index%
-				}
-
-		    {
-					character_index := 21
-					character21 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character22 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character23 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character24 := % all_characters%ch_mode%%character_index%
-					character_index += 2
-					character26 := % all_characters%ch_mode%%character_index%
-					character_index += 2
-					character28 := % all_characters%ch_mode%%character_index%
-				}
-
-		    {
-					character_index := 31
-					character31 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character32 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character33 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					character36 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					character39 := % all_characters%ch_mode%%character_index%
-				}
-
-		    {
-					character_index := 41
-					character41 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					character44 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					character47 := % all_characters%ch_mode%%character_index%
-				}
-
-		    {
-					character_index := 63
-					character63 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					character66 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					character69 := % all_characters%ch_mode%%character_index%
-				}
-
-		    {
-					character_index := 71
-					character71 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					character74 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					character77 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character78 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character79 := % all_characters%ch_mode%%character_index%
-				}
-
-		    {
-					character_index := 84
-					character84 := % all_characters%ch_mode%%character_index%
-					character_index += 2
-					character86 := % all_characters%ch_mode%%character_index%
-					character_index := 87
-					character87 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character88 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character89 := % all_characters%ch_mode%%character_index%
-				}
-
-		    {
-					character_index := 93
-					character93 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					character96 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character97 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character98 := % all_characters%ch_mode%%character_index%
-					character_index++
-					character99 := % all_characters%ch_mode%%character_index%
-				}
-			}
-
-			; Inner Ring
-			{
-				If (character_code < 20)
-		    {
-					character_index := 11
-					option1 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option2 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option3 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option4 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					option7 = % all_characters%ch_mode%%character_index%
-				}
-				Else If (character_code < 30)
-		    {
-					character_index := 21
-					option1 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option2 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option3 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option4 := % all_characters%ch_mode%%character_index%
-					character_index += 2
-					option6 := % all_characters%ch_mode%%character_index%
-					character_index += 2
-					option8 := % all_characters%ch_mode%%character_index%
-				}
-				Else If (character_code < 40)
-		    {
-					character_index := 31
-					option1 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option2 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option3 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					option6 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					option9 := % all_characters%ch_mode%%character_index%
-				}
-				Else If (character_code < 60)
-		    {
-					character_index := 41
-					option1 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					option4 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					option7 := % all_characters%ch_mode%%character_index%
-				}
-				Else If (character_code < 70)
-		    {
-					character_index := 63
-					option3 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					option6 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					option9 := % all_characters%ch_mode%%character_index%
-				}
-				Else If (character_code < 80)
-		    {
-					character_index := 71
-					option1 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					option4 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					option7 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option8 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option9 := % all_characters%ch_mode%%character_index%
-				}
-				Else If (character_code < 90)
-		    {
-					character_index := 84
-					option4 := % all_characters%ch_mode%%character_index%
-					character_index += 2
-					option6 := % all_characters%ch_mode%%character_index%
-					character_index := 87
-					option7 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option8 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option9 := % all_characters%ch_mode%%character_index%
-				}
-				Else
-		    {
-					character_index := 93
-					option3 := % all_characters%ch_mode%%character_index%
-					character_index += 3
-					option6 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option7 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option8 := % all_characters%ch_mode%%character_index%
-					character_index++
-					option9 := % all_characters%ch_mode%%character_index%
-				}
-			}
-
-			mode_title := % character_mode_list%ch_mode%
-			If (character_mode > 20)
-			{
-				mode_title = %mode_title% Latch
-			}
-
-			DetectHiddenWindows, on
-			bar_TransValue := 180
-			IfWinNotExist, HUDbackground
-			{
-				Progress, b zh0 fm32 fs28 w800 ctRed cwBlack
-	      ,  %A_Space%|---------+---------+---------|`n
-	                  |%character11% %character12% %character13% |%character21% %character22% %character23% |%character31% %character32% %character33% |`n
-	                  |%character14%       |   %character28%    |      %character36% |`n
-	                  |%character17%    %option1% |   %option2%    |%option3%    %character39% |`n
-	                  |---------+---------+---------|`n
-	                  |%character41%       |         |      %character63% |`n
-	                  |%character44%    %option4% |         |%option6%    %character66% |`n
-	                  |%character47%       |         |      %character69% |`n
-	                  |---------+---------+---------|`n
-	                  |%character71%    %option7% |   %option8%    |%option9%    %character93% |`n
-	                  |%character74%       |         |      %character96% |`n
-	                  |%character77% %character78% %character79% |%character87% %character88% %character89% |%character97% %character98% %character99% |`n
-	                  |---------+---------+---------|
-	        , % mode_title, HUDbackground, Courier New
-				WinSet, Transparent, %bar_TransValue%, HUDbackground
-				;WinSet, TransColor, Black %bar_TransValue%, HUDbackground
-			}
-			/*
-			Progress, 2:b zh0 fm32 fs28 w800 ctRed cwBlack
-      ,  %A_Space%|---------+---------+---------|`n
-                  |%character11% %character12% %character13% |%character21% %character22% %character23% |%character31% %character32% %character33% |`n
-                  |%character14%       |   %character28%    |      %character36% |`n
-                  |%character17%    %option1% |   %option2%    |%option3%    %character39% |`n
-                  |---------+---------+---------|`n
-                  |%character41%       |         |      %character63% |`n
-                  |%character44%    %option4% |   %character%    |%option6%    %character66% |`n
-                  |%character47%       |         |      %character69% |`n
-                  |---------+---------+---------|`n
-                  |%character71%    %option7% |   %option8%    |%option9%    %character93% |`n
-                  |%character74%       |         |      %character96% |`n
-                  |%character77% %character78% %character79% |%character87% %character88% %character89% |%character97% %character98% %character99% |`n
-                  |---------+---------+---------|
-        , % mode_title, , Courier New
-			*/
-			Progress, 2:b zh0 fm32 fs28 w800 ctRed cwBlack
-      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
-        , %A_Space%, HUDforeground, Courier New
-			WinSet, TransColor, On, HUDforeground
-			; , `n`n`n`n`n`n%A_Space%|         |   %character%    |         |`n`n`n`n`n`n
-    }
-  }
-
 	;ToolTip, %joy_name% (#%JoystickNumber%):`n%axis_info%`nButtons Down: %buttons_down%`n`n(right-click the tray icon to exit)`ncharacter_code: %character_code%%A_Space%theta: %theta%%A_Space%loop_count: %loop_count%
 	Sleep, 25
 }
