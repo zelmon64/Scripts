@@ -20,19 +20,7 @@ JoystickNumber = 2
 ;     o  g  z │ ▼  ►  ● │ b  d  i
 ;   0    8  9   7  0  9   7  8    0
 ;
-;                                       0 1 2 3 4 5 6 7 8 9
-/*
-mode_1_characters =                        , , , , , , , , ,
-mode_1_characters =  %mode_1_characters%a, ,s,k,m, , ,q, , ,
-mode_1_characters =  %mode_1_characters%L,S,U, , , , , , , ,
-mode_1_characters =  %mode_1_characters%n,p,f, , , ,l, , ,x,
-mode_1_characters =  %mode_1_characters%e,h, , , , , ,c, , ,
-mode_1_characters =  %mode_1_characters% , , , , , , , , , ,
-mode_1_characters =  %mode_1_characters%t, , ,u, , , , , ,y,
-mode_1_characters =  %mode_1_characters%o,v, , ,w, , , ,g,z,
-mode_1_characters =  %mode_1_characters%R, , , , , , ,D, ,C,
-mode_1_characters =  %mode_1_characters%i, , ,j, , ,r,b,d, ,
-*/
+;
 all_characters := Object()
 all_characters_long := Object()
 ArrayIndex1 := 1
@@ -40,7 +28,7 @@ ArrayIndex2 := 2
 ArrayIndex3 := 3
 ArrayIndex4 := 4
 ArrayIndex5 := 5
-;                                       0 1 2 3 4 5 6 7 8 9
+
 mode_1_characters =  %A_Space%              ,,,,,,,,,
 mode_1_characters =  %mode_1_characters% a, a, s, k, m,,, q,,,
 mode_1_characters =  %mode_1_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
@@ -49,11 +37,10 @@ mode_1_characters =  %mode_1_characters% e, h,,, e,,, c,,,
 mode_1_characters =  %mode_1_characters%,,,,,,,,,,
 mode_1_characters =  %mode_1_characters% t,,, u,,, t,,, y,
 mode_1_characters =  %mode_1_characters% o, v,,, w,,, o, g, z,
-mode_1_characters =  %mode_1_characters%Sp,,,No,En,,,En,Sp,No,
+mode_1_characters =  %mode_1_characters%Sp,,Fn,No,En,,,En,Sp,No,
 mode_1_characters =  %mode_1_characters% i,,, j,,, r, b, d, i,
 StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
-;
-;                                       0 1 2 3 4 5 6 7 8 9
+
 mode_2_characters =   %A_Space%             ,,,,,,,,,
 mode_2_characters =  %mode_2_characters% A, A, S, K, M,,, Q,,,
 mode_2_characters =  %mode_2_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
@@ -62,11 +49,10 @@ mode_2_characters =  %mode_2_characters% E, H,,, E,,, C,,,
 mode_2_characters =  %mode_2_characters%,,,,,,,,,,
 mode_2_characters =  %mode_2_characters% T,,, U,,, T,,, Y,
 mode_2_characters =  %mode_2_characters% O, V,,, W,,, O, G, Z,
-mode_2_characters =  %mode_2_characters%Sp,,,No,En,,,En,Sp,No,
+mode_2_characters =  %mode_2_characters%Sp,,Fn,No,En,,,En,Sp,No,
 mode_2_characters =  %mode_2_characters% I,,, J,,, R, B, D, I,
 StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
-;
-;                                       0 1 2 3 4 5 6 7 8 9
+
 mode_3_characters =    %A_Space%            ,,,,,,,,,
 mode_3_characters =  %mode_3_characters% *, *, {, }, @,,,In,,,
 mode_3_characters =  %mode_3_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
@@ -75,15 +61,14 @@ mode_3_characters =  %mode_3_characters%%A_Space%;,%A_Space%#,,,%A_Space%;,,,%A_
 mode_3_characters =  %mode_3_characters%,,,,,,,,,,
 mode_3_characters =  %mode_3_characters% ',,, ",,, ',,, &,
 mode_3_characters =  %mode_3_characters% |,Tb,,, ^,,, |, /, \,
-mode_3_characters =  %mode_3_characters%Sp,,,No,En,,,En,Sp,No,
+mode_3_characters =  %mode_3_characters%Sp,,Fn,No,En,,,En,Sp,No,
 mode_3_characters =  %mode_3_characters% .,,, !,,, ?, _, -, .,
 StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
 ArrayIndex := 30
 all_characters%ArrayIndex3%%ArrayIndex% := " ,"
 ArrayIndex := 33
 all_characters%ArrayIndex3%%ArrayIndex% := " ,"
-;
-;                                       0 1 2 3 4 5 6 7 8 9
+
 mode_4_characters =  %A_Space%            ,,,,,,,,,
 mode_4_characters =  %mode_4_characters% 0, 0, <, >, 1,,, 2,,,
 mode_4_characters =  %mode_4_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
@@ -92,7 +77,7 @@ mode_4_characters =  %mode_4_characters% 3, #,,, 3,,, 4,,,
 mode_4_characters =  %mode_4_characters%,,,,,,,,,,
 mode_4_characters =  %mode_4_characters% =,,, +,,, =,,, -,
 mode_4_characters =  %mode_4_characters% 5, /,,, *,,, 5, 6, 7,
-mode_4_characters =  %mode_4_characters%Sp,,,No,En,,,En,Sp,No,
+mode_4_characters =  %mode_4_characters%Sp,,Fn,No,En,,,En,Sp,No,
 mode_4_characters =  %mode_4_characters% .,,, 9,,, 8, $, P, .,
 StringSplit, all_characters%ArrayIndex4%, mode_4_characters, `,
 ArrayIndex := 30
@@ -101,8 +86,7 @@ ArrayIndex := 33
 all_characters%ArrayIndex4%%ArrayIndex% := " ,"
 ArrayIndex := 98
 all_characters%ArrayIndex4%%ArrayIndex% := " %"
-;
-;                                       0 1 2 3 4 5 6 7 8 9
+
 mode_5_characters =  %A_Space%            ,,,,,,,,,
 mode_5_characters =  %mode_5_characters%^s,^s,Hm,Ed,PU,,,PD,,,
 mode_5_characters =  %mode_5_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
@@ -111,7 +95,7 @@ mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,^h,,,
 mode_5_characters =  %mode_5_characters%,,,,,,,,,,
 mode_5_characters =  %mode_5_characters%!c,,,!z,,,!c,,,!x,
 mode_5_characters =  %mode_5_characters%Sr,PS,,,Z+,,,Sr,CT,CW,
-mode_5_characters =  %mode_5_characters%Sp,,,No,En,,,En,Sp,No,
+mode_5_characters =  %mode_5_characters%Sp,,Fn,No,En,,,En,Sp,No,
 mode_5_characters =  %mode_5_characters%12,,,F6,,,F5,11,TM,12,
 StringSplit, all_characters%ArrayIndex5%, mode_5_characters, `,
 
@@ -139,7 +123,6 @@ StringSplit, all_characters_long%ArrayIndex5%, mode_5_characters_long, `,
 
 ;
 ;
-
 ; From "Joystick Test Script"
 ; If you want to unconditionally use a specific joystick number, change
 ; the following value from 0 to the number of the joystick (1-16).
@@ -187,35 +170,26 @@ StringSplit, character_mode_list, character_mode_lists, `,
 
 New_Code(character_code, this_code)
 {
-  ;this_code = 1
   If (character_code = 0)
   {
     Return this_code * 10
-    ;character_code := this_code * 10
   }
   Else If (character_code = this_code * 10)
   {
-    ; character_code = 10
 	  Return character_code
   }
   Else If (Mod(character_code, 10) = 0)
   {
     Return character_code + this_code
-    ;character_code += this_code
   }
   Else If (Mod(character_code, 10) <> this_code)
   {
-    ;character_code := (character_code // 10) * 10 + this_code
     Return (character_code // 10) * 10 + this_code
   }
   Return character_code
 }
 scroll(direction)
 {
-	;SetTitleMatchMode, 2
-	;ControlGetFocus, fcontrol, Visual Studio
-	;Loop 5
-	;SendMessage, 0x114, %direction%, 0, %fcontrol%, Visual Studio
 	ControlGetFocus, fcontrol, A
 	SendMessage, 0x114, %direction%, 0, %fcontrol%, A
 }
@@ -389,7 +363,6 @@ Loop
 				}
 				loop_count++
 			}
-			;Else
 			If (joy5 = "D")
 			{
 				If (button_click_pre <> 5)
@@ -398,7 +371,6 @@ Loop
 					SendInput, {Control down}
 				}
 			}
-			;Else
 			If (joyz > 55)
 			{
 				If (button_click_pre <> 2)
@@ -407,7 +379,6 @@ Loop
 					SendInput, {Shift down}
 				}
 			}
-			;Else
 			If (joy1 = "D")
 			{
 				If (button_click_pre <> 1)
@@ -416,7 +387,6 @@ Loop
 					SendInput, {LWin down}
 				}
 			}
-			;Else
 			If (joy2 = "D")
 			{
 				If (button_click_pre <> 3)
@@ -425,7 +395,6 @@ Loop
 					SendInput, {Escape down}
 				}
 			}
-			;Else
 			{
 				If (joyp = -1 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
 					{
@@ -478,16 +447,12 @@ Loop
 				If (button_click_pre <> 9000)
 				{
 					button_click_pre := 9000
-					;SendInput, +{WheelDown}
 					scroll(1)
-					;SendInput, {WheelRight}
 					loop_count := 1
 				}
 				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					scroll(1)
-					;SendInput, +{WheelDown}
-					;SendInput, {WheelRight}
 				}
 				loop_count++
 			}
@@ -511,19 +476,14 @@ Loop
 				{
 					button_click_pre := 27000
 					scroll(0)
-					;SendInput, +{WheelUp}
-					;SendInput, {WheelLeft}
 					loop_count := 1
 				}
 				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					scroll(0)
-					;SendInput, +{WheelUp}
-					;SendInput, {WheelLeft}
 				}
 				loop_count++
 			}
-
 			If (joyz > 55)
 			{
 				If (mouse_click_pre <> 1)
@@ -532,7 +492,6 @@ Loop
 					MouseClick, Left,,, 1, 0, D  ; Hold down the left mouse button.
 				}
 			}
-			;Else
 			If (joy5 = "D")
 			{
 				If (mouse_click_pre <> 2)
@@ -541,7 +500,6 @@ Loop
 					MouseClick, Right,,, 1, 0, D
 				}
 			}
-			;Else
 			If (joy2 = "D")
 			{
 				If (mouse_click_pre <> 3)
@@ -550,7 +508,6 @@ Loop
 					MouseClick, Middle,,, 1, 0, D
 				}
 			}
-			;Else
 			If (joy1 = "D")
 			{
 				If (mouse_click_pre <> 4)
@@ -559,7 +516,6 @@ Loop
 					MouseClick, X1,,, 1, 0, D
 				}
 			}
-			;Else
 			{
 				If (joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && mouse_click_pre <> -1)
 				{
@@ -574,7 +530,6 @@ Loop
 					mouse_click_pre := -1
 				}
 			}
-			;Else
 			{
 				If (joyp = -1 && button_click_pre <> -1 && button_click_pre <> 9)
 					{
@@ -676,42 +631,6 @@ Loop
 			  {
 					; Space
 					{
-				    character11 := A_Space
-				    character12 := A_Space
-				    character13 := A_Space
-				    character14 := A_Space
-				    character17 := A_Space
-				    character21 := A_Space
-				    character22 := A_Space
-				    character23 := A_Space
-				    character27 := A_Space
-				    character28 := A_Space
-				    character29 := A_Space
-				    character31 := A_Space
-				    character32 := A_Space
-				    character33 := A_Space
-				    character36 := A_Space
-				    character39 := A_Space
-				    character41 := A_Space
-				    character44 := A_Space
-				    character47 := A_Space
-				    character63 := A_Space
-				    character66 := A_Space
-				    character69 := A_Space
-				    character71 := A_Space
-				    character74 := A_Space
-				    character77 := A_Space
-				    character78 := A_Space
-				    character79 := A_Space
-				    character83 := A_Space
-				    character87 := A_Space
-				    character88 := A_Space
-				    character89 := A_Space
-				    character93 := A_Space
-				    character96 := A_Space
-				    character97 := A_Space
-				    character98 := A_Space
-				    character99 := A_Space
 						option1 := "  "
 						option2 := "  "
 						option3 := "  "
@@ -744,11 +663,7 @@ Loop
 							character22 := % all_characters%ch_mode%%character_index%
 							character_index++
 							character23 := % all_characters%ch_mode%%character_index%
-							;character_index++
-							;character24 := % all_characters%ch_mode%%character_index%
 							character_index += 4
-							;character26 := % all_characters%ch_mode%%character_index%
-							;character_index++
 							character27 := % all_characters%ch_mode%%character_index%
 							character_index++
 							character28 := % all_characters%ch_mode%%character_index%
@@ -805,8 +720,8 @@ Loop
 							character84 := % all_characters%ch_mode%%character_index%
 							character_index--
 							character83 := % all_characters%ch_mode%%character_index%
-							;character_index += 2
-							;character86 := % all_characters%ch_mode%%character_index%
+							character_index--
+							character82 := % all_characters%ch_mode%%character_index%
 							character_index := 87
 							character87 := % all_characters%ch_mode%%character_index%
 							character_index++
@@ -852,11 +767,7 @@ Loop
 							option2 := % all_characters%ch_mode%%character_index%
 							character_index++
 							option3 := % all_characters%ch_mode%%character_index%
-							;character_index++
-							;option4 := % all_characters%ch_mode%%character_index%
 							character_index += 4
-							;option6 := % all_characters%ch_mode%%character_index%
-							;character_index++
 							option7 := % all_characters%ch_mode%%character_index%
 							character_index++
 							option8 := % all_characters%ch_mode%%character_index%
@@ -913,8 +824,8 @@ Loop
 							option4 := % all_characters%ch_mode%%character_index%
 							character_index--
 							option3 := % all_characters%ch_mode%%character_index%
-							;character_index += 2
-							;option6 := % all_characters%ch_mode%%character_index%
+							character_index--
+							option2 := % all_characters%ch_mode%%character_index%
 							character_index := 87
 							option7 := % all_characters%ch_mode%%character_index%
 							character_index++
@@ -958,89 +869,120 @@ Loop
 										|%character47%       |         |      %character69% |`n
 										|---------+---------+---------|`n
 										|%character71%    %option7% |   %option8%    |%option9%    %character93% |`n
-										|%character74%       |      %character83% |      %character96% |`n
+										|%character74%       |   %character82% %character83% |      %character96% |`n
 										|%character77% %character78% %character79% |%character87% %character88% %character89% |%character97% %character98% %character99% |`n
 										|---------+---------+---------|
 
 				HUD_loop_count++
 
 				DetectHiddenWindows, on
-				bar_TransValue_steps := 15
-				bar_TransValue := 255 / bar_TransValue_steps
-				HUD_loop_count_skip := 10
+				bar_TransValue_steps := 4
+				bar_TransValue := 150 / bar_TransValue_steps
+				HUD_loop_count_skip := 20
+				HUD_loop_count_delay := 30
 
-				If (mod(HUD_loop_count, HUD_loop_count_skip) = 0)
+				If (HUD_loop_count > 0 && mod(HUD_loop_count, HUD_loop_count_skip) = 0)
 				{
 					bar_TransValue_step := HUD_loop_count / HUD_loop_count_skip
 					If (bar_TransValue_step < bar_TransValue_steps + 1)
 					{
 						bar_TransValue_current := bar_TransValue * bar_TransValue_step
-						If (mod(bar_TransValue_step, 3) = 1)
+						If (mod(bar_TransValue_step, 4) = 1)
 						{
-							IfWinNotExist, HUDbackground1
+							;IfWinNotExist, HUDbackground1
 							{
-								;Progress, 1:OFF
 								Progress, 1:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      , %A_Space%%SubText% , % mode_title, HUDbackground1, Courier New
+					      	, %A_Space%%SubText% , % mode_title, HUDbackground1, Courier New
 								WinSet, Transparent, % bar_TransValue_current, HUDbackground1
+								Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
+					      	, `n`n`n`n`n`n`n`n`n`n`n`n
+					        , % mode_title, HUDforeground5, Courier New
+								WinSet, Transparent, 100, HUDforeground5
+								WinSet, TransColor, 000000, HUDforeground5
 								Progress, 9:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
 					        , %A_Space%, HUDforeground2, Courier New
 								WinSet, TransColor, 000000, HUDforeground2
 							}
-							;Progress, 2:OFF
-							;Progress, 8:OFF
-							Progress, 3:OFF
-							Progress, 7:OFF
+							;Progress, 1:Show
+							;Progress, 3:OFF
+							;Progress, 7:OFF
 						}
-						Else If (mod(bar_TransValue_step, 3) = 2)
+						Else If (mod(bar_TransValue_step, 4) = 2)
 						{
-							IfWinNotExist, HUDbackground3
+							;IfWinNotExist, HUDbackground3
 							{
-								;Progress, 1:OFF
 								Progress, 3:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      , %A_Space%%SubText% , % mode_title, HUDbackground3, Courier New
+					      	, %A_Space%%SubText% , % mode_title, HUDbackground3, Courier New
 								WinSet, Transparent, % bar_TransValue_current, HUDbackground3
+								Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
+					      	, `n`n`n`n`n`n`n`n`n`n`n`n
+					        , % mode_title, HUDforeground5, Courier New
+								WinSet, Transparent, 100, HUDforeground5
+								WinSet, TransColor, 000000, HUDforeground5
 								Progress, 7:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
 					        , %A_Space%, HUDforeground3, Courier New
 								WinSet, TransColor, 000000, HUDforeground3
 							}
-							;Progress, 1:OFF
-							;Progress, 9:OFF
-							Progress, 2:OFF
-							Progress, 8:OFF
+							;Progress, 3:Show
+							;Progress, 4:OFF
+							;Progress, 6:OFF
+						}
+						Else If (mod(bar_TransValue_step, 4) = 3)
+						{
+							;IfWinNotExist, HUDbackground4
+							{
+								Progress, 4:b zh0 fm32 fs28 w800 ctRed cwBlack
+					      	, %A_Space%%SubText% , % mode_title, HUDbackground4, Courier New
+								WinSet, Transparent, % bar_TransValue_current, HUDbackground4
+								Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
+					      	, `n`n`n`n`n`n`n`n`n`n`n`n
+					        , % mode_title, HUDforeground5, Courier New
+								WinSet, Transparent, 100, HUDforeground5
+								WinSet, TransColor, 000000, HUDforeground5
+								Progress, 6:b zh0 fm32 fs28 w800 ctRed cwBlack
+					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+					        , %A_Space%, HUDforeground4, Courier New
+								WinSet, TransColor, 000000, HUDforeground4
+							}
+							;Progress, 4:Show
+							;Progress, 2:OFF
+							;Progress, 8:OFF
 						}
 						Else
 						{
-							IfWinNotExist, HUDbackground2
+							;IfWinNotExist, HUDbackground2
 							{
-								;Progress, 2:OFF
 								Progress, 2:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      , %A_Space%%SubText% , % mode_title, HUDbackground2, Courier New
+					      	, %A_Space%%SubText% , % mode_title, HUDbackground2, Courier New
 								WinSet, Transparent, % bar_TransValue_current, HUDbackground2
+								Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
+					      	, `n`n`n`n`n`n`n`n`n`n`n`n
+					        , % mode_title, HUDforeground5, Courier New
+								WinSet, Transparent, 100, HUDforeground5
+								WinSet, TransColor, 000000, HUDforeground5
 								Progress, 8:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
 					        , %A_Space%, HUDforeground3, Courier New
 								WinSet, TransColor, 000000, HUDforeground3
 							}
-							Progress, 1:OFF
-							Progress, 9:OFF
-							;Progress, 3:OFF
-							;Progress, 7:OFF
+							;Progress, 2:Show
+							;Progress, 1:OFF
+							;Progress, 9:OFF
 						}
 					}
 				}
 
 				If (character_code <> character_code_pre)
 				{
+					Progress, 6:OFF
 					Progress, 7:OFF
 					Progress, 8:OFF
 					Progress, 9:OFF
 					Progress, 10:b zh0 fm32 fs28 w800 ctRed cwBlack
 		      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
 		        , %A_Space%, HUDforeground, Courier New
-					;WinSet, TransColor, On, HUDforeground
 					WinSet, TransColor, 000000, HUDforeground
 				}
 		  }
@@ -1048,7 +990,7 @@ Loop
 	}
   Else
   {
-    ;If (character_code <> 0 && character_code // 10 <> Mod(character_code, 10))
+
     If (character_code <> 0)
     {
       ; SendInput, %character_code%
@@ -1121,6 +1063,13 @@ Loop
 				Else
         	character_mode := 4
       }
+      Else If (character_code = 82)
+      {
+				If (character_mode = 5)
+        	character_mode := 1
+				Else
+        	character_mode := 5
+      }
       Else If (all_characters%ch_mode%%character_code% = "Tb")
       {
 				SendInput, {Tab}
@@ -1162,6 +1111,7 @@ Loop
 
 	    character_code = 0
 			HUD_loop_count = 0
+			HUD_loop_count := -HUD_loop_count_delay
 	    Progress, 1:Off
 	    Progress, 2:Off
 			Progress, 3:Off
