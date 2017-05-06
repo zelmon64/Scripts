@@ -62,7 +62,7 @@ ConditionalSendInput(c1, c2, c3, c4)
 }
 
 
-Backspace::ConditionalSendInput("{Backspace}", "{Delete}", "{Delete}", "{Delete}")
+Backspace::ConditionalSendInput("{Backspace}", "{Backspace}", "{Delete}", "{Delete}")
 
 NumpadSub::
   If ( GetKeyState("Numlock", "T") )
@@ -109,11 +109,11 @@ Return
 NumpadEnter::
   If ( GetKeyState("Numlock", "T") )
   {
-    ConditionalSendInput("{Enter}", "{Enter}", "{Enter}", "{Enter}")
+    ConditionalSendInput("{Enter}", "{Enter}", "{Volume_Up}", "{Volume_Up}")
   }
   Else
   {
-    ConditionalSendInput("{Space}", "{Tab}", "{Tab}", "+{Tab}")
+    ConditionalSendInput("{Space}", "{Tab}", "{Tab}", "{Tab}")
   }
 Return
 Backspace & NumpadEnter::
@@ -195,17 +195,16 @@ Backspace & NumpadMult::
 Return
 
 Numpad9::ConditionalSendInput("{Raw}w", "{Raw}W", "{Raw}7", "{Raw}7")
-Backspace & Numpad9::ConditionalSendInput("{Raw}W", "{Raw}w", "{Raw}&", "{Raw}&")
+Backspace & Numpad9::ConditionalSendInput("{Raw}W", "{F10}", "{Raw}&", "{Raw}&")
 
 Numpad6::ConditionalSendInput("{Raw}e", "{Raw}E", "{Raw}8", "{Raw}8")
-Backspace & Numpad6::ConditionalSendInput("{Raw}E", "{Raw}e", "{Raw}*", "{Raw}*")
+Backspace & Numpad6::ConditionalSendInput("{Raw}E", "{F11}", "{Raw}*", "{Raw}*")
 
 Numpad3::ConditionalSendInput("{Raw}r", "{Raw}R", "{Raw}9", "{Raw}9")
-Backspace & Numpad3::ConditionalSendInput("{Raw}R", "{Raw}r", "{Raw}(", "{Raw}(")
+Backspace & Numpad3::ConditionalSendInput("{Raw}R", "{F12}", "{Volume_Mute}", "{Volume_Mute}")
 
 NumpadDot::ConditionalSendInput("{Raw}t", "{Raw}T", "{Raw}.", "{Raw}.")
 Backspace & NumpadDot::ConditionalSendInput("{Raw}T", "{Raw}t", "{Raw}~", "{Raw}~")
-
 NumpadDiv::
   If ( GetKeyState("Numlock", "T") )
   {
@@ -228,25 +227,25 @@ Backspace & NumpadDiv::
 Return
 
 Numpad8::ConditionalSendInput("{Raw}s", "{Raw}S", "{Raw}4", "{Raw}4")
-Backspace & Numpad8::ConditionalSendInput("{Raw}S", "{Raw}s", "{Raw}$", "{Raw}$")
+Backspace & Numpad8::ConditionalSendInput("{Raw}S", "{F7}", "{Raw}$", "{Raw}$")
 
 Numpad5::ConditionalSendInput("{Raw}d", "{Raw}D", "{Raw}5", "{Raw}5")
-Backspace & Numpad5::ConditionalSendInput("{Raw}D", "{Raw}d", "{Raw}%", "{Raw}%")
+Backspace & Numpad5::ConditionalSendInput("{Raw}D", "{F8}", "{Raw}%", "{Raw}%")
 
 Numpad2::ConditionalSendInput("{Raw}f", "{Raw}F", "{Raw}6", "{Raw}6")
-Backspace & Numpad2::ConditionalSendInput("{Raw}F", "{Raw}f", "{Raw}^", "{Raw}^")
+Backspace & Numpad2::ConditionalSendInput("{Raw}F", "{F9}", "{Raw}^", "{Raw}^")
 
 Numpad7::ConditionalSendInput("{Raw}z", "{Raw}Z", "{Raw}1", "{Raw}1")
-Backspace & Numpad7::ConditionalSendInput("{Raw}Z", "{Raw}z", "{Raw}!", "{Raw}!")
+Backspace & Numpad7::ConditionalSendInput("{Raw}Z", "{F4}", "{Raw}!", "{Raw}!")
 
 Numpad4::ConditionalSendInput("{Raw}x", "{Raw}x", "{Raw}2", "{Raw}2")
-Backspace & Numpad4::ConditionalSendInput("{Raw}X", "{Raw}x", "{Raw}`", "{Raw}`")
+Backspace & Numpad4::ConditionalSendInput("{Raw}X", "{F5}", "{Raw}`", "{Raw}`")
 
 Numpad1::ConditionalSendInput("{Raw}c", "{Raw}C", "{Raw}3", "{Raw}3")
-Backspace & Numpad1::ConditionalSendInput("{Raw}C", "{Raw}c", "{U+00A3}", "{U+00A3}")
+Backspace & Numpad1::ConditionalSendInput("{Raw}C", "{F6}", "{U+00A3}", "{U+00A3}")
 
 Numpad0::ConditionalSendInput("{Raw}v", "{Raw}V", "{Raw}0", "{Raw}0")
-Backspace & Numpad0::ConditionalSendInput("{Raw}V", "{Raw}v", "{Raw})", "{Raw})")
+Backspace & Numpad0::ConditionalSendInput("{Raw}V", "{Raw}v", "{Volume_Down}", "{Volume_Down}")
 
 
 NumpadEnd::Return ;ConditionalSendInput("{Raw}", "{Raw}", "{Raw}", "{Raw}")
@@ -256,9 +255,13 @@ NumpadLeft::Return ;ConditionalSendInput("{Raw}", "{Raw}", "{Raw}", "{Raw}")
 Backspace & NumpadLeft::SendInput, {Insert} ;Return ;ConditionalSendInput("{Raw}", "{Raw}", "{Raw}", "{Raw}")
 
 NumpadHome::Return ;ConditionalSendInput("{Raw}", "{Raw}", "{Raw}", "{Raw}")
-Backspace & NumpadHome::SendInput, {Control up}{Shift up}{Alt up} ;Return ;ConditionalSendInput("{Raw}", "{Raw}", "{Raw}", "{Raw}")
+Backspace & NumpadHome::
+  SendInput, {Control up}{Shift up}{Alt up}
+  SetCapslockState, off
+  SetScrollLockState, off
+Return ;ConditionalSendInput("{Raw}", "{Raw}", "{Raw}", "{Raw}")
 
-NumpadIns::ConditionalSendInput("{Raw}y", "{Raw}Y", "{Raw}", "{Raw}")
+NumpadIns::ConditionalSendInput("{Raw}y", "{Raw}Y", "{PrintScreen}", "{PrintScreen}")
 Backspace & NumpadIns::ConditionalSendInput("{Raw}Y", "{Raw}y", "{Raw}", "{Raw}")
 
 NumpadDown::ConditionalSendInput("{Raw}u", "{Raw}U", "{Raw}-", "{Raw}-")
