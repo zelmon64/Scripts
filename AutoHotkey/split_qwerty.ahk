@@ -291,6 +291,18 @@ ConditionalSendInputwithMouseButton(c1, mbuttoncur, mbuttonnew, c3, c4)
   Return % mbuttoncur
 }
 
+scroll(direction)
+{
+	ControlGetFocus, fcontrol, A
+	SendMessage, 0x114, %direction%, 0, %fcontrol%, A
+  Sleep, 100
+	;SoundBeep,2033,100
+  Return
+}
+
+WheelLeft::scroll(0)
+WheelRight::scroll(1)
+
 MouseButton := Left
 
 Backspace::ConditionalSendInput("{Backspace}", "{Backspace}", "{Delete}", "{Delete}")
@@ -497,10 +509,14 @@ Backspace & NumpadHome::
   SendInput, {Control up}{Shift up}{Alt up}
   SetCapslockState, off
   SetScrollLockState, off
+  Reload
+  Sleep 1000 ; If successful, the reload will close this instance during the Sleep, so the line below will never be reached.
+  MsgBox, 4,, The script could not be reloaded. Would you like to open it for editing?
+  IfMsgBox, Yes, Edit
 Return ;ConditionalSendInput("{Raw}", "{Raw}", "{Raw}", "{Raw}")
 
 NumpadIns::ConditionalSendInput("{Raw}y", "{Raw}Y", "{PrintScreen}", "{PrintScreen}")
-Backspace & NumpadIns::ConditionalSendInputwithMouseClick("{Raw}Y", MouseButton, "D", "{Raw}", "{Raw}")
+Backspace & NumpadIns::ConditionalSendInputwithMouseClick("{Raw}Y", MouseButton, "D", "{Backspace}", "{Backspace}")
 
 NumpadDown::ConditionalSendInput("{Raw}u", "{Raw}U", "{Raw}-", "{Raw}-")
 Backspace & NumpadDown::MouseButton:=ConditionalSendInputwithMouseButton("{Raw}U", MouseButton, "Middle", "{Raw}_", "{Raw}_")
