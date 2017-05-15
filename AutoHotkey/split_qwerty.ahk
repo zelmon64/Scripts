@@ -295,7 +295,7 @@ scroll(direction)
 {
 	ControlGetFocus, fcontrol, A
 	SendMessage, 0x114, %direction%, 0, %fcontrol%, A
-  Sleep, 100
+  Sleep, 25
 	;SoundBeep,2033,100
   Return
 }
@@ -357,11 +357,11 @@ Backspace & Tab::ConditionalSendInputwithMouseMove("{Raw}B", -1, 1, "{Raw}<", "{
 NumpadEnter::
   If ( GetKeyState("Numlock", "T") )
   {
-    ConditionalSendInput("{Enter}", "{Enter}", "{Volume_Up}", "{Volume_Up}")
+    ConditionalSendInput("{Enter}", "{AppsKey}", "{Volume_Up}", "{Volume_Up}")
   }
   Else
   {
-    ConditionalSendInput("{Space}", "{Tab}", "{Tab}", "{Tab}")
+    ConditionalSendInput("{Space}", "{Space}", "{Tab}", "{Tab}")
   }
 Return
 Backspace & NumpadEnter::
@@ -475,22 +475,22 @@ Backspace & NumpadDiv::
 Return
 
 Numpad8::ConditionalSendInput("{Raw}s", "{Raw}S", "{Raw}4", "{Raw}4")
-Backspace & Numpad8::ConditionalSendInput("{Raw}S", "{F7}", "{Raw}$", "{Raw}$")
+Backspace & Numpad8::ConditionalSendInput("{Raw}S", "{F5}", "{Raw}$", "{Raw}$")
 
 Numpad5::ConditionalSendInput("{Raw}d", "{Raw}D", "{Raw}5", "{Raw}5")
-Backspace & Numpad5::ConditionalSendInput("{Raw}D", "{F8}", "{Raw}%", "{Raw}%")
+Backspace & Numpad5::ConditionalSendInput("{Raw}D", "{F6}", "{Raw}%", "{Raw}%")
 
 Numpad2::ConditionalSendInput("{Raw}f", "{Raw}F", "{Raw}6", "{Raw}6")
-Backspace & Numpad2::ConditionalSendInput("{Raw}F", "{F9}", "{Raw}^", "{Raw}^")
+Backspace & Numpad2::ConditionalSendInput("{Raw}F", "{F8}", "{Raw}^", "{Raw}^")
 
 Numpad7::ConditionalSendInput("{Raw}z", "{Raw}Z", "{Raw}1", "{Raw}1")
-Backspace & Numpad7::ConditionalSendInput("{Raw}Z", "{F4}", "{Raw}!", "{Raw}!")
+Backspace & Numpad7::ConditionalSendInput("{Raw}Z", "{F2}", "{Raw}!", "{Raw}!")
 
 Numpad4::ConditionalSendInput("{Raw}x", "{Raw}x", "{Raw}2", "{Raw}2")
-Backspace & Numpad4::ConditionalSendInput("{Raw}X", "{F5}", "{Raw}`", "{Raw}`")
+Backspace & Numpad4::ConditionalSendInput("{Raw}X", "{F3}", "{Raw}`", "{Raw}`")
 
 Numpad1::ConditionalSendInput("{Raw}c", "{Raw}C", "{Raw}3", "{Raw}3")
-Backspace & Numpad1::ConditionalSendInput("{Raw}C", "{F6}", "{U+00A3}", "{U+00A3}")
+Backspace & Numpad1::ConditionalSendInput("{Raw}C", "{F4}", "{U+00A3}", "{U+00A3}")
 
 Numpad0::ConditionalSendInput("{Raw}v", "{Raw}V", "{Raw}0", "{Raw}0")
 Backspace & Numpad0::ConditionalSendInputwithMouseClick("{Raw}V", MouseButton, "U", "{Volume_Down}", "{Volume_Down}")
