@@ -165,6 +165,9 @@ this_code = 0
 stick_mode := 0 ;3 ; 1
 character_mode = 1
 ch_mode := 1
+amoffsetx := 0
+amoffsety := 0
+dasher_mode := 0
 character_mode_lists = Lowercase,Uppercase,Symbols,Numbers,Functions
 StringSplit, character_mode_list, character_mode_lists, `,
 
@@ -192,6 +195,14 @@ scroll(direction)
 {
 	ControlGetFocus, fcontrol, A
 	SendMessage, 0x114, %direction%, 0, %fcontrol%, A
+}
+
+WindowGetRect(windowTitle*) {
+    if hwnd := WinExist(windowTitle*) {
+        VarSetCapacity(rect, 16, 0)
+        DllCall("GetClientRect", "Ptr", hwnd, "Ptr", &rect)
+        return {width: NumGet(rect, 8, "Int"), height: NumGet(rect, 12, "Int")}
+    }
 }
 
 #SingleInstance
@@ -242,14 +253,42 @@ Loop
 
 	tdz := 60
 
-	If (stick_mode = 0)
+	If (stick_mode = 0) ; Mode selection
 	{
-		If (abs(joyx-50) > 5 || abs(joyy-50) > 5)
+		If (abs(joyx-50) > 15 || abs(joyy-50) > 15)
 		{
 			If (button_click_pre <> 9)
 			{
 				button_click_pre := 9
 				stick_mode := 2
+			}
+		}
+		Else If (joyz > 95)
+		{
+			If (button_click_pre <> 9)
+			{
+				button_click_pre := 9
+				mouse_click_pre := 1
+				stick_mode := 6
+				dasher_mode := 0
+				If (joyp = 9000)
+				{
+					button_click_pre := 9000
+					loop_count := 1
+					dasher_mode := 1
+					SetTitleMatchMode, 2
+					IfWinExist, Dasher
+					{
+					   WinGet MMX, MinMax, Dasher
+					   IfNotEqual MMX,0, WinRestore, Dasher
+						 IfWinActive,  Dasher
+						 	SendInput, !{Tab}
+					}
+					Else
+					{
+						Run, "C:\Program Files (x86)\Dasher\Dasher 5.00\Dasher.exe" /config direct_joy
+					}
+				}
 			}
 		}
 		Else If (joyp = 0)
@@ -298,16 +337,16 @@ Loop
 		Else If (button_click_pre = 9)
 			button_click_pre := -1
 	}
-	Else If (stick_mode = 3)
+	Else If (stick_mode = 3) ; ACAT
 	{
 		If (joy9 = "D" || joy11 = "D")
 		{
 			If (button_click_pre <> 9)
 			{
 				button_click_pre := 9
-				stick_mode := 2
+				stick_mode := 0 ;2
 				;SendInput, !{Space}
-				SendInput, #{Tab}
+				;SendInput, #{Tab}
 			}
 		}
 		Else If (button_click_pre = 9)
@@ -346,7 +385,7 @@ Loop
 				}
 		}
 	}
-	Else If (stick_mode = 1)
+	Else If (stick_mode = 1) ; Typing
 	{
 		If (joy9 = "D" || joy11 = "D")
 		{
@@ -470,7 +509,7 @@ Loop
 			}
 		}
 	}
-	Else If (stick_mode = 4)
+	Else If (stick_mode = 4) ; Media Control normal
 	{
 		If (joy9 = "D" || joy11 = "D")
 		{
@@ -530,7 +569,7 @@ Loop
 					SendInput, {Media_Prev}
 				}
 			}
-			Else If (joyy < 30 && joyx > 40 && joyx < 60)
+			Else If (joyy < 30 && joyx > 30 && joyx < 70)
 			{
 				If (button_click_pre <> 2)
 				{
@@ -544,7 +583,7 @@ Loop
 				}
 				loop_count++
 			}
-			Else If (joyy > 70 && joyx > 40 && joyx < 60)
+			Else If (joyy > 70 && joyx > 30 && joyx < 70)
 			{
 				If (button_click_pre <> 2)
 				{
@@ -563,12 +602,12 @@ Loop
 				If (button_click_pre <> 2)
 				{
 					button_click_pre := 2
-					SendInput, {Right}
+					SendInput, {Left}
 					loop_count := 1
 				}
 				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
 				{
-					SendInput, {Right}
+					SendInput, {Left}
 				}
 				loop_count++
 			}
@@ -577,12 +616,12 @@ Loop
 				If (button_click_pre <> 2)
 				{
 					button_click_pre := 2
-					SendInput, {Left}
+					SendInput, {Right}
 					loop_count := 1
 				}
 				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
 				{
-					SendInput, {Left}
+					SendInput, {Right}
 				}
 				loop_count++
 			}
@@ -627,7 +666,7 @@ Loop
 			}
 		}
 	}
-	Else If (stick_mode = 5)
+	Else If (stick_mode = 5) ; Media Control Amazon
 	{
 		If (joy9 = "D" || joy11 = "D")
 		{
@@ -676,18 +715,30 @@ Loop
 				If (button_click_pre <> 9000)
 				{
 					button_click_pre := 9000
-					SendInput, {Media_Next}
+					SendInput, {Right}
+					loop_count := 1
 				}
+				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, {Right}
+				}
+				loop_count++
 			}
 			Else If (joyp = 27000)
 			{
 				If (button_click_pre <> 27000)
 				{
 					button_click_pre := 27000
-					SendInput, {Media_Prev}
+					SendInput, {Left}
+					loop_count := 1
 				}
+				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, {Left}
+				}
+				loop_count++
 			}
-			Else If (joyy < 30 && joyx > 40 && joyx < 60)
+			Else If (joyy < 30 && joyx > 30 && joyx < 70)
 			{
 				If (button_click_pre <> 2)
 				{
@@ -701,7 +752,7 @@ Loop
 				}
 				loop_count++
 			}
-			Else If (joyy > 70 && joyx > 40 && joyx < 60)
+			Else If (joyy > 70 && joyx > 30 && joyx < 70)
 			{
 				If (button_click_pre <> 2)
 				{
@@ -720,28 +771,16 @@ Loop
 				If (button_click_pre <> 2)
 				{
 					button_click_pre := 2
-					SendInput, {Right}
-					loop_count := 1
+					SendInput, {Volume_Mute}
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Right}
-				}
-				loop_count++
 			}
 			Else If (joyx > 70 && joyy > 40 && joyy < 60)
 			{
 				If (button_click_pre <> 2)
 				{
 					button_click_pre := 2
-					SendInput, {Left}
-					loop_count := 1
+					SendInput, {Volume_Mute}
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Left}
-				}
-				loop_count++
 			}
 			If (joy5 = "D")
 			{
@@ -773,7 +812,7 @@ Loop
 				If (button_click_pre <> 3)
 				{
 					button_click_pre := 3
-					SendInput, {w}
+					SendInput, {Escape}
 				}
 			}
 			{
@@ -784,7 +823,149 @@ Loop
 			}
 		}
 	}
-	Else ; stick_mode = 2
+	Else If (stick_mode = 6) ; Absolute mouse
+	{
+		If (joy9 = "D" || joy11 = "D")
+		{
+			If (button_click_pre <> 9)
+			{
+				stick_mode := 0
+				button_click_pre := 9
+			}
+		}
+		Else If (button_click_pre = 9)
+			button_click_pre := -1
+		Else
+		{
+			loop_count_repeat4 := 40
+			loop_count_skip := 4
+			If (joyp = 0 && dasher_mode = 0)
+			{
+				amoffsetx := -(joyx - 50) / 100
+				amoffsety := -(joyy - 50) / 100
+			}
+			Else If (joyp = 0)
+			{
+				button_click_pre := 0
+				loop_count := 1
+				stick_mode := 2
+				dasher_mode := 0
+				WinMinimize, Dasher
+			}
+			Else If (joyp = 18000)
+			{
+				If (button_click_pre <> 18000)
+				{
+					button_click_pre := 18000
+					If (dasher_mode = 0)
+						SendInput, #{Tab}
+					Else
+					{
+						stick_mode := 2
+						WinMinimize, Dasher
+					}
+				}
+			}
+			Else If (joyp = 9000)
+			{
+				If (button_click_pre <> 9000)
+				{
+					button_click_pre := 9000
+					SendInput, {Right}
+					loop_count := 1
+				}
+				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, {Right}
+				}
+				loop_count++
+			}
+			Else If (joyp = 27000)
+			{
+				If (button_click_pre <> 27000)
+				{
+					button_click_pre := 27000
+					SendInput, {Left}
+					loop_count := 1
+				}
+				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, {Left}
+				}
+				loop_count++
+			}
+			Else If (joy2 = "D" && dasher_mode = 1)
+			{
+				If (button_click_pre <> 3)
+				{
+					button_click_pre := 3
+					SendInput, {Backspace}
+					loop_count := 1
+				}
+				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				{
+					SendInput, {Backspace}
+				}
+				loop_count++
+			}
+			If (joyz > 55)
+			{
+				; || joyu > 10 || joyv > 10
+				If (mouse_click_pre <> 1)
+				{
+					mouse_click_pre := 1
+					MouseClick, Left,,, 1, 0, D  ; Hold down the left mouse button.
+				}
+			}
+			If (joy5 = "D")
+			{
+				If (mouse_click_pre <> 2)
+				{
+					mouse_click_pre := 2
+					MouseClick, Right,,, 1, 0, D
+				}
+			}
+			If (joy1 = "D")
+			{
+				If (button_click_pre <> 1)
+				{
+					button_click_pre := 1
+					SendInput, {Enter}
+				}
+			}
+			If (joy2 = "D")
+			{
+				If (button_click_pre <> 3 && dasher_mode = 0)
+				{
+					button_click_pre := 3
+					SendInput, {Escape}
+				}
+			}
+			{
+				If (joyz < 55 && joy5 <> "D" && mouse_click_pre <> -1)
+				{
+					;  && joyu < 10 && joyv < 10
+					If (mouse_click_pre = 1)
+					{
+						MouseClick, Left,,, 1, 0, U
+					}  ; Release the mouse button.
+					Else If (mouse_click_pre = 2)
+					{
+						MouseClick, Right,,, 1, 0, U
+					}  ; Release the mouse button.
+					mouse_click_pre := -1
+					; button_click_pre := -1
+				}
+			}
+			{
+				If (joy1 <> "D" && joy2 <> "D" && joyp = -1 && button_click_pre <> -1)
+				{
+					button_click_pre := -1
+				}
+			}
+		}
+	}
+	Else ; stick_mode = 2 ; Relative mouse
 	{
 		If (joy9 = "D" || joy11 = "D")
 		{
@@ -792,8 +973,15 @@ Loop
 			{
 				If (joyp = 000)
 					stick_mode := 3
-				Else
+				Else If (dasher_mode = 0)
 					stick_mode := 0 ; 1
+				Else
+				{
+					stick_mode := 6 ; 1
+					WinRestore, Dasher
+					IfWinActive,  Dasher
+					 SendInput, !{Tab}
+				}
 				button_click_pre := 9
 			}
 		}
@@ -873,7 +1061,7 @@ Loop
 			}
 			If (joy5 = "D")
 			{
-				If (mouse_click_pre <> 2)
+				If (mouse_click_pre <> 2 && mouse_click_pre <> 23) ;) ;
 				{
 					mouse_click_pre := 2
 					MouseClick, Right,,, 1, 0, D
@@ -884,11 +1072,13 @@ Loop
 				If (mouse_click_pre = 2)
 				{
 					mouse_click_pre := 23
+					MouseClick, Middle,,, 1, 0, D
 					MouseClick, Right,,, 1, 0, U
-					SendInput, #{Esc}
+					MouseClick, Middle,,, 1, 0, U
+					;SendInput, #{Esc}
 					; MouseClick, Middle,,, 1, 0, D
 				}
-				Else If (mouse_click_pre <> 3)
+				Else If (mouse_click_pre <> 3 && mouse_click_pre <> 23)
 				{
 					mouse_click_pre := 3
 					MouseClick, Middle,,, 1, 0, D
@@ -918,6 +1108,8 @@ Loop
 					{
 						; MouseClick, Right,,, 1, 0, U
 						; MouseClick, Middle,,, 1, 0, U
+						; SendInput, #{Esc}
+						;SendInput, {Esc}
 					}  ; Release the mouse button.
 					Else If (mouse_click_pre = 3)
 					{
@@ -977,19 +1169,59 @@ Loop
 
 	If (stick_mode = 2)
 	{
-		mdz := 2 ;5
-		ms := 10
-		ms := 0.03
+		mdz := 5
+		ms := 0.03 ; 10
 		If (radius2 > mdz*mdz)
 		{
 			SetMouseDelay, -1  ; Makes movement smoother.
 			; Relative mouse positioning
 			MouseMove, joyx * abs(joyx) * ms, joyy * abs(joyy) * ms, 0, R
+		}
+	}
+	Else If (stick_mode = 6 && dasher_mode = 0)
+	{
+		mdz := .2 ;5
+		If (radius2 > mdz*mdz)
+		{
+			SetMouseDelay, -1  ; Makes movement smoother.
 			; Absolute mouse positioning
-			; CoordMode, Mouse, Screen
-			; joyx += 50
-			; joyy += 50
-			; MouseMove, (joyx) * 19.20, (joyy) * 10.80, 0
+			joyx += 50
+			joyy += 50
+			joyx /= 100
+			joyy /= 100
+			WinGetPos, , , Width, Height, A
+			CoordMode, Mouse, Window
+			MouseMove, (joyx - amoffsetx) * Width, (joyy - amoffsety) * Height, 0
+		}
+	}
+	Else If (stick_mode = 6 && dasher_mode = 1)
+	{
+		mdz := .2 ;5
+		If (radius2 > mdz*mdz)
+		{
+			SetMouseDelay, -1  ; Makes movement smoother.
+			; Absolute mouse positioning
+			joyx += 50
+			joyy += 50
+			joyx /= 100
+			joyy /= 100
+
+			SetTitleMatchMode, 2
+			DasherTb := 30
+			DasherBb := 40
+			DasherLb := -10
+			DasherRb := 10
+			DasherX := 0
+			DasherY := 0
+			;CoordMode, Pixel, Client
+			WinGetPos, DasherX, DasherY, Width, Height, Dasher
+			;rect := WindowGetRect("Dasher")
+			Width -= DasherLb + DasherRb
+			DasherX += DasherLb
+			Height -= DasherTb + DasherBb
+			DasherY += DasherTb
+			CoordMode, Mouse, Screen
+			MouseMove, DasherX + (joyx - amoffsetx) * Width, DasherY + (joyy - amoffsety) * Height, 0
 		}
 	}
 	Else If (stick_mode = 1 && radius2 > dz*dz)
