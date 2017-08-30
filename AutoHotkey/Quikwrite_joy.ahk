@@ -168,6 +168,9 @@ ch_mode := 1
 amoffsetx := 0
 amoffsety := 0
 dasher_mode := 0
+audio_feedback := 1
+hold_pose := 0
+loop_count_max := 15
 character_mode_lists = Lowercase,Uppercase,Symbols,Numbers,Functions
 StringSplit, character_mode_list, character_mode_lists, `,
 
@@ -270,12 +273,20 @@ Loop
 				button_click_pre := 9
 				mouse_click_pre := 1
 				stick_mode := 6
-				dasher_mode := 0
-				If (joyp = 9000)
+				;dasher_mode := 0
+				;If (joyp = 9000)
+				If (joy9 = "D")
 				{
-					button_click_pre := 9000
-					loop_count := 1
-					dasher_mode := 1
+					;button_click_pre := 9000
+					button_click_pre := 9
+					;loop_count := 1
+					If (dasher_mode = 1)
+						dasher_mode := 0
+					Else
+						dasher_mode := 1
+				}
+				If (dasher_mode = 1)
+				{
 					SetTitleMatchMode, 2
 					IfWinExist, Dasher
 					{
@@ -316,6 +327,15 @@ Loop
 				button_click_pre := 5
 				stick_mode := 1
 				character_mode := 1
+				If (joy9 = "D")
+				{
+					button_click_pre := 9
+					;loop_count := 0
+					If (audio_feedback = 0)
+						audio_feedback := 1
+					Else
+						audio_feedback := 0
+				}
 			}
 		}
 		Else If (joy1 = "D")
@@ -360,6 +380,22 @@ Loop
 					button_click_pre := 95
 				}
 			}
+			Else If (joyp = 9000)
+			{
+				If (button_click_pre <> 9000)
+				{
+					button_click_pre := 9000
+					loop_count_max := 30
+				}
+			}
+			Else If (joyp = 27000)
+			{
+				If (button_click_pre <> 27000)
+				{
+					button_click_pre := 27000
+					loop_count_max := 15
+				}
+			}
 			Else If (joyz > 95 || joyu > 90 || joyv > 90)
 			{
 				If (button_click_pre = 95)
@@ -377,6 +413,59 @@ Loop
 					Send {Blind}{F12 DownTemp}
 					Send {Blind}{F12 Up}
 					SetKeyDelay, -1
+				}
+			}
+			Else If (joy5 = "D")
+			{
+				; || joyu > 10 || joyv > 10
+				If (button_click_pre <> 2 && button_click_pre <> 95)
+				{
+				  If (loop_count >= loop_count_max || loop_count < 0)
+				    loop_count := 0
+					;loop_count += 1
+					If (loop_count = 0)
+						Progress, fs48 , -%loop_count%-, Count, Exercise, Courier New
+					Else
+						Progress,, -%loop_count%-
+					loop_count_progress := (loop_count + 1) * 100 / loop_count_max
+					Progress, %loop_count_progress%
+					;Progress, loop_count * 100 / 15
+					If (hold_pose = 1)
+						Sleep, 5000
+				  ;Sleep, 100
+					v := ComObjCreate("SAPI.SpVoice")
+					v.Voice := v.GetVoices().Item(1)
+					;Progress, %loop_count_progress%
+					;SplashTextOn,,, %loop_count%
+					loop_count += 1
+					Progress,, %loop_count%
+					v.Speak(loop_count)
+					;Progress, %loop_count_progress%
+					;SplashTextOff
+					If (loop_count >= loop_count_max)
+						Progress, Off
+					button_click_pre := 2
+					;Send, {F12}
+				}
+			}
+			Else If (joy2 = "D")
+			{
+				If (button_click_pre <> 3)
+				{
+					button_click_pre := 3
+					hold_pose := 0
+					Progress, Off
+					loop_count := 0
+				}
+			}
+			Else If (joy1 = "D")
+			{
+				If (button_click_pre <> 1)
+				{
+					button_click_pre := 1
+					loop_count := 0
+					hold_pose := 1
+					Progress, Off
 				}
 			}
 			Else If (button_click_pre <> -1 && button_click_pre <> 9 && button_click_pre <> 95)
@@ -849,7 +938,6 @@ Loop
 				button_click_pre := 0
 				loop_count := 1
 				stick_mode := 2
-				dasher_mode := 0
 				WinMinimize, Dasher
 			}
 			Else If (joyp = 18000)
@@ -862,7 +950,8 @@ Loop
 					Else
 					{
 						stick_mode := 2
-						WinMinimize, Dasher
+						dasher_mode := 0
+						WinClose, Dasher
 					}
 				}
 			}
@@ -971,17 +1060,18 @@ Loop
 		{
 			If (button_click_pre <> 9)
 			{
-				If (joyp = 000)
-					stick_mode := 3
-				Else If (dasher_mode = 0)
-					stick_mode := 0 ; 1
-				Else
-				{
-					stick_mode := 6 ; 1
-					WinRestore, Dasher
-					IfWinActive,  Dasher
-					 SendInput, !{Tab}
-				}
+				;If (joyp = 000)
+				;	stick_mode := 3
+				;Else If (dasher_mode = 0)
+				;	stick_mode := 0 ; 1
+				;Else
+				;{
+				;	stick_mode := 6 ; 1
+				;	WinRestore, Dasher
+				;	IfWinActive,  Dasher
+				;	 SendInput, !{Tab}
+				;}
+				stick_mode := 0
 				button_click_pre := 9
 			}
 		}
@@ -1167,7 +1257,7 @@ Loop
 
 	ch_mode := mod(character_mode, 10)
 
-	If (stick_mode = 2)
+	If (stick_mode = 2) ; Relative mouse positioning
 	{
 		mdz := 5
 		ms := 0.03 ; 10
@@ -1178,50 +1268,56 @@ Loop
 			MouseMove, joyx * abs(joyx) * ms, joyy * abs(joyy) * ms, 0, R
 		}
 	}
-	Else If (stick_mode = 6 && dasher_mode = 0)
+	Else If (stick_mode = 6) ; Absolute mouse positioning
 	{
-		mdz := .2 ;5
-		If (radius2 > mdz*mdz)
+		mdz := 2.5 ;5
+		; If (abs(joyx) > mdz || abs(joyy) > mdz)
+		; If (radius2 > mdz*mdz)
 		{
 			SetMouseDelay, -1  ; Makes movement smoother.
-			; Absolute mouse positioning
-			joyx += 50
-			joyy += 50
-			joyx /= 100
-			joyy /= 100
-			WinGetPos, , , Width, Height, A
-			CoordMode, Mouse, Window
-			MouseMove, (joyx - amoffsetx) * Width, (joyy - amoffsety) * Height, 0
-		}
-	}
-	Else If (stick_mode = 6 && dasher_mode = 1)
-	{
-		mdz := .2 ;5
-		If (radius2 > mdz*mdz)
-		{
-			SetMouseDelay, -1  ; Makes movement smoother.
-			; Absolute mouse positioning
-			joyx += 50
-			joyy += 50
-			joyx /= 100
-			joyy /= 100
+			If (abs(joyx) < mdz)
+				joyx := 0
+			Else If (joyx > 0)
+				joyx -= mdz
+			Else
+				joyx += mdz
 
-			SetTitleMatchMode, 2
-			DasherTb := 30
-			DasherBb := 40
-			DasherLb := -10
-			DasherRb := 10
-			DasherX := 0
-			DasherY := 0
-			;CoordMode, Pixel, Client
-			WinGetPos, DasherX, DasherY, Width, Height, Dasher
-			;rect := WindowGetRect("Dasher")
-			Width -= DasherLb + DasherRb
-			DasherX += DasherLb
-			Height -= DasherTb + DasherBb
-			DasherY += DasherTb
-			CoordMode, Mouse, Screen
-			MouseMove, DasherX + (joyx - amoffsetx) * Width, DasherY + (joyy - amoffsety) * Height, 0
+			If (abs(joyy) < mdz)
+				joyy := 0
+			Else If (joyy > 0)
+				joyy -= mdz
+			Else
+				joyy += mdz
+			joyx += 50 - mdz
+			joyy += 50 - mdz
+			joyx /= (100 - mdz - mdz)
+			joyy /= (100 - mdz - mdz)
+
+			If (dasher_mode = 1)
+			{
+				SetTitleMatchMode, 2
+				DasherTb := 30
+				DasherBb := 40
+				DasherLb := -10
+				DasherRb := 10
+				DasherX := 0
+				DasherY := 0
+				;CoordMode, Pixel, Client
+				WinGetPos, DasherX, DasherY, Width, Height, Dasher
+				;rect := WindowGetRect("Dasher")
+				Width -= DasherLb + DasherRb
+				DasherX += DasherLb
+				Height -= DasherTb + DasherBb
+				DasherY += DasherTb
+				CoordMode, Mouse, Screen
+				MouseMove, DasherX + (joyx - amoffsetx) * Width, DasherY + (joyy - amoffsety) * Height, 0
+			}
+			Else
+			{
+				WinGetPos, , , Width, Height, A
+				CoordMode, Mouse, Window
+				MouseMove, (joyx - amoffsetx) * Width, (joyy - amoffsety) * Height, 0
+			}
 		}
 	}
 	Else If (stick_mode = 1 && radius2 > dz*dz)
@@ -1259,6 +1355,56 @@ Loop
 		  Else If (theta < region * 15 / 2 - tol && theta > region * 13 / 2 + tol)
 			{
 				character_code := New_Code(character_code, 9)
+			}
+
+			if (character_code <> character_code_pre && audio_feedback = 1)
+			{
+			  If (character_code > 9)
+				{
+					BeepDur := 25
+					If (Mod(character_code, 10) = 0)
+					{
+						If (character_code = 10)
+							SoundBeep,1906,BeepDur
+						Else If (character_code = 20)
+							SoundBeep,2033,BeepDur
+						Else If (character_code = 30)
+							SoundBeep,2174,BeepDur
+						Else If (character_code = 40)
+							SoundBeep,1979,BeepDur
+						Else If (character_code = 50)
+							SoundBeep,2106,BeepDur
+						Else If (character_code = 60)
+							SoundBeep,2247,BeepDur
+						Else If (character_code = 70)
+							SoundBeep,2061,BeepDur
+						Else If (character_code = 80)
+							SoundBeep,2188,BeepDur
+						Else If (character_code = 90)
+							SoundBeep,2329,BeepDur
+					}
+					Else ;If (Mod(character_code, 10) = 0)
+					{
+						If (Mod(character_code, 10) = 1)
+							SoundBeep,1906,BeepDur
+						Else If (Mod(character_code, 10) = 2)
+							SoundBeep,2033,BeepDur
+						Else If (Mod(character_code, 10) = 3)
+							SoundBeep,2174,BeepDur
+						Else If (Mod(character_code, 10) = 4)
+							SoundBeep,1979,BeepDur
+						Else If (Mod(character_code, 10) = 5)
+							SoundBeep,2106,BeepDur
+						Else If (Mod(character_code, 10) = 6)
+							SoundBeep,2247,BeepDur
+						Else If (Mod(character_code, 10) = 7)
+							SoundBeep,2061,BeepDur
+						Else If (Mod(character_code, 10) = 8)
+							SoundBeep,2188,BeepDur
+						Else If (Mod(character_code, 10) = 9)
+							SoundBeep,2329,BeepDur
+					}
+				}
 			}
 		}
 
