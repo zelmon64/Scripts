@@ -21,106 +21,107 @@ JoystickNumber = 0
 ;   0    8  9   7  0  9   7  8    0
 ;
 ;
-all_characters := Object()
-all_characters_long := Object()
-ArrayIndex1 := 1
-ArrayIndex2 := 2
-ArrayIndex3 := 3
-ArrayIndex4 := 4
-ArrayIndex5 := 5
+{
+	all_characters := Object()
+	all_characters_long := Object()
+	ArrayIndex1 := 1
+	ArrayIndex2 := 2
+	ArrayIndex3 := 3
+	ArrayIndex4 := 4
+	ArrayIndex5 := 5
 
-mode_1_characters =  %A_Space%              ,,,,,,,,,
-mode_1_characters =  %mode_1_characters% a, a, s, k, m,,, q,,,
-mode_1_characters =  %mode_1_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
-mode_1_characters =  %mode_1_characters% n, p, f, n,,, l,,, x,
-mode_1_characters =  %mode_1_characters% e, h,,, e,,, c,,,
-mode_1_characters =  %mode_1_characters%,,,,,,,,,,
-mode_1_characters =  %mode_1_characters% t,,, u,,, t,,, y,
-mode_1_characters =  %mode_1_characters% o, v,,, w,,, o, g, z,
-mode_1_characters =  %mode_1_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
-mode_1_characters =  %mode_1_characters% i,,, j,,, r, b, d, i,
-StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
+	mode_1_characters =  %A_Space%              ,,,,,,,,,
+	mode_1_characters =  %mode_1_characters% a, a, s, k, m,,, q,,,
+	mode_1_characters =  %mode_1_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
+	mode_1_characters =  %mode_1_characters% n, p, f, n,,, l,,, x,
+	mode_1_characters =  %mode_1_characters% e, h,,, e,,, c,,,
+	mode_1_characters =  %mode_1_characters%,,,,,,,,,,
+	mode_1_characters =  %mode_1_characters% t,,, u,,, t,,, y,
+	mode_1_characters =  %mode_1_characters% o, v,,, w,,, o, g, z,
+	mode_1_characters =  %mode_1_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
+	mode_1_characters =  %mode_1_characters% i,,, j,,, r, b, d, i,
+	StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
 
-mode_2_characters =   %A_Space%             ,,,,,,,,,
-mode_2_characters =  %mode_2_characters% A, A, S, K, M,,, Q,,,
-mode_2_characters =  %mode_2_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
-mode_2_characters =  %mode_2_characters% N, P, F, N,,, L,,, X,
-mode_2_characters =  %mode_2_characters% E, H,,, E,,, C,,,
-mode_2_characters =  %mode_2_characters%,,,,,,,,,,
-mode_2_characters =  %mode_2_characters% T,,, U,,, T,,, Y,
-mode_2_characters =  %mode_2_characters% O, V,,, W,,, O, G, Z,
-mode_2_characters =  %mode_2_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
-mode_2_characters =  %mode_2_characters% I,,, J,,, R, B, D, I,
-StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
+	mode_2_characters =   %A_Space%             ,,,,,,,,,
+	mode_2_characters =  %mode_2_characters% A, A, S, K, M,,, Q,,,
+	mode_2_characters =  %mode_2_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
+	mode_2_characters =  %mode_2_characters% N, P, F, N,,, L,,, X,
+	mode_2_characters =  %mode_2_characters% E, H,,, E,,, C,,,
+	mode_2_characters =  %mode_2_characters%,,,,,,,,,,
+	mode_2_characters =  %mode_2_characters% T,,, U,,, T,,, Y,
+	mode_2_characters =  %mode_2_characters% O, V,,, W,,, O, G, Z,
+	mode_2_characters =  %mode_2_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
+	mode_2_characters =  %mode_2_characters% I,,, J,,, R, B, D, I,
+	StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
 
-mode_3_characters =    %A_Space%            ,,,,,,,,,
-mode_3_characters =  %mode_3_characters% *, *, {, }, @,,,In,,,
-mode_3_characters =  %mode_3_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
-mode_3_characters =  %mode_3_characters% C, (, ), C,,, [,,, ],
-mode_3_characters =  %mode_3_characters%%A_Space%;,%A_Space%#,,,%A_Space%;,,,%A_Space%:,,,
-mode_3_characters =  %mode_3_characters%,,,,,,,,,,
-mode_3_characters =  %mode_3_characters% ',,, ",,, ',,, &,
-mode_3_characters =  %mode_3_characters% |,Ec,,, ^,,, |, /, \,
-mode_3_characters =  %mode_3_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
-mode_3_characters =  %mode_3_characters% .,,, !,,, ?, _, -, .,
-StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
-ArrayIndex := 30
-all_characters%ArrayIndex3%%ArrayIndex% := " ,"
-ArrayIndex := 33
-all_characters%ArrayIndex3%%ArrayIndex% := " ,"
+	mode_3_characters =    %A_Space%            ,,,,,,,,,
+	mode_3_characters =  %mode_3_characters% *, *, {, }, @,,,In,,,
+	mode_3_characters =  %mode_3_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
+	mode_3_characters =  %mode_3_characters% C, (, ), C,,, [,,, ],
+	mode_3_characters =  %mode_3_characters%%A_Space%;,%A_Space%#,,,%A_Space%;,,,%A_Space%:,,,
+	mode_3_characters =  %mode_3_characters%,,,,,,,,,,
+	mode_3_characters =  %mode_3_characters% ',,, ",,, ',,, &,
+	mode_3_characters =  %mode_3_characters% |,Ec,,, ^,,, |, /, \,
+	mode_3_characters =  %mode_3_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
+	mode_3_characters =  %mode_3_characters% .,,, !,,, ?, _, -, .,
+	StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
+	ArrayIndex := 30
+	all_characters%ArrayIndex3%%ArrayIndex% := " ,"
+	ArrayIndex := 33
+	all_characters%ArrayIndex3%%ArrayIndex% := " ,"
 
-mode_4_characters =  %A_Space%            ,,,,,,,,,
-mode_4_characters =  %mode_4_characters% 0, 0, <, >, 1,,, 2,,,
-mode_4_characters =  %mode_4_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
-mode_4_characters =  %mode_4_characters% C, (, ), C,,, [,,, ],
-mode_4_characters =  %mode_4_characters% 3, #,,, 3,,, 4,,,
-mode_4_characters =  %mode_4_characters%,,,,,,,,,,
-mode_4_characters =  %mode_4_characters% =,,, +,,, =,,, -,
-mode_4_characters =  %mode_4_characters% 5, /,,, *,,, 5, 6, 7,
-mode_4_characters =  %mode_4_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
-mode_4_characters =  %mode_4_characters% .,,, 9,,, 8, $, P, .,
-StringSplit, all_characters%ArrayIndex4%, mode_4_characters, `,
-ArrayIndex := 30
-all_characters%ArrayIndex4%%ArrayIndex% := " ,"
-ArrayIndex := 33
-all_characters%ArrayIndex4%%ArrayIndex% := " ,"
-ArrayIndex := 98
-all_characters%ArrayIndex4%%ArrayIndex% := " %"
+	mode_4_characters =  %A_Space%            ,,,,,,,,,
+	mode_4_characters =  %mode_4_characters% 0, 0, <, >, 1,,, 2,,,
+	mode_4_characters =  %mode_4_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
+	mode_4_characters =  %mode_4_characters% C, (, ), C,,, [,,, ],
+	mode_4_characters =  %mode_4_characters% 3, #,,, 3,,, 4,,,
+	mode_4_characters =  %mode_4_characters%,,,,,,,,,,
+	mode_4_characters =  %mode_4_characters% =,,, +,,, =,,, -,
+	mode_4_characters =  %mode_4_characters% 5, /,,, *,,, 5, 6, 7,
+	mode_4_characters =  %mode_4_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
+	mode_4_characters =  %mode_4_characters% .,,, 9,,, 8, $, P, .,
+	StringSplit, all_characters%ArrayIndex4%, mode_4_characters, `,
+	ArrayIndex := 30
+	all_characters%ArrayIndex4%%ArrayIndex% := " ,"
+	ArrayIndex := 33
+	all_characters%ArrayIndex4%%ArrayIndex% := " ,"
+	ArrayIndex := 98
+	all_characters%ArrayIndex4%%ArrayIndex% := " %"
 
-mode_5_characters =  %A_Space%            ,,,,,,,,,
-mode_5_characters =  %mode_5_characters%^s,^s,Hm,Ed,PU,,,PD,,,
-mode_5_characters =  %mode_5_characters%M5,Sy,M5,UC,,,,Sy,Fn,UC,
-mode_5_characters =  %mode_5_characters%VM,V+,V-,VM,,,#x,,,F4,
-mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,^h,,,
-mode_5_characters =  %mode_5_characters%,,,,,,,,,,
-mode_5_characters =  %mode_5_characters%!c,,,!z,,,!c,,,!x,
-mode_5_characters =  %mode_5_characters%Sr,PS,,,Z+,,,Sr,CT,CW,
-mode_5_characters =  %mode_5_characters%SC,Tb,Fn,No,,,,En,SC,No,
-mode_5_characters =  %mode_5_characters%12,,,F6,,,F5,11,TM,12,
-StringSplit, all_characters%ArrayIndex5%, mode_5_characters, `,
+	mode_5_characters =  %A_Space%            ,,,,,,,,,
+	mode_5_characters =  %mode_5_characters%^s,^s,Hm,Ed,PU,,,PD,,,
+	mode_5_characters =  %mode_5_characters%M5,Sy,M5,UC,,,,Sy,Fn,UC,
+	mode_5_characters =  %mode_5_characters%VM,V+,V-,VM,,,#x,,,F4,
+	mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,^h,,,
+	mode_5_characters =  %mode_5_characters%,,,,,,,,,,
+	mode_5_characters =  %mode_5_characters%!c,,,!z,,,!c,,,!x,
+	mode_5_characters =  %mode_5_characters%Sr,PS,,,Z+,,,Sr,CT,CW,
+	mode_5_characters =  %mode_5_characters%SC,Tb,Fn,No,,,,En,SC,No,
+	mode_5_characters =  %mode_5_characters%12,,,F6,,,F5,11,TM,12,
+	StringSplit, all_characters%ArrayIndex5%, mode_5_characters, `,
 
-StringReplace, mode_5_characters_long, mode_5_characters, F3 , {F3} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, F4 , !{F4} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, F5 , {F5} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, F6 , {F6} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, 11 , {F11} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, 12 , {F12} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, Hm , {Home} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, Ed , {End} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, PU , {PgUp} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, PD , {PgDn} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, PS , {PrintScreen} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, VM , {Volume_Mute} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, V+ , {Volume_Up 5} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, V- , {Volume_Down 5} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, Sr , !{Space} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, CW , {Alt DownTemp}{Tab} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, CT , {Control DownTemp}{Tab} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, Z+ , ^{=} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, Z- , ^{-} , All
-StringReplace, mode_5_characters_long, mode_5_characters_long, TM , ^+{Escape} , All
-StringSplit, all_characters_long%ArrayIndex5%, mode_5_characters_long, `,
-
+	StringReplace, mode_5_characters_long, mode_5_characters, F3 , {F3} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, F4 , !{F4} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, F5 , {F5} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, F6 , {F6} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, 11 , {F11} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, 12 , {F12} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, Hm , {Home} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, Ed , {End} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, PU , {PgUp} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, PD , {PgDn} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, PS , {PrintScreen} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, VM , {Volume_Mute} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, V+ , {Volume_Up 5} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, V- , {Volume_Down 5} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, Sr , !{Space} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, CW , {Alt DownTemp}{Tab} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, CT , {Control DownTemp}{Tab} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, Z+ , ^{=} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, Z- , ^{-} , All
+	StringReplace, mode_5_characters_long, mode_5_characters_long, TM , ^+{Escape} , All
+	StringSplit, all_characters_long%ArrayIndex5%, mode_5_characters_long, `,
+}
 ;
 ;
 ; From "Joystick Test Script"
@@ -135,19 +136,30 @@ StringSplit, all_characters_long%ArrayIndex5%, mode_5_characters_long, `,
 ; Auto-detect the joystick number if called for:
 if JoystickNumber <= 0
 {
-	Loop 16  ; Query each joystick number to find out which ones exist.
+	Loop  ; Query each joystick number to find out which ones exist.
 	{
-		GetKeyState, JoyName, %A_Index%JoyName
-		if JoyName <>
+		Loop 16  ; Query each joystick number to find out which ones exist.
 		{
-			JoystickNumber = %A_Index%
+			GetKeyState, JoyName, %A_Index%JoyName
+			if JoyName <>
+			{
+				JoystickNumber = %A_Index%
+				break
+			}
+		}
+		if JoystickNumber <= 0
+		{
+			; MsgBox The system does not appear to have any joysticks.
+			; ExitApp
+			Sleep, 10000
+		}
+		Else
+		{
+			SoundBeep, 500, 100
+			SoundBeep, 700, 100
+			SoundBeep, 900, 200
 			break
 		}
-	}
-	if JoystickNumber <= 0
-	{
-		MsgBox The system does not appear to have any joysticks.
-		ExitApp
 	}
 }
 
@@ -163,6 +175,7 @@ HUD_loop_count_repeat := 10
 HUD_loop_count_skip := 3
 this_code = 0
 stick_mode := 0 ;3 ; 1
+stick_centre := 1
 character_mode = 1
 ch_mode := 1
 amoffsetx := 0
@@ -333,6 +346,8 @@ Loop
 					;loop_count := 0
 					If (audio_feedback = 0)
 						audio_feedback := 1
+					Else If (audio_feedback = 1)
+						audio_feedback := 2
 					Else
 						audio_feedback := 0
 				}
@@ -428,11 +443,15 @@ Loop
 					Else
 						Progress,, -%loop_count%-
 					loop_count_progress := (loop_count + 1) * 100 / loop_count_max
+					If (hold_pose = 1)
+						SoundBeep,900,100
 					Progress, %loop_count_progress%
 					;Progress, loop_count * 100 / 15
 					If (hold_pose = 1)
 						Sleep, 5000
 				  ;Sleep, 100
+					If (hold_pose = 1)
+						SoundBeep,500,100
 					v := ComObjCreate("SAPI.SpVoice")
 					v.Voice := v.GetVoices().Item(1)
 					;Progress, %loop_count_progress%
@@ -1003,7 +1022,7 @@ Loop
 				If (mouse_click_pre <> 1)
 				{
 					mouse_click_pre := 1
-					MouseClick, Left,,, 1, 0, D  ; Hold down the left mouse button.
+					MouseClick, Left,,, 1, 0, ;D  ; Hold down the left mouse button.
 				}
 			}
 			If (joy5 = "D")
@@ -1011,7 +1030,7 @@ Loop
 				If (mouse_click_pre <> 2)
 				{
 					mouse_click_pre := 2
-					MouseClick, Right,,, 1, 0, D
+					MouseClick, Right,,, 1, 0, ;D
 				}
 			}
 			If (joy1 = "D")
@@ -1036,11 +1055,11 @@ Loop
 					;  && joyu < 10 && joyv < 10
 					If (mouse_click_pre = 1)
 					{
-						MouseClick, Left,,, 1, 0, U
+						;MouseClick, Left,,, 1, 0, U
 					}  ; Release the mouse button.
 					Else If (mouse_click_pre = 2)
 					{
-						MouseClick, Right,,, 1, 0, U
+						;MouseClick, Right,,, 1, 0, U
 					}  ; Release the mouse button.
 					mouse_click_pre := -1
 					; button_click_pre := -1
@@ -1060,17 +1079,6 @@ Loop
 		{
 			If (button_click_pre <> 9)
 			{
-				;If (joyp = 000)
-				;	stick_mode := 3
-				;Else If (dasher_mode = 0)
-				;	stick_mode := 0 ; 1
-				;Else
-				;{
-				;	stick_mode := 6 ; 1
-				;	WinRestore, Dasher
-				;	IfWinActive,  Dasher
-				;	 SendInput, !{Tab}
-				;}
 				stick_mode := 0
 				button_click_pre := 9
 			}
@@ -1260,7 +1268,7 @@ Loop
 	If (stick_mode = 2) ; Relative mouse positioning
 	{
 		mdz := 5
-		ms := 0.03 ; 10
+		ms := 0.01 ; 10
 		If (radius2 > mdz*mdz)
 		{
 			SetMouseDelay, -1  ; Makes movement smoother.
@@ -1272,8 +1280,12 @@ Loop
 	{
 		mdz := 2.5 ;5
 		; If (abs(joyx) > mdz || abs(joyy) > mdz)
-		; If (radius2 > mdz*mdz)
+		If (radius2 > mdz*mdz || !stick_centre)
 		{
+			If (radius2 > mdz*mdz)
+				stick_centre := 0
+			Else
+				stick_centre := 1
 			SetMouseDelay, -1  ; Makes movement smoother.
 			If (abs(joyx) < mdz)
 				joyx := 0
@@ -1357,59 +1369,59 @@ Loop
 				character_code := New_Code(character_code, 9)
 			}
 
-			if (character_code <> character_code_pre && audio_feedback = 1)
+			if (character_code <> character_code_pre && audio_feedback <> 0)
 			{
 			  If (character_code > 9)
 				{
-					BeepDur := 25
+					BeepDur := 100
 					If (Mod(character_code, 10) = 0)
 					{
 						If (character_code = 10)
-							SoundBeep,1906,BeepDur
+							SoundBeep,440.000,BeepDur
 						Else If (character_code = 20)
-							SoundBeep,2033,BeepDur
+							SoundBeep,493.883,BeepDur
 						Else If (character_code = 30)
-							SoundBeep,2174,BeepDur
+							SoundBeep,523.251,BeepDur
 						Else If (character_code = 40)
-							SoundBeep,1979,BeepDur
+							SoundBeep,880.000,BeepDur
 						Else If (character_code = 50)
 							SoundBeep,2106,BeepDur
 						Else If (character_code = 60)
-							SoundBeep,2247,BeepDur
+							SoundBeep,587.330,BeepDur
 						Else If (character_code = 70)
-							SoundBeep,2061,BeepDur
+							SoundBeep,783.991,BeepDur
 						Else If (character_code = 80)
-							SoundBeep,2188,BeepDur
+							SoundBeep,698.456,BeepDur
 						Else If (character_code = 90)
-							SoundBeep,2329,BeepDur
+							SoundBeep,659.255,BeepDur
 					}
 					Else ;If (Mod(character_code, 10) = 0)
 					{
 						If (Mod(character_code, 10) = 1)
-							SoundBeep,1906,BeepDur
+							SoundBeep,440.000,BeepDur
 						Else If (Mod(character_code, 10) = 2)
-							SoundBeep,2033,BeepDur
+							SoundBeep,493.883,BeepDur
 						Else If (Mod(character_code, 10) = 3)
-							SoundBeep,2174,BeepDur
+							SoundBeep,523.251,BeepDur
 						Else If (Mod(character_code, 10) = 4)
-							SoundBeep,1979,BeepDur
+							SoundBeep,880.000,BeepDur
 						Else If (Mod(character_code, 10) = 5)
 							SoundBeep,2106,BeepDur
 						Else If (Mod(character_code, 10) = 6)
-							SoundBeep,2247,BeepDur
+							SoundBeep,587.330,BeepDur
 						Else If (Mod(character_code, 10) = 7)
-							SoundBeep,2061,BeepDur
+							SoundBeep,783.991,BeepDur
 						Else If (Mod(character_code, 10) = 8)
-							SoundBeep,2188,BeepDur
+							SoundBeep,698.456,BeepDur
 						Else If (Mod(character_code, 10) = 9)
-							SoundBeep,2329,BeepDur
+							SoundBeep,659.255,BeepDur
 					}
 				}
 			}
 		}
 
 		{
-		  If (character_code > 9)
+		  If (character_code > 9 && audio_feedback <> 2)
 		  {
 			  If (character_code_pre = 0)
 			  {
@@ -1923,6 +1935,6 @@ Loop
     }
   }
 	;ToolTip, %joy_name% (#%JoystickNumber%):`n%axis_info%`nButtons Down: %buttons_down%`n`n(right-click the tray icon to exit)`ncharacter_code: %character_code%%A_Space%theta: %theta%%A_Space%loop_count: %loop_count%
-	Sleep, 25
+	Sleep, 5
 }
 return
