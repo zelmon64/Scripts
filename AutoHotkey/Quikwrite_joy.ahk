@@ -133,6 +133,17 @@ JoystickNumber = 0
 ; END OF CONFIG SECTION. Do not make changes below this point unless
 ; you wish to alter the basic functionality of the script.
 
+;Menu, tray, Icon, %A_ScriptDir%\wheel.ico, ,1
+{
+	 If A_IsCompiled
+   {
+      Menu, tray, Icon, %A_ScriptFullPath%, -159
+   } else
+   {
+      Menu, tray, Icon, %A_ScriptDir%\wheel.ico
+   }
+ }
+
 ; Auto-detect the joystick number if called for:
 if JoystickNumber <= 0
 {
@@ -1846,12 +1857,13 @@ Loop
       {
 				If (mod(character_mode, 10) = 5)
 				{
-					MouseClick, X2,,, 1, 0, D
-					MouseClick, X1,,, 1, 0, D
-					Sleep, 100
-					MouseClick, X1,,, 1, 0, U
-					Sleep, 100
-					MouseClick, X2,,, 1, 0, U
+					MouseClick, X2,,, 1, 0
+					;MouseClick, X2,,, 1, 0, D
+					;MouseClick, X1,,, 1, 0, D
+					;Sleep, 100
+					;MouseClick, X1,,, 1, 0, U
+					;Sleep, 100
+					;MouseClick, X2,,, 1, 0, U
 				}
 				Else
         	SendInput, {Backspace}
@@ -1962,32 +1974,53 @@ Loop
 	      If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "1")
 	      {
 					;SendRaw, 11
-					SendEvent, {Numpad1}
+					;SendEvent, {Numpad1}
+					SendEvent, {1}{1}
+					;Sleep, 200
+					;SendEvent, {1}
+					;SetKeyDelay, 100
+					;Send {1 Down}
+					;Send {1 Up}
+					;Send {1 Down}
+					;Send {1 Up}
+					;SetKeyDelay, -1
+					;SendEvent, {1}
+					;SetKeyDelay, 500
+					;Send {Blind}{1 DownTemp}
+					;Send {Blind}{1 Up}
+					;Send {Blind}{1 DownTemp}
+					;Send {Blind}{1 Up}
+					;SetKeyDelay, -1
 	      }
 	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "2")
 	      {
 					;SendRaw, 22
-					SendEvent, {Numpad2}
+					SendEvent, {2}{2}
+					;SendEvent, {Numpad2}
 	      }
 	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "3")
 	      {
 					;SendRaw, 33
-					SendEvent, {Numpad3}
+					SendEvent, {3}{3}
+					;SendEvent, {Numpad3}
 	      }
 	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "4")
 	      {
 					;SendRaw, 44
-					SendEvent, {Numpad4}
+					SendEvent, {4}{4}
+					;SendEvent, {Numpad4}
 	      }
 	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "5")
 	      {
 					;SendRaw, 55
-					SendEvent, {Numpad5}
+					SendEvent, {5}{5}
+					;SendEvent, {Numpad5}
 	      }
 	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "6")
 	      {
 					;SendRaw, 66
-					SendEvent, {Numpad6}
+					SendEvent, {6}{6}
+					;SendEvent, {Numpad6}
 	      }
       }
       Else
