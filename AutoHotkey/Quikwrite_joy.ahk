@@ -31,15 +31,15 @@ JoystickNumber = 0
 	ArrayIndex5 := 5
 
 	mode_1_characters =  %A_Space%              ,,,,,,,,,
-	mode_1_characters =  %mode_1_characters% a, a, s, k, m,,, q,,,
+	mode_1_characters =  %mode_1_characters% a, a, s, k, m,,, q,,TAid1,
 	mode_1_characters =  %mode_1_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
-	mode_1_characters =  %mode_1_characters% n, p, f, n,,, l,,, x,
-	mode_1_characters =  %mode_1_characters% e, h,,, e,,, c,,,
+	mode_1_characters =  %mode_1_characters% n, p, f, n,,, l,TAid4,, x,
+	mode_1_characters =  %mode_1_characters% e, h,,, e,,TAid2, c,,,
 	mode_1_characters =  %mode_1_characters%,,,,,,,,,,
-	mode_1_characters =  %mode_1_characters% t,,, u,,, t,,, y,
-	mode_1_characters =  %mode_1_characters% o, v,,, w,,, o, g, z,
+	mode_1_characters =  %mode_1_characters% t,,, u,TAid5,, t,,, y,
+	mode_1_characters =  %mode_1_characters% o, v,,TAid3, w,,, o, g, z,
 	mode_1_characters =  %mode_1_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
-	mode_1_characters =  %mode_1_characters% i,,, j,,, r, b, d, i,
+	mode_1_characters =  %mode_1_characters% i,TAid6,, j,,, r, b, d, i,
 	StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
 
 	mode_2_characters =   %A_Space%             ,,,,,,,,,
@@ -168,11 +168,15 @@ character_code_pre = 0
 button_click_pre := -1 ;95 ;
 mouse_click_pre := 0
 loop_count := 0
-loop_count_repeat := 10
-loop_count_skip := 3
-HUD_loop_count := 0
-HUD_loop_count_repeat := 10
-HUD_loop_count_skip := 3
+loop_count_repeat_base := 30 ;10
+loop_count_skip_base := 2 ;3
+;loop_count_repeat := 10
+;loop_count_skip := 3
+;HUD_loop_count := 0
+;HUD_loop_count_repeat := 10
+HUD_loop_count_skip := 12 ;10 ;3
+HUD_loop_count_delay := 80 ;30
+HUD_loop_count := -HUD_loop_count_delay
 this_code = 0
 stick_mode := 0 ;3 ; 1
 stick_centre := 1
@@ -184,6 +188,7 @@ dasher_mode := 0
 audio_feedback := 1
 hold_pose := 0
 loop_count_max := 15
+
 character_mode_lists = Lowercase,Uppercase,Symbols,Numbers,Functions
 StringSplit, character_mode_list, character_mode_lists, `,
 
@@ -401,6 +406,7 @@ Loop
 				{
 					button_click_pre := 9000
 					loop_count_max := 30
+					loop_count := 0
 				}
 			}
 			Else If (joyp = 27000)
@@ -409,6 +415,7 @@ Loop
 				{
 					button_click_pre := 27000
 					loop_count_max := 15
+					loop_count := 0
 				}
 			}
 			Else If (joyz > 95 || joyu > 90 || joyv > 90)
@@ -474,7 +481,6 @@ Loop
 					button_click_pre := 3
 					hold_pose := 0
 					Progress, Off
-					loop_count := 0
 				}
 			}
 			Else If (joy1 = "D")
@@ -482,7 +488,6 @@ Loop
 				If (button_click_pre <> 1)
 				{
 					button_click_pre := 1
-					loop_count := 0
 					hold_pose := 1
 					Progress, Off
 				}
@@ -510,8 +515,8 @@ Loop
 			button_click_pre := -1
 		Else
 		{
-
-			loop_count_skip := 2
+			loop_count_repeat := 1 * loop_count_repeat_base
+			loop_count_skip := 2 * loop_count_skip_base
 			If (joyp = 0)
 			{
 				If (button_click_pre <> 0)
@@ -631,8 +636,8 @@ Loop
 			button_click_pre := -1
 		Else
 		{
-			loop_count_repeat4 := 40
-			loop_count_skip := 4
+			loop_count_repeat := 4 * loop_count_repeat_base
+			loop_count_skip := 4 * loop_count_skip_base
 			If (joyp = 0)
 			{
 				If (button_click_pre <> 0)
@@ -641,7 +646,7 @@ Loop
 					SendInput, {Up}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Up}
 				}
@@ -655,7 +660,7 @@ Loop
 					SendInput, {Down}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Down}
 				}
@@ -685,7 +690,7 @@ Loop
 					SendInput, {Volume_Up}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Volume_Up}
 				}
@@ -699,7 +704,7 @@ Loop
 					SendInput, {Volume_Down}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Volume_Down}
 				}
@@ -713,7 +718,7 @@ Loop
 					SendInput, {Left}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Left}
 				}
@@ -727,7 +732,7 @@ Loop
 					SendInput, {Right}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Right}
 				}
@@ -788,8 +793,8 @@ Loop
 			button_click_pre := -1
 		Else
 		{
-			loop_count_repeat4 := 40
-			loop_count_skip := 4
+			loop_count_repeat := 4 * loop_count_repeat_base
+			loop_count_skip := 4 * loop_count_skip_base
 			If (joyp = 0)
 			{
 				If (button_click_pre <> 0)
@@ -798,7 +803,7 @@ Loop
 					SendInput, {Up}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Up}
 				}
@@ -812,7 +817,7 @@ Loop
 					SendInput, {Down}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Down}
 				}
@@ -826,7 +831,7 @@ Loop
 					SendInput, {Right}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Right}
 				}
@@ -840,7 +845,7 @@ Loop
 					SendInput, {Left}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Left}
 				}
@@ -854,7 +859,7 @@ Loop
 					SendInput, {Volume_Up}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Volume_Up}
 				}
@@ -868,7 +873,7 @@ Loop
 					SendInput, {Volume_Down}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Volume_Down}
 				}
@@ -945,8 +950,8 @@ Loop
 			button_click_pre := -1
 		Else
 		{
-			loop_count_repeat4 := 40
-			loop_count_skip := 4
+			loop_count_repeat := 4 * loop_count_repeat_base
+			loop_count_skip := 4 * loop_count_skip_base
 			If (joyp = 0 && dasher_mode = 0)
 			{
 				amoffsetx := -(joyx - 50) / 100
@@ -982,7 +987,7 @@ Loop
 					SendInput, {Right}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Right}
 				}
@@ -996,7 +1001,7 @@ Loop
 					SendInput, {Left}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Left}
 				}
@@ -1010,7 +1015,7 @@ Loop
 					SendInput, {Backspace}
 					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat4 && mod(loop_count, loop_count_skip) = 0)
+				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 				{
 					SendInput, {Backspace}
 				}
@@ -1087,7 +1092,8 @@ Loop
 			button_click_pre := -1
 		Else
 		{
-			loop_count_skip := 1
+			loop_count_repeat := 1 * loop_count_repeat_base
+			loop_count_skip := 1 * loop_count_skip_base
 			If (joyp = 0)
 			{
 				If (button_click_pre <> 0)
@@ -1450,6 +1456,11 @@ Loop
 							character14 := % all_characters%ch_mode%%character_index%
 							character_index += 3
 							character17 = % all_characters%ch_mode%%character_index%
+							character_index += 2
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								character19 = % "  "
+							Else
+								character19 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
 						}
 
 				    {
@@ -1476,7 +1487,12 @@ Loop
 							character33 := % all_characters%ch_mode%%character_index%
 							character_index += 3
 							character36 := % all_characters%ch_mode%%character_index%
-							character_index += 3
+							character_index++
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								character37 = % "  "
+							Else
+								character37 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index += 2
 							character39 := % all_characters%ch_mode%%character_index%
 						}
 
@@ -1485,14 +1501,24 @@ Loop
 							character41 := % all_characters%ch_mode%%character_index%
 							character_index += 3
 							character44 := % all_characters%ch_mode%%character_index%
-							character_index += 3
+							character_index += 2
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								character46 = % "  "
+							Else
+								character46 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index++
 							character47 := % all_characters%ch_mode%%character_index%
 						}
 
 				    {
 							character_index := 63
 							character63 := % all_characters%ch_mode%%character_index%
-							character_index += 3
+							character_index++
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								character64 = % "  "
+							Else
+								character64 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index += 2
 							character66 := % all_characters%ch_mode%%character_index%
 							character_index += 3
 							character69 := % all_characters%ch_mode%%character_index%
@@ -1501,7 +1527,12 @@ Loop
 				    {
 							character_index := 71
 							character71 := % all_characters%ch_mode%%character_index%
-							character_index += 3
+							character_index += 2
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								character73 = % "  "
+							Else
+								character73 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index++
 							character74 := % all_characters%ch_mode%%character_index%
 							character_index += 3
 							character77 := % all_characters%ch_mode%%character_index%
@@ -1529,7 +1560,12 @@ Loop
 						}
 
 				    {
-							character_index := 93
+							character_index := 91
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								character91 = % "  "
+							Else
+								character91 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index += 2
 							character93 := % all_characters%ch_mode%%character_index%
 							character_index += 3
 							character96 := % all_characters%ch_mode%%character_index%
@@ -1556,6 +1592,11 @@ Loop
 							option4 := % all_characters%ch_mode%%character_index%
 							character_index += 3
 							option7 = % all_characters%ch_mode%%character_index%
+							character_index += 2
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								option9 = % "  "
+							Else
+								option9 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
 						}
 						Else If (character_code < 30)
 				    {
@@ -1582,7 +1623,12 @@ Loop
 							option3 := % all_characters%ch_mode%%character_index%
 							character_index += 3
 							option6 := % all_characters%ch_mode%%character_index%
-							character_index += 3
+							character_index++
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								option7 = % "  "
+							Else
+								option7 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index += 2
 							option9 := % all_characters%ch_mode%%character_index%
 						}
 						Else If (character_code < 60)
@@ -1591,14 +1637,24 @@ Loop
 							option1 := % all_characters%ch_mode%%character_index%
 							character_index += 3
 							option4 := % all_characters%ch_mode%%character_index%
-							character_index += 3
+							character_index += 2
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								option6 = % "  "
+							Else
+								option6 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index++
 							option7 := % all_characters%ch_mode%%character_index%
 						}
 						Else If (character_code < 70)
 				    {
 							character_index := 63
 							option3 := % all_characters%ch_mode%%character_index%
-							character_index += 3
+							character_index++
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								option4 = % "  "
+							Else
+								option4 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index += 2
 							option6 := % all_characters%ch_mode%%character_index%
 							character_index += 3
 							option9 := % all_characters%ch_mode%%character_index%
@@ -1607,7 +1663,12 @@ Loop
 				    {
 							character_index := 71
 							option1 := % all_characters%ch_mode%%character_index%
-							character_index += 3
+							character_index += 2
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								option3 = % "  "
+							Else
+								option3 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index++
 							option4 := % all_characters%ch_mode%%character_index%
 							character_index += 3
 							option7 := % all_characters%ch_mode%%character_index%
@@ -1635,7 +1696,12 @@ Loop
 						}
 						Else
 				    {
-							character_index := 93
+							character_index := 91
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								option1 = % "  "
+							Else
+								option1 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index += 2
 							option3 := % all_characters%ch_mode%%character_index%
 							character_index += 3
 							option6 := % all_characters%ch_mode%%character_index%
@@ -1661,15 +1727,15 @@ Loop
 
 				SubText = %A_Space%|---------+---------+---------|`n
 										|%character11% %character12% %character13% |%character21% %character22% %character23% |%character31% %character32% %character33% |`n
-										|%character14%       |%character27% %character28% %character29% |      %character36% |`n
+										|%character14% %character19%    |%character27% %character28% %character29% |   %character37% %character36% |`n
 										|%character17%    %option1% |   %option2%    |%option3%    %character39% |`n
 										|---------+---------+---------|`n
 										|%character41%       |         |      %character63% |`n
-										|%character44%    %option4% |         |%option6%    %character66% |`n
+										|%character44% %character46% %option4% |         |%option6% %character64% %character66% |`n
 										|%character47%       |         |      %character69% |`n
 										|---------+---------+---------|`n
 										|%character71%    %option7% |   %option8%    |%option9%    %character93% |`n
-										|%character74%       |%character81% %character82% %character83% |      %character96% |`n
+										|%character74% %character73%    |%character81% %character82% %character83% |   %character91% %character96% |`n
 										|%character77% %character78% %character79% |%character87% %character88% %character89% |%character97% %character98% %character99% |`n
 										|---------+---------+---------|
 
@@ -1678,8 +1744,6 @@ Loop
 				DetectHiddenWindows, on
 				bar_TransValue_steps := 4
 				bar_TransValue := 150 / bar_TransValue_steps
-				HUD_loop_count_skip := 10
-				HUD_loop_count_delay := 30
 
 				If (HUD_loop_count > 0 && mod(HUD_loop_count, HUD_loop_count_skip) = 0)
 				{
@@ -1892,6 +1956,40 @@ Loop
 				If (character_mode > 20)
         	character_mode := 1
       }
+      Else If (StrLen(all_characters%ch_mode%%character_code%) = 5 && SubStr(all_characters%ch_mode%%character_code%, 1, 4) = "TAid")
+      {
+				;SendEvent, % " " + SubStr(all_characters%ch_mode%%character_code%, 2, 1)
+	      If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "1")
+	      {
+					;SendRaw, 11
+					SendEvent, {Numpad1}
+	      }
+	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "2")
+	      {
+					;SendRaw, 22
+					SendEvent, {Numpad2}
+	      }
+	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "3")
+	      {
+					;SendRaw, 33
+					SendEvent, {Numpad3}
+	      }
+	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "4")
+	      {
+					;SendRaw, 44
+					SendEvent, {Numpad4}
+	      }
+	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "5")
+	      {
+					;SendRaw, 55
+					SendEvent, {Numpad5}
+	      }
+	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "6")
+	      {
+					;SendRaw, 66
+					SendEvent, {Numpad6}
+	      }
+      }
       Else
       {
 				If (all_characters%ch_mode%%character_code% <> "")
@@ -1935,6 +2033,6 @@ Loop
     }
   }
 	;ToolTip, %joy_name% (#%JoystickNumber%):`n%axis_info%`nButtons Down: %buttons_down%`n`n(right-click the tray icon to exit)`ncharacter_code: %character_code%%A_Space%theta: %theta%%A_Space%loop_count: %loop_count%
-	Sleep, 5
+	Sleep, 1
 }
 return
