@@ -21,7 +21,7 @@ JoystickNumber = 0
 ;   0    8  9   7  0  9   7  8    0
 ;
 ;
-{
+{ ; Quikwrite definitions
 	all_characters := Object()
 	all_characters_long := Object()
 	ArrayIndex1 := 1
@@ -30,97 +30,104 @@ JoystickNumber = 0
 	ArrayIndex4 := 4
 	ArrayIndex5 := 5
 
-	mode_1_characters =  %A_Space%              ,,,,,,,,,
-	mode_1_characters =  %mode_1_characters% a, a, s, k, m,,, q,,TAid1,
-	mode_1_characters =  %mode_1_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
-	mode_1_characters =  %mode_1_characters% n, p, f, n,,, l,TAid4,, x,
-	mode_1_characters =  %mode_1_characters% e, h,,, e,,TAid2, c,,,
-	mode_1_characters =  %mode_1_characters%,,,,,,,,,,
-	mode_1_characters =  %mode_1_characters% t,,, u,TAid5,, t,,, y,
-	mode_1_characters =  %mode_1_characters% o, v,,TAid3, w,,, o, g, z,
-	mode_1_characters =  %mode_1_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
-	mode_1_characters =  %mode_1_characters% i,TAid6,, j,,, r, b, d, i,
-	StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
+	{ ; abc
+		mode_1_characters =  %A_Space%              ,,,,,,,,,
+		mode_1_characters =  %mode_1_characters% a, a, s, k, m,,, q,,TAid1,
+		mode_1_characters =  %mode_1_characters%BS,SL,BS,UL,,,,Sy,FL,Ca,
+		mode_1_characters =  %mode_1_characters% n, p, f, n,,, l,TAid4,, x,
+		mode_1_characters =  %mode_1_characters% e, h,,, e,,TAid2, c,,,
+		mode_1_characters =  %mode_1_characters%,,,,,,,,,,
+		mode_1_characters =  %mode_1_characters% t,,, u,TAid5,, t,,, y,
+		mode_1_characters =  %mode_1_characters% o, v,,TAid3, w,,, o, g, z,
+		mode_1_characters =  %mode_1_characters%Sp,Tb,Fn,No,,,,En,Sp,NL,
+		mode_1_characters =  %mode_1_characters% i,TAid6,, j,,, r, b, d, i,
+		StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
+	}
+	{ ; ABC
+		mode_2_characters =   %A_Space%             ,,,,,,,,,
+		mode_2_characters =  %mode_2_characters% A, A, S, K, M,,, Q,,,
+		mode_2_characters =  %mode_2_characters%BS,SL,BS,UL,,,,Sy,FL,Ca,
+		mode_2_characters =  %mode_2_characters% N, P, F, N,,, L,,, X,
+		mode_2_characters =  %mode_2_characters% E, H,,, E,,, C,,,
+		mode_2_characters =  %mode_2_characters%,,,,,,,,,,
+		mode_2_characters =  %mode_2_characters% T,,, U,,, T,,, Y,
+		mode_2_characters =  %mode_2_characters% O, V,,, W,,, O, G, Z,
+		mode_2_characters =  %mode_2_characters%Sp,Tb,Fn,No,,,,En,Sp,NL,
+		mode_2_characters =  %mode_2_characters% I,,, J,,, R, B, D, I,
+		StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
+	}
+	{ ; Symbols
+		mode_3_characters =    %A_Space%            ,,,,,,,,,
+		mode_3_characters =  %mode_3_characters% ~, ~, {, }, @,,,In,,,
+		mode_3_characters =  %mode_3_characters%BS,SL,BS,UL,,,,Sy,FL,Ca,
+		mode_3_characters =  %mode_3_characters% C, (, ), C,,, [,,, ],
+		mode_3_characters =  %mode_3_characters%%A_Space%;,%A_Space%#,,,%A_Space%;,,,%A_Space%:,,,
+		mode_3_characters =  %mode_3_characters%,,,,,,,,,,
+		mode_3_characters =  %mode_3_characters% ',,, ",,, ',,, ``,
+		mode_3_characters =  %mode_3_characters% |,Ec,,, ^,,, |, /, \,
+		mode_3_characters =  %mode_3_characters%Sp,Tb,Fn,No,,,,En,Sp,NL,
+		mode_3_characters =  %mode_3_characters% .,,, !,,, ?, _, &, .,
+		StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
+		ArrayIndex := 30
+		all_characters%ArrayIndex3%%ArrayIndex% := " ,"
+		ArrayIndex := 33
+		all_characters%ArrayIndex3%%ArrayIndex% := " ,"
+	}
+	{ ; Numbers
+		mode_4_characters =  %A_Space%            ,,,,,,,,,
+		mode_4_characters =  %mode_4_characters% 0, 0, <, >, 1,,, 2,,,
+		mode_4_characters =  %mode_4_characters%BS,SL,BS,UL,,,,Sy,FL,Ca,
+		mode_4_characters =  %mode_4_characters% C, (, ), C,,, [,,, ],
+		mode_4_characters =  %mode_4_characters% 3, #,,, 3,,, 4,,,
+		mode_4_characters =  %mode_4_characters%,,,,,,,,,,
+		mode_4_characters =  %mode_4_characters% =,,, +,,, =,,, -,
+		mode_4_characters =  %mode_4_characters% 5, /,,, *,,, 5, 6, 7,
+		mode_4_characters =  %mode_4_characters%Sp,Tb,Fn,No,,,,En,Sp,NL,
+		mode_4_characters =  %mode_4_characters% .,,, 9,,, 8, $, P, .,
+		StringSplit, all_characters%ArrayIndex4%, mode_4_characters, `,
+		ArrayIndex := 30
+		all_characters%ArrayIndex4%%ArrayIndex% := " ,"
+		ArrayIndex := 33
+		all_characters%ArrayIndex4%%ArrayIndex% := " ,"
+		ArrayIndex := 98
+		all_characters%ArrayIndex4%%ArrayIndex% := " %"
+	}
+	{ ; Functions
+		mode_5_characters =  %A_Space%            ,,,,,,,,,
+		mode_5_characters =  %mode_5_characters%^s,^s,Hm,Ed,PU,,,PD,,,
+		mode_5_characters =  %mode_5_characters%BS,SL,BS,UL,,,,Sy,FL,Ca,
+		mode_5_characters =  %mode_5_characters%VM,V+,V-,VM,,,#x,,,F4,
+		mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,^h,,,
+		mode_5_characters =  %mode_5_characters%,,,,,,,,,,
+		mode_5_characters =  %mode_5_characters%!c,,,!z,,,!c,,,!x,
+		mode_5_characters =  %mode_5_characters%Sr,Z-,,,Z+,,,Sr,CT,CW,
+		mode_5_characters =  %mode_5_characters%Sp,Tb,Fn,No,,,,En,Sp,NL,
+		mode_5_characters =  %mode_5_characters%PS,,,F6,,,F5,11,12,PS,
+		StringSplit, all_characters%ArrayIndex5%, mode_5_characters, `,
 
-	mode_2_characters =   %A_Space%             ,,,,,,,,,
-	mode_2_characters =  %mode_2_characters% A, A, S, K, M,,, Q,,,
-	mode_2_characters =  %mode_2_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
-	mode_2_characters =  %mode_2_characters% N, P, F, N,,, L,,, X,
-	mode_2_characters =  %mode_2_characters% E, H,,, E,,, C,,,
-	mode_2_characters =  %mode_2_characters%,,,,,,,,,,
-	mode_2_characters =  %mode_2_characters% T,,, U,,, T,,, Y,
-	mode_2_characters =  %mode_2_characters% O, V,,, W,,, O, G, Z,
-	mode_2_characters =  %mode_2_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
-	mode_2_characters =  %mode_2_characters% I,,, J,,, R, B, D, I,
-	StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
-
-	mode_3_characters =    %A_Space%            ,,,,,,,,,
-	mode_3_characters =  %mode_3_characters% ~, ~, {, }, @,,,In,,,
-	mode_3_characters =  %mode_3_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
-	mode_3_characters =  %mode_3_characters% C, (, ), C,,, [,,, ],
-	mode_3_characters =  %mode_3_characters%%A_Space%;,%A_Space%#,,,%A_Space%;,,,%A_Space%:,,,
-	mode_3_characters =  %mode_3_characters%,,,,,,,,,,
-	mode_3_characters =  %mode_3_characters% ',,, ",,, ',,, ``,
-	mode_3_characters =  %mode_3_characters% |,Ec,,, ^,,, |, /, \,
-	mode_3_characters =  %mode_3_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
-	mode_3_characters =  %mode_3_characters% .,,, !,,, ?, _, &, .,
-	StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
-	ArrayIndex := 30
-	all_characters%ArrayIndex3%%ArrayIndex% := " ,"
-	ArrayIndex := 33
-	all_characters%ArrayIndex3%%ArrayIndex% := " ,"
-
-	mode_4_characters =  %A_Space%            ,,,,,,,,,
-	mode_4_characters =  %mode_4_characters% 0, 0, <, >, 1,,, 2,,,
-	mode_4_characters =  %mode_4_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
-	mode_4_characters =  %mode_4_characters% C, (, ), C,,, [,,, ],
-	mode_4_characters =  %mode_4_characters% 3, #,,, 3,,, 4,,,
-	mode_4_characters =  %mode_4_characters%,,,,,,,,,,
-	mode_4_characters =  %mode_4_characters% =,,, +,,, =,,, -,
-	mode_4_characters =  %mode_4_characters% 5, /,,, *,,, 5, 6, 7,
-	mode_4_characters =  %mode_4_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
-	mode_4_characters =  %mode_4_characters% .,,, 9,,, 8, $, P, .,
-	StringSplit, all_characters%ArrayIndex4%, mode_4_characters, `,
-	ArrayIndex := 30
-	all_characters%ArrayIndex4%%ArrayIndex% := " ,"
-	ArrayIndex := 33
-	all_characters%ArrayIndex4%%ArrayIndex% := " ,"
-	ArrayIndex := 98
-	all_characters%ArrayIndex4%%ArrayIndex% := " %"
-
-	mode_5_characters =  %A_Space%            ,,,,,,,,,
-	mode_5_characters =  %mode_5_characters%^s,^s,Hm,Ed,PU,,,PD,,,
-	mode_5_characters =  %mode_5_characters%M5,Sy,M5,UC,,,,Sy,Fn,UC,
-	mode_5_characters =  %mode_5_characters%VM,V+,V-,VM,,,#x,,,F4,
-	mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,^h,,,
-	mode_5_characters =  %mode_5_characters%,,,,,,,,,,
-	mode_5_characters =  %mode_5_characters%!c,,,!z,,,!c,,,!x,
-	mode_5_characters =  %mode_5_characters%Sr,PS,,,Z+,,,Sr,CT,CW,
-	mode_5_characters =  %mode_5_characters%SC,Tb,Fn,No,,,,En,SC,No,
-	mode_5_characters =  %mode_5_characters%12,,,F6,,,F5,11,TM,12,
-	StringSplit, all_characters%ArrayIndex5%, mode_5_characters, `,
-
-	StringReplace, mode_5_characters_long, mode_5_characters, F3 , {F3} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, F4 , !{F4} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, F5 , {F5} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, F6 , {F6} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, 11 , {F11} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, 12 , {F12} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, Hm , {Home} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, Ed , {End} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, PU , {PgUp} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, PD , {PgDn} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, PS , {PrintScreen} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, VM , {Volume_Mute} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, V+ , {Volume_Up 5} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, V- , {Volume_Down 5} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, Sr , !{Space} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, CW , {Alt DownTemp}{Tab} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, CT , {Control DownTemp}{Tab} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, Z+ , ^{=} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, Z- , ^{-} , All
-	StringReplace, mode_5_characters_long, mode_5_characters_long, TM , ^+{Escape} , All
-	StringSplit, all_characters_long%ArrayIndex5%, mode_5_characters_long, `,
+		StringReplace, mode_5_characters_long, mode_5_characters, F3 , {F3} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, F4 , !{F4} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, F5 , {F5} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, F6 , {F6} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, 11 , {F11} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, 12 , {F12} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, Hm , {Home} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, Ed , {End} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, PU , {PgUp} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, PD , {PgDn} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, PS , {PrintScreen} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, VM , {Volume_Mute} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, V+ , {Volume_Up 5} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, V- , {Volume_Down 5} , All
+		;StringReplace, mode_5_characters_long, mode_5_characters_long, Sr , !{Space} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, Sr , #{Tab} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, CW , {Alt DownTemp}{Tab} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, CT , {Control DownTemp}{Tab} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, Z+ , ^{=} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, Z- , ^{-} , All
+		;StringReplace, mode_5_characters_long, mode_5_characters_long, TM , ^+{Escape} , All
+		StringSplit, all_characters_long%ArrayIndex5%, mode_5_characters_long, `,
+	}
 }
 ;
 ;
@@ -174,33 +181,35 @@ if JoystickNumber <= 0
 	}
 }
 
-character_code = 0
-character_code_pre = 0
-button_click_pre := -1 ;95 ;
-mouse_click_pre := 0
-loop_count := 0
-loop_count_repeat_base := 30 ;10
-loop_count_skip_base := 2 ;3
-;loop_count_repeat := 10
-;loop_count_skip := 3
-;HUD_loop_count := 0
-;HUD_loop_count_repeat := 10
-HUD_loop_count_skip := 12 ;10 ;3
-HUD_loop_count_delay := 80 ;30
-HUD_loop_count := -HUD_loop_count_delay
-this_code = 0
-stick_mode := 0 ;3 ; 1
-stick_centre := 1
-character_mode = 1
-ch_mode := 1
-amoffsetx := 0
-amoffsety := 0
-dasher_mode := 0
-audio_feedback := 1
-hold_pose := 0
-loop_count_max := 15
+{ ; Variables
+	character_code = 0
+	character_code_pre = 0
+	button_click_pre := -1 ;95 ;
+	mouse_click_pre := 0
+	loop_count := 0
+	loop_count_repeat_base := 30 ;10
+	loop_count_skip_base := 2 ;3
+	;loop_count_repeat := 10
+	;loop_count_skip := 3
+	;HUD_loop_count := 0
+	;HUD_loop_count_repeat := 10
+	HUD_loop_count_skip := 12 ;10 ;3
+	HUD_loop_count_delay := 80 ;30
+	HUD_loop_count := -HUD_loop_count_delay
+	this_code = 0
+	stick_mode := 0 ;3 ; 1
+	stick_centre := 1
+	character_mode = 1
+	ch_mode := 1
+	amoffsetx := 0
+	amoffsety := 0
+	dasher_mode := 0
+	audio_feedback := 1
+	hold_pose := 0
+	loop_count_max := 15
+}
 
-character_mode_lists = Lowercase,Uppercase,Symbols,Numbers,Functions
+character_mode_lists = Lowercase,Capitals,Symbols,Numbers,Functions
 StringSplit, character_mode_list, character_mode_lists, `,
 
 New_Code(character_code, this_code)
@@ -244,7 +253,7 @@ GetKeyState, joy_name, %JoystickNumber%JoyName
 GetKeyState, joy_info, %JoystickNumber%JoyInfo
 Loop
 {
-	{
+	{ ; Joystick polling
 		buttons_down =
 		Loop, %joy_buttons%
 		{
@@ -284,214 +293,89 @@ Loop
 	}
 
 	tdz := 60
-
-	If (stick_mode = 0) ; Mode selection
-	{
-		If (abs(joyx-50) > 15 || abs(joyy-50) > 15)
+	{ ; Modes
+		If (stick_mode = 0) ; Mode selection
 		{
-			If (button_click_pre <> 9)
+			If (abs(joyx-50) > 15 || abs(joyy-50) > 15)
 			{
-				button_click_pre := 9
-				stick_mode := 2
-			}
-		}
-		Else If (joyz > 95)
-		{
-			If (button_click_pre <> 9)
-			{
-				button_click_pre := 9
-				mouse_click_pre := 1
-				stick_mode := 6
-				;dasher_mode := 0
-				;If (joyp = 9000)
-				If (joy9 = "D")
+				If (button_click_pre <> 9)
 				{
-					;button_click_pre := 9000
 					button_click_pre := 9
-					;loop_count := 1
+					stick_mode := 2
+				}
+			}
+			Else If (joyz > 95)
+			{
+				If (button_click_pre <> 9)
+				{
+					button_click_pre := 9
+					mouse_click_pre := 1
+					stick_mode := 6
+					;dasher_mode := 0
+					;If (joyp = 9000)
+					If (joy9 = "D")
+					{
+						;button_click_pre := 9000
+						button_click_pre := 9
+						;loop_count := 1
+						If (dasher_mode = 1)
+							dasher_mode := 0
+						Else
+							dasher_mode := 1
+					}
 					If (dasher_mode = 1)
-						dasher_mode := 0
-					Else
-						dasher_mode := 1
-				}
-				If (dasher_mode = 1)
-				{
-					SetTitleMatchMode, 2
-					IfWinExist, Dasher
 					{
-					   WinGet MMX, MinMax, Dasher
-					   IfNotEqual MMX,0, WinRestore, Dasher
-						 IfWinActive,  Dasher
-						 	SendInput, !{Tab}
-					}
-					Else
-					{
-						Run, "C:\Program Files (x86)\Dasher\Dasher 5.00\Dasher.exe" /config direct_joy
+						SetTitleMatchMode, 2
+						IfWinExist, Dasher
+						{
+						   WinGet MMX, MinMax, Dasher
+						   IfNotEqual MMX,0, WinRestore, Dasher
+							 IfWinActive,  Dasher
+							 	SendInput, !{Tab}
+						}
+						Else
+						{
+							Run, "C:\Program Files (x86)\Dasher\Dasher 5.00\Dasher.exe" /config direct_joy
+						}
 					}
 				}
 			}
-		}
-		Else If (joyp = 0)
-		{
-			If (button_click_pre <> 0)
+			Else If (joyp = 0)
 			{
-				button_click_pre := 0
-				loop_count := 1
-				stick_mode := 1
-				character_mode := 5
-			}
-		}
-		Else If (joyp = 18000)
-		{
-			If (button_click_pre <> 95)
-			{
-				button_click_pre := 95
-				stick_mode := 3
-			}
-		}
-		Else If (joy5 = "D")
-		{
-			If (button_click_pre <> 5)
-			{
-				button_click_pre := 5
-				stick_mode := 1
-				character_mode := 1
-				If (joy9 = "D")
+				If (button_click_pre <> 0)
 				{
-					button_click_pre := 9
-					;loop_count := 0
-					If (audio_feedback = 0)
-						audio_feedback := 1
-					Else If (audio_feedback = 1)
-						audio_feedback := 2
-					Else
-						audio_feedback := 0
+					button_click_pre := 0
+					loop_count := 1
+					stick_mode := 1
+					character_mode := 5
 				}
 			}
-		}
-		Else If (joy1 = "D")
-		{
-			If (button_click_pre <> 1)
-			{
-				button_click_pre := 1
-				stick_mode := 4
-			}
-		}
-		Else If (joy2 = "D")
-		{
-			If (button_click_pre <> 3)
-			{
-				button_click_pre := 3
-				stick_mode := 5
-			}
-		}
-		Else If (button_click_pre = 9)
-			button_click_pre := -1
-	}
-	Else If (stick_mode = 3) ; ACAT
-	{
-		If (joy9 = "D" || joy11 = "D")
-		{
-			If (button_click_pre <> 9)
-			{
-				button_click_pre := 9
-				stick_mode := 0 ;2
-				;SendInput, !{Space}
-				;SendInput, #{Tab}
-			}
-		}
-		Else If (button_click_pre = 9)
-			button_click_pre := -1
-		Else
-		{
-			If (joyp = 18000)
+			Else If (joyp = 18000)
 			{
 				If (button_click_pre <> 95)
 				{
 					button_click_pre := 95
-				}
-			}
-			Else If (joyp = 9000)
-			{
-				If (button_click_pre <> 9000)
-				{
-					button_click_pre := 9000
-					loop_count_max := 30
-					loop_count := 0
-				}
-			}
-			Else If (joyp = 27000)
-			{
-				If (button_click_pre <> 27000)
-				{
-					button_click_pre := 27000
-					loop_count_max := 15
-					loop_count := 0
-				}
-			}
-			Else If (joyz > 95 || joyu > 90 || joyv > 90)
-			{
-				If (button_click_pre = 95)
-				{
-					button_click_pre := 2
-				}
-			}
-			Else If (joyz > 51)
-			{
-				; || joyu > 10 || joyv > 10
-				If (button_click_pre <> 2 && button_click_pre <> 95)
-				{
-					button_click_pre := 2
-					SetKeyDelay, 100
-					Send {Blind}{F12 DownTemp}
-					Send {Blind}{F12 Up}
-					SetKeyDelay, -1
+					stick_mode := 3
 				}
 			}
 			Else If (joy5 = "D")
 			{
-				; || joyu > 10 || joyv > 10
-				If (button_click_pre <> 2 && button_click_pre <> 95)
+				If (button_click_pre <> 5)
 				{
-				  If (loop_count >= loop_count_max || loop_count < 0)
-				    loop_count := 0
-					;loop_count += 1
-					If (loop_count = 0)
-						Progress, fs48 , -%loop_count%-, Count, Exercise, Courier New
-					Else
-						Progress,, -%loop_count%-
-					loop_count_progress := (loop_count + 1) * 100 / loop_count_max
-					If (hold_pose = 1)
-						SoundBeep,900,100
-					Progress, %loop_count_progress%
-					;Progress, loop_count * 100 / 15
-					If (hold_pose = 1)
-						Sleep, 5000
-				  ;Sleep, 100
-					If (hold_pose = 1)
-						SoundBeep,500,100
-					v := ComObjCreate("SAPI.SpVoice")
-					v.Voice := v.GetVoices().Item(1)
-					;Progress, %loop_count_progress%
-					;SplashTextOn,,, %loop_count%
-					loop_count += 1
-					Progress,, %loop_count%
-					v.Speak(loop_count)
-					;Progress, %loop_count_progress%
-					;SplashTextOff
-					If (loop_count >= loop_count_max)
-						Progress, Off
-					button_click_pre := 2
-					;Send, {F12}
-				}
-			}
-			Else If (joy2 = "D")
-			{
-				If (button_click_pre <> 3)
-				{
-					button_click_pre := 3
-					hold_pose := 0
-					Progress, Off
+					button_click_pre := 5
+					stick_mode := 1
+					character_mode := 1
+					If (joy9 = "D")
+					{
+						button_click_pre := 9
+						;loop_count := 0
+						If (audio_feedback = 0)
+							audio_feedback := 1
+						Else If (audio_feedback = 1)
+							audio_feedback := 2
+						Else
+							audio_feedback := 0
+					}
 				}
 			}
 			Else If (joy1 = "D")
@@ -499,765 +383,892 @@ Loop
 				If (button_click_pre <> 1)
 				{
 					button_click_pre := 1
-					hold_pose := 1
-					Progress, Off
+					stick_mode := 4
 				}
 			}
-			Else If (button_click_pre <> -1 && button_click_pre <> 9 && button_click_pre <> 95)
-				{
-					button_click_pre := -1
-				}
-		}
-	}
-	Else If (stick_mode = 1) ; Typing
-	{
-		If (joy9 = "D" || joy11 = "D")
-		{
-			If (button_click_pre <> 9)
-			{
-				If (joyp = 000)
-					stick_mode := 3
-				Else
-					stick_mode := 0 ; 2
-				button_click_pre := 9
-			}
-		}
-		Else If (button_click_pre = 9)
-			button_click_pre := -1
-		Else
-		{
-			loop_count_repeat := 1 * loop_count_repeat_base
-			loop_count_skip := 2 * loop_count_skip_base
-			If (joyp = 0)
-			{
-				If (button_click_pre <> 0)
-				{
-					button_click_pre := 0
-					SendInput, {Up}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Up}
-				}
-				loop_count++
-			}
-			Else If (joyp = 9000)
-			{
-				If (button_click_pre <> 9000)
-				{
-					button_click_pre := 9000
-					SendInput, {Right}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Right}
-				}
-				loop_count++
-			}
-			Else If (joyp = 18000)
-			{
-				If (button_click_pre <> 18000)
-				{
-					button_click_pre := 18000
-					SendInput, {Down}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Down}
-				}
-				loop_count++
-			}
-			Else If (joyp = 27000)
-			{
-				If (button_click_pre <> 27000)
-				{
-					button_click_pre := 27000
-					SendInput, {Left}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Left}
-				}
-				loop_count++
-			}
-			If (joy5 = "D")
-			{
-				If (button_click_pre <> 5)
-				{
-					button_click_pre := 5
-					SendInput, {Control down}
-				}
-			}
-			If (joyz > 55)
-			{
-				; || joyu > 10 || joyv > 10
-				If (button_click_pre <> 2)
-				{
-					button_click_pre := 2
-					SendInput, {Shift down}
-				}
-			}
-			If (joy1 = "D")
-			{
-				If (button_click_pre <> 1)
-				{
-					button_click_pre := 1
-					SendInput, {LWin down}
-				}
-			}
-			If (joy2 = "D")
+			Else If (joy2 = "D")
 			{
 				If (button_click_pre <> 3)
 				{
 					button_click_pre := 3
-					SendInput, {Alt down}
+					stick_mode := 5
 				}
 			}
+			Else If (button_click_pre = 9)
+				button_click_pre := -1
+		}
+		Else If (stick_mode = 3) ; ACAT
+		{
+			If (joy9 = "D" || joy11 = "D")
 			{
-				If (joyp = -1 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
+				If (button_click_pre <> 9)
+				{
+					button_click_pre := 9
+					stick_mode := 0 ;2
+					;SendInput, !{Space}
+					;SendInput, #{Tab}
+				}
+			}
+			Else If (button_click_pre = 9)
+				button_click_pre := -1
+			Else
+			{
+				If (joyp = 18000)
+				{
+					If (button_click_pre <> 95)
 					{
-						; || joyu > 10 || joyv > 10  && joyu < 10 && joyv < 10
-						If (button_click_pre > 0 && button_click_pre < 9)
-						{
-							SendInput, {Control up}
-							SendInput, {Shift up}
-							SendInput, {LWin up}
-							SendInput, {Alt up}
-						}
-						button_click_pre := -1
+						button_click_pre := 95
 					}
-			}
-		}
-	}
-	Else If (stick_mode = 4) ; Media Control normal
-	{
-		If (joy9 = "D" || joy11 = "D")
-		{
-			If (button_click_pre <> 9)
-			{
-				stick_mode := 0 ; 2
-				button_click_pre := 9
-			}
-		}
-		Else If (button_click_pre = 9)
-			button_click_pre := -1
-		Else
-		{
-			loop_count_repeat := 4 * loop_count_repeat_base
-			loop_count_skip := 4 * loop_count_skip_base
-			If (joyp = 0)
-			{
-				If (button_click_pre <> 0)
-				{
-					button_click_pre := 0
-					SendInput, {Up}
-					loop_count := 1
 				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+				Else If (joyp = 9000)
 				{
-					SendInput, {Up}
+					If (button_click_pre <> 9000)
+					{
+						button_click_pre := 9000
+						loop_count_max := 30
+						loop_count := 0
+					}
 				}
-				loop_count++
-			}
-			Else If (joyp = 18000)
-			{
-				If (button_click_pre <> 18000)
+				Else If (joyp = 27000)
 				{
-					button_click_pre := 18000
-					SendInput, {Down}
-					loop_count := 1
+					If (button_click_pre <> 27000)
+					{
+						button_click_pre := 27000
+						loop_count_max := 15
+						loop_count := 0
+					}
 				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+				Else If (joyz > 95 || joyu > 90 || joyv > 90)
 				{
-					SendInput, {Down}
+					If (button_click_pre = 95)
+					{
+						button_click_pre := 2
+					}
 				}
-				loop_count++
-			}
-			Else If (joyp = 9000)
-			{
-				If (button_click_pre <> 9000)
+				Else If (joyz > 51)
 				{
-					button_click_pre := 9000
-					SendInput, {Media_Next}
+					; || joyu > 10 || joyv > 10
+					If (button_click_pre <> 2 && button_click_pre <> 95)
+					{
+						button_click_pre := 2
+						SetKeyDelay, 100
+						Send {Blind}{F12 DownTemp}
+						Send {Blind}{F12 Up}
+						SetKeyDelay, -1
+					}
 				}
-			}
-			Else If (joyp = 27000)
-			{
-				If (button_click_pre <> 27000)
+				Else If (joy5 = "D")
 				{
-					button_click_pre := 27000
-					SendInput, {Media_Prev}
+					; || joyu > 10 || joyv > 10
+					If (button_click_pre <> 2 && button_click_pre <> 95)
+					{
+					  If (loop_count >= loop_count_max || loop_count < 0)
+					    loop_count := 0
+						;loop_count += 1
+						If (loop_count = 0)
+							Progress, fs48 , -%loop_count%-, Count, Exercise, Courier New
+						Else
+							Progress,, -%loop_count%-
+						loop_count_progress := (loop_count + 1) * 100 / loop_count_max
+						If (hold_pose = 1)
+							SoundBeep,900,100
+						Progress, %loop_count_progress%
+						;Progress, loop_count * 100 / 15
+						If (hold_pose = 1)
+							Sleep, 5000
+					  ;Sleep, 100
+						If (hold_pose = 1)
+							SoundBeep,500,100
+						v := ComObjCreate("SAPI.SpVoice")
+						v.Voice := v.GetVoices().Item(1)
+						;Progress, %loop_count_progress%
+						;SplashTextOn,,, %loop_count%
+						loop_count += 1
+						Progress,, %loop_count%
+						v.Speak(loop_count)
+						;Progress, %loop_count_progress%
+						;SplashTextOff
+						If (loop_count >= loop_count_max)
+							Progress, Off
+						button_click_pre := 2
+						;Send, {F12}
+					}
 				}
-			}
-			Else If (joyy < 30 && joyx > 30 && joyx < 70)
-			{
-				If (button_click_pre <> 2)
+				Else If (joy2 = "D")
 				{
-					button_click_pre := 2
-					SendInput, {Volume_Up}
-					loop_count := 1
+					If (button_click_pre <> 3)
+					{
+						button_click_pre := 3
+						hold_pose := 0
+						Progress, Off
+					}
 				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+				Else If (joy1 = "D")
 				{
-					SendInput, {Volume_Up}
+					If (button_click_pre <> 1)
+					{
+						button_click_pre := 1
+						hold_pose := 1
+						Progress, Off
+					}
 				}
-				loop_count++
-			}
-			Else If (joyy > 70 && joyx > 30 && joyx < 70)
-			{
-				If (button_click_pre <> 2)
-				{
-					button_click_pre := 2
-					SendInput, {Volume_Down}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Volume_Down}
-				}
-				loop_count++
-			}
-			Else If (joyx < 30 && joyy > 40 && joyy < 60)
-			{
-				If (button_click_pre <> 2)
-				{
-					button_click_pre := 2
-					SendInput, {Left}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Left}
-				}
-				loop_count++
-			}
-			Else If (joyx > 70 && joyy > 40 && joyy < 60)
-			{
-				If (button_click_pre <> 2)
-				{
-					button_click_pre := 2
-					SendInput, {Right}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Right}
-				}
-				loop_count++
-			}
-			If (joy5 = "D")
-			{
-				If (button_click_pre <> 5)
-				{
-					button_click_pre := 5
-					SendInput, {Media_Play_Pause}
-				}
-			}
-			If (joyz > 95)
-			{
-				; || joyu > 10 || joyv > 10
-				If (button_click_pre <> 2)
-				{
-					button_click_pre := 2
-					SendInput, {Media_Stop}
-				}
-			}
-			If (joy1 = "D")
-			{
-				If (button_click_pre <> 1)
-				{
-					button_click_pre := 1
-					SendInput, {F11}
-				}
-			}
-			If (joy2 = "D")
-			{
-				If (button_click_pre <> 3)
-				{
-					button_click_pre := 3
-					SendInput, {w}
-				}
-			}
-			{
-				If (joyp = -1 && abs(joyx-50) < 5 && abs(joyy-50) < 5 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
+				Else If (button_click_pre <> -1 && button_click_pre <> 9 && button_click_pre <> 95)
 					{
 						button_click_pre := -1
 					}
 			}
 		}
-	}
-	Else If (stick_mode = 5) ; Media Control Amazon
-	{
-		If (joy9 = "D" || joy11 = "D")
+		Else If (stick_mode = 1) ; Typing
 		{
-			If (button_click_pre <> 9)
+			If (joy9 = "D" || joy11 = "D")
 			{
-				stick_mode := 0 ; 2
-				button_click_pre := 9
-			}
-		}
-		Else If (button_click_pre = 9)
-			button_click_pre := -1
-		Else
-		{
-			loop_count_repeat := 4 * loop_count_repeat_base
-			loop_count_skip := 4 * loop_count_skip_base
-			If (joyp = 0)
-			{
-				If (button_click_pre <> 0)
+				If (button_click_pre <> 9)
 				{
-					button_click_pre := 0
-					SendInput, {Up}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Up}
-				}
-				loop_count++
-			}
-			Else If (joyp = 18000)
-			{
-				If (button_click_pre <> 18000)
-				{
-					button_click_pre := 18000
-					SendInput, {Down}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Down}
-				}
-				loop_count++
-			}
-			Else If (joyp = 9000)
-			{
-				If (button_click_pre <> 9000)
-				{
-					button_click_pre := 9000
-					SendInput, {Right}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Right}
-				}
-				loop_count++
-			}
-			Else If (joyp = 27000)
-			{
-				If (button_click_pre <> 27000)
-				{
-					button_click_pre := 27000
-					SendInput, {Left}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Left}
-				}
-				loop_count++
-			}
-			Else If (joyy < 30 && joyx > 30 && joyx < 70)
-			{
-				If (button_click_pre <> 2)
-				{
-					button_click_pre := 2
-					SendInput, {Volume_Up}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Volume_Up}
-				}
-				loop_count++
-			}
-			Else If (joyy > 70 && joyx > 30 && joyx < 70)
-			{
-				If (button_click_pre <> 2)
-				{
-					button_click_pre := 2
-					SendInput, {Volume_Down}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Volume_Down}
-				}
-				loop_count++
-			}
-			Else If (joyx < 30 && joyy > 40 && joyy < 60)
-			{
-				If (button_click_pre <> 2)
-				{
-					button_click_pre := 2
-					SendInput, {Volume_Mute}
-				}
-			}
-			Else If (joyx > 70 && joyy > 40 && joyy < 60)
-			{
-				If (button_click_pre <> 2)
-				{
-					button_click_pre := 2
-					SendInput, {Volume_Mute}
-				}
-			}
-			If (joy5 = "D")
-			{
-				If (button_click_pre <> 5)
-				{
-					button_click_pre := 5
-					SendInput, {Space}
-				}
-			}
-			If (joyz > 95)
-			{
-				; || joyu > 10 || joyv > 10
-				If (button_click_pre <> 2)
-				{
-					button_click_pre := 2
-					SendInput, {Media_Stop}
-				}
-			}
-			If (joy1 = "D")
-			{
-				If (button_click_pre <> 1)
-				{
-					button_click_pre := 1
-					SendInput, {F11}
-				}
-			}
-			If (joy2 = "D")
-			{
-				If (button_click_pre <> 3)
-				{
-					button_click_pre := 3
-					SendInput, {Escape}
-				}
-			}
-			{
-				If (joyp = -1 && abs(joyx-50) < 5 && abs(joyy-50) < 5 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
-					{
-						button_click_pre := -1
-					}
-			}
-		}
-	}
-	Else If (stick_mode = 6) ; Absolute mouse
-	{
-		If (joy9 = "D" || joy11 = "D")
-		{
-			If (button_click_pre <> 9)
-			{
-				stick_mode := 0
-				button_click_pre := 9
-			}
-		}
-		Else If (button_click_pre = 9)
-			button_click_pre := -1
-		Else
-		{
-			loop_count_repeat := 4 * loop_count_repeat_base
-			loop_count_skip := 4 * loop_count_skip_base
-			If (joyp = 0 && dasher_mode = 0)
-			{
-				If (mouse_click_pre <> 2)
-				{
-					mouse_click_pre := 2
-					MouseClick, Right,,, 1, 0, ;D
-				}
-				;amoffsetx := -(joyx - 50) / 100
-				;amoffsety := -(joyy - 50) / 100
-			}
-			Else If (joyp = 0)
-			{
-				button_click_pre := 0
-				loop_count := 1
-				stick_mode := 2
-				WinMinimize, Dasher
-			}
-			Else If (joyp = 18000)
-			{
-				If (button_click_pre <> 18000)
-				{
-					button_click_pre := 18000
-					If (dasher_mode = 0)
-						SendInput, #{Tab}
+					If (joyp = 000)
+						stick_mode := 3
 					Else
+						stick_mode := 0 ; 2
+					button_click_pre := 9
+				}
+			}
+			Else If (button_click_pre = 9)
+				button_click_pre := -1
+			Else
+			{
+				loop_count_repeat := 1 * loop_count_repeat_base
+				loop_count_skip := 2 * loop_count_skip_base
+				If (joyp = 0)
+				{
+					If (button_click_pre <> 0)
 					{
-						stick_mode := 2
-						dasher_mode := 0
-						WinClose, Dasher
+						button_click_pre := 0
+						SendInput, {Up}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Up}
+					}
+					loop_count++
+				}
+				Else If (joyp = 9000)
+				{
+					If (button_click_pre <> 9000)
+					{
+						button_click_pre := 9000
+						SendInput, {Right}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Right}
+					}
+					loop_count++
+				}
+				Else If (joyp = 18000)
+				{
+					If (button_click_pre <> 18000)
+					{
+						button_click_pre := 18000
+						SendInput, {Down}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Down}
+					}
+					loop_count++
+				}
+				Else If (joyp = 27000)
+				{
+					If (button_click_pre <> 27000)
+					{
+						button_click_pre := 27000
+						SendInput, {Left}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Left}
+					}
+					loop_count++
+				}
+				If (joy5 = "D")
+				{
+					If (button_click_pre <> 5)
+					{
+						button_click_pre := 5
+						SendInput, {Control down}
 					}
 				}
-			}
-			Else If (joyp = 9000)
-			{
-				If (button_click_pre <> 9000)
+				If (joyz > 55)
 				{
-					button_click_pre := 9000
-					SendInput, {Right}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Right}
-				}
-				loop_count++
-			}
-			Else If (joyp = 27000)
-			{
-				If (button_click_pre <> 27000)
-				{
-					button_click_pre := 27000
-					SendInput, {Left}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Left}
-				}
-				loop_count++
-			}
-			Else If (joy2 = "D" && dasher_mode = 1)
-			{
-				If (button_click_pre <> 3)
-				{
-					button_click_pre := 3
-					SendInput, {Backspace}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {Backspace}
-				}
-				loop_count++
-			}
-			If (joyz > 55)
-			{
-				; || joyu > 10 || joyv > 10
-				If (mouse_click_pre <> 1)
-				{
-					mouse_click_pre := 1
-					MouseClick, Left,,, 1, 0, ;D  ; Hold down the left mouse button.
-				}
-			}
-			If (joy5 = "D")
-			{
-				If (mouse_click_pre <> 2 && dasher_mode = 1)
-				{
-					mouse_click_pre := 2
-					MouseClick, Right,,, 1, 0, ;D
-				}
-				Else If (button_click_pre <> 5 && dasher_mode = 0)
-				{
-					button_click_pre := 5
-					amoffsetx := (joyx - 50) ;/ 100
-					amoffsety := (joyy - 50) ;/ 100
-				}
-			}
-			If (joy1 = "D")
-			{
-				If (button_click_pre <> 1)
-				{
-					button_click_pre := 1
-					SendInput, {Enter}
-				}
-			}
-			If (joy2 = "D")
-			{
-				If (button_click_pre <> 3 && dasher_mode = 0)
-				{
-					button_click_pre := 3
-					SendInput, {Escape}
-				}
-			}
-			{
-				If (joyz < 55 && joy5 <> "D" && joyp = -1 && mouse_click_pre <> -1)
-				{
-					;  && joyu < 10 && joyv < 10
-					If (mouse_click_pre = 1)
+					; || joyu > 10 || joyv > 10
+					If (button_click_pre <> 2)
 					{
-						;MouseClick, Left,,, 1, 0, U
-					}  ; Release the mouse button.
-					Else If (mouse_click_pre = 2)
-					{
-						;MouseClick, Right,,, 1, 0, U
-					}  ; Release the mouse button.
-					mouse_click_pre := -1
-					; button_click_pre := -1
+						button_click_pre := 2
+						SendInput, {Shift down}
+					}
 				}
-			}
-			{
-				If (joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && joyp = -1 && button_click_pre <> -1)
+				If (joy1 = "D")
 				{
-					button_click_pre := -1
+					If (button_click_pre <> 1)
+					{
+						button_click_pre := 1
+						SendInput, {LWin down}
+					}
+				}
+				If (joy2 = "D")
+				{
+					If (button_click_pre <> 3)
+					{
+						button_click_pre := 3
+						SendInput, {Alt down}
+					}
+				}
+				{
+					If (joyp = -1 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
+						{
+							; || joyu > 10 || joyv > 10  && joyu < 10 && joyv < 10
+							If (button_click_pre > 0 && button_click_pre < 9)
+							{
+								SendInput, {Control up}
+								SendInput, {Shift up}
+								SendInput, {LWin up}
+								SendInput, {Alt up}
+							}
+							button_click_pre := -1
+						}
 				}
 			}
 		}
-	}
-	Else ; stick_mode = 2 ; Relative mouse
-	{
-		If (joy9 = "D" || joy11 = "D")
+		Else If (stick_mode = 4) ; Media Control normal
 		{
-			If (button_click_pre <> 9)
+			If (joy9 = "D" || joy11 = "D")
 			{
-				stick_mode := 0
-				button_click_pre := 9
+				If (button_click_pre <> 9)
+				{
+					stick_mode := 0 ; 2
+					button_click_pre := 9
+				}
+			}
+			Else If (button_click_pre = 9)
+				button_click_pre := -1
+			Else
+			{
+				loop_count_repeat := 4 * loop_count_repeat_base
+				loop_count_skip := 4 * loop_count_skip_base
+				If (joyp = 0)
+				{
+					If (button_click_pre <> 0)
+					{
+						button_click_pre := 0
+						SendInput, {Up}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Up}
+					}
+					loop_count++
+				}
+				Else If (joyp = 18000)
+				{
+					If (button_click_pre <> 18000)
+					{
+						button_click_pre := 18000
+						SendInput, {Down}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Down}
+					}
+					loop_count++
+				}
+				Else If (joyp = 9000)
+				{
+					If (button_click_pre <> 9000)
+					{
+						button_click_pre := 9000
+						SendInput, {Media_Next}
+					}
+				}
+				Else If (joyp = 27000)
+				{
+					If (button_click_pre <> 27000)
+					{
+						button_click_pre := 27000
+						SendInput, {Media_Prev}
+					}
+				}
+				Else If (joyy < 30 && joyx > 30 && joyx < 70)
+				{
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
+						SendInput, {Volume_Up}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Volume_Up}
+					}
+					loop_count++
+				}
+				Else If (joyy > 70 && joyx > 30 && joyx < 70)
+				{
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
+						SendInput, {Volume_Down}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Volume_Down}
+					}
+					loop_count++
+				}
+				Else If (joyx < 30 && joyy > 40 && joyy < 60)
+				{
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
+						SendInput, {Left}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Left}
+					}
+					loop_count++
+				}
+				Else If (joyx > 70 && joyy > 40 && joyy < 60)
+				{
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
+						SendInput, {Right}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Right}
+					}
+					loop_count++
+				}
+				If (joy5 = "D")
+				{
+					If (button_click_pre <> 5)
+					{
+						button_click_pre := 5
+						SendInput, {Media_Play_Pause}
+					}
+				}
+				If (joyz > 95)
+				{
+					; || joyu > 10 || joyv > 10
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
+						SendInput, {Media_Stop}
+					}
+				}
+				If (joy1 = "D")
+				{
+					If (button_click_pre <> 1)
+					{
+						button_click_pre := 1
+						SendInput, {F11}
+					}
+				}
+				If (joy2 = "D")
+				{
+					If (button_click_pre <> 3)
+					{
+						button_click_pre := 3
+						SendInput, {w}
+					}
+				}
+				{
+					If (joyp = -1 && abs(joyx-50) < 5 && abs(joyy-50) < 5 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
+						{
+							button_click_pre := -1
+						}
+				}
 			}
 		}
-		Else If (button_click_pre = 9)
-			button_click_pre := -1
-		Else
+		Else If (stick_mode = 5) ; Media Control Amazon
 		{
-			loop_count_repeat := 1 * loop_count_repeat_base
-			loop_count_skip := 1 * loop_count_skip_base
-			If (joyp = 0)
+			If (joy9 = "D" || joy11 = "D")
 			{
-				If (button_click_pre <> 0)
+				If (button_click_pre <> 9)
+				{
+					stick_mode := 0 ; 2
+					button_click_pre := 9
+				}
+			}
+			Else If (button_click_pre = 9)
+				button_click_pre := -1
+			Else
+			{
+				loop_count_repeat := 4 * loop_count_repeat_base
+				loop_count_skip := 4 * loop_count_skip_base
+				If (joyp = 0)
+				{
+					If (button_click_pre <> 0)
+					{
+						button_click_pre := 0
+						SendInput, {Up}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Up}
+					}
+					loop_count++
+				}
+				Else If (joyp = 18000)
+				{
+					If (button_click_pre <> 18000)
+					{
+						button_click_pre := 18000
+						SendInput, {Down}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Down}
+					}
+					loop_count++
+				}
+				Else If (joyp = 9000)
+				{
+					If (button_click_pre <> 9000)
+					{
+						button_click_pre := 9000
+						SendInput, {Right}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Right}
+					}
+					loop_count++
+				}
+				Else If (joyp = 27000)
+				{
+					If (button_click_pre <> 27000)
+					{
+						button_click_pre := 27000
+						SendInput, {Left}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Left}
+					}
+					loop_count++
+				}
+				Else If (joyy < 30 && joyx > 30 && joyx < 70)
+				{
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
+						SendInput, {Volume_Up}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Volume_Up}
+					}
+					loop_count++
+				}
+				Else If (joyy > 70 && joyx > 30 && joyx < 70)
+				{
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
+						SendInput, {Volume_Down}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Volume_Down}
+					}
+					loop_count++
+				}
+				Else If (joyx < 30 && joyy > 40 && joyy < 60)
+				{
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
+						SendInput, {Volume_Mute}
+					}
+				}
+				Else If (joyx > 70 && joyy > 40 && joyy < 60)
+				{
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
+						SendInput, {Volume_Mute}
+					}
+				}
+				If (joy5 = "D")
+				{
+					If (button_click_pre <> 5)
+					{
+						button_click_pre := 5
+						SendInput, {Space}
+					}
+				}
+				If (joyz > 95)
+				{
+					; || joyu > 10 || joyv > 10
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
+						SendInput, {Escape}
+					}
+				}
+				If (joy1 = "D")
+				{
+					If (button_click_pre <> 1)
+					{
+						button_click_pre := 1
+						SendInput, {F11}
+					}
+				}
+				If (joy2 = "D")
+				{
+					If (button_click_pre <> 3)
+					{
+						button_click_pre := 3
+						SendInput, {f}
+					}
+				}
+				{
+					If (joyp = -1 && abs(joyx-50) < 5 && abs(joyy-50) < 5 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
+						{
+							button_click_pre := -1
+						}
+				}
+			}
+		}
+		Else If (stick_mode = 6) ; Absolute mouse
+		{
+			If (joy9 = "D" || joy11 = "D")
+			{
+				If (button_click_pre <> 9)
+				{
+					stick_mode := 0
+					button_click_pre := 9
+				}
+			}
+			Else If (button_click_pre = 9)
+				button_click_pre := -1
+			Else
+			{
+				loop_count_repeat := 4 * loop_count_repeat_base
+				loop_count_skip := 4 * loop_count_skip_base
+				If (joyp = 0 && dasher_mode = 0)
+				{
+					If (mouse_click_pre <> 2)
+					{
+						mouse_click_pre := 2
+						MouseClick, Right,,, 1, 0, ;D
+					}
+					;amoffsetx := -(joyx - 50) / 100
+					;amoffsety := -(joyy - 50) / 100
+				}
+				Else If (joyp = 0)
 				{
 					button_click_pre := 0
-					SendInput, {WheelUp}
 					loop_count := 1
+					stick_mode := 2
+					WinMinimize, Dasher
 				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+				Else If (joyp = 18000)
 				{
-					SendInput, {WheelUp}
-				}
-				loop_count++
-			}
-			Else If (joyp = 9000)
-			{
-				If (button_click_pre <> 9000)
-				{
-					button_click_pre := 9000
-					SendInput, {WheelRight}
-					;scroll(1)
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {WheelRight}
-					;scroll(1)
-				}
-				loop_count++
-			}
-			Else If (joyp = 18000)
-			{
-				If (button_click_pre <> 18000)
-				{
-					button_click_pre := 18000
-					SendInput, {WheelDown}
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {WheelDown}
-				}
-				loop_count++
-			}
-			Else If (joyp = 27000)
-			{
-				If (button_click_pre <> 27000)
-				{
-					button_click_pre := 27000
-					SendInput, {WheelLeft}
-					;scroll(0)
-					loop_count := 1
-				}
-				Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-				{
-					SendInput, {WheelLeft}
-					;scroll(0)
-				}
-				loop_count++
-			}
-			If (joyz > 55)
-			{
-				; || joyu > 10 || joyv > 10
-				If (mouse_click_pre <> 1)
-				{
-					mouse_click_pre := 1
-					MouseClick, Left,,, 1, 0, D  ; Hold down the left mouse button.
-				}
-			}
-			If (joy5 = "D")
-			{
-				If (mouse_click_pre <> 2 && mouse_click_pre <> 23) ;) ;
-				{
-					mouse_click_pre := 2
-					MouseClick, Right,,, 1, 0, D
-				}
-			}
-			If (joy2 = "D")
-			{
-				If (mouse_click_pre = 2)
-				{
-					mouse_click_pre := 23
-					MouseClick, Middle,,, 1, 0, D
-					MouseClick, Right,,, 1, 0, U
-					MouseClick, Middle,,, 1, 0, U
-					;SendInput, #{Esc}
-					; MouseClick, Middle,,, 1, 0, D
-				}
-				Else If (mouse_click_pre <> 3 && mouse_click_pre <> 23)
-				{
-					mouse_click_pre := 3
-					MouseClick, Middle,,, 1, 0, D
-				}
-			}
-			If (joy1 = "D")
-			{
-				If (mouse_click_pre <> 4)
-				{
-					mouse_click_pre := 4
-					MouseClick, X1,,, 1, 0, D
-				}
-			}
-			{
-				If (joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && mouse_click_pre <> -1)
-				{
-					;  && joyu < 10 && joyv < 10
-					If (mouse_click_pre = 1)
+					If (button_click_pre <> 18000)
 					{
-						MouseClick, Left,,, 1, 0, U
-					}  ; Release the mouse button.
-					Else If (mouse_click_pre = 2)
-					{
-						MouseClick, Right,,, 1, 0, U
-					}  ; Release the mouse button.
-					Else If (mouse_click_pre = 23)
-					{
-						; MouseClick, Right,,, 1, 0, U
-						; MouseClick, Middle,,, 1, 0, U
-						; SendInput, #{Esc}
-						;SendInput, {Esc}
-					}  ; Release the mouse button.
-					Else If (mouse_click_pre = 3)
-					{
-						MouseClick, Middle,,, 1, 0, U
-					}  ; Release the mouse button.
-					Else If (mouse_click_pre = 4)
-					{
-						MouseClick, X1,,, 1, 0, U
-					}  ; Release the mouse button.
-					mouse_click_pre := -1
+						button_click_pre := 18000
+						If (dasher_mode = 0)
+							SendInput, #{Tab}
+						Else
+						{
+							stick_mode := 2
+							dasher_mode := 0
+							WinClose, Dasher
+						}
+					}
 				}
-			}
-			{
-				If (joyp = -1 && button_click_pre <> -1 && button_click_pre <> 9)
+				Else If (joyp = 9000)
+				{
+					If (button_click_pre <> 9000)
+					{
+						button_click_pre := 9000
+						SendInput, {Right}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Right}
+					}
+					loop_count++
+				}
+				Else If (joyp = 27000)
+				{
+					If (button_click_pre <> 27000)
+					{
+						button_click_pre := 27000
+						SendInput, {Left}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Left}
+					}
+					loop_count++
+				}
+				Else If (joy2 = "D" && dasher_mode = 1)
+				{
+					If (button_click_pre <> 3)
+					{
+						button_click_pre := 3
+						SendInput, {Backspace}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Backspace}
+					}
+					loop_count++
+				}
+				If (joyz > 55)
+				{
+					; || joyu > 10 || joyv > 10
+					If (mouse_click_pre <> 1)
+					{
+						mouse_click_pre := 1
+						MouseClick, Left,,, 1, 0, ;D  ; Hold down the left mouse button.
+					}
+				}
+				If (joy5 = "D")
+				{
+					If (mouse_click_pre <> 2 && dasher_mode = 1)
+					{
+						mouse_click_pre := 2
+						MouseClick, Right,,, 1, 0, ;D
+					}
+					Else If (button_click_pre <> 5 && dasher_mode = 0)
+					{
+						button_click_pre := 5
+						amoffsetx := (joyx - 50) ;/ 100
+						amoffsety := (joyy - 50) ;/ 100
+					}
+				}
+				If (joy1 = "D")
+				{
+					If (button_click_pre <> 1)
+					{
+						button_click_pre := 1
+						SendInput, {Enter}
+					}
+				}
+				If (joy2 = "D")
+				{
+					If (button_click_pre <> 3 && dasher_mode = 0)
+					{
+						button_click_pre := 3
+						SendInput, {Escape}
+					}
+				}
+				{
+					If (joyz < 55 && joy5 <> "D" && joyp = -1 && mouse_click_pre <> -1)
+					{
+						;  && joyu < 10 && joyv < 10
+						If (mouse_click_pre = 1)
+						{
+							;MouseClick, Left,,, 1, 0, U
+						}  ; Release the mouse button.
+						Else If (mouse_click_pre = 2)
+						{
+							;MouseClick, Right,,, 1, 0, U
+						}  ; Release the mouse button.
+						mouse_click_pre := -1
+						; button_click_pre := -1
+					}
+				}
+				{
+					If (joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && joyp = -1 && button_click_pre <> -1)
 					{
 						button_click_pre := -1
 					}
+				}
+			}
+		}
+		Else ; stick_mode = 2 ; Relative mouse
+		{
+			If (joy9 = "D" || joy11 = "D")
+			{
+				If (button_click_pre <> 9)
+				{
+					stick_mode := 0
+					button_click_pre := 9
+				}
+			}
+			Else If (button_click_pre = 9)
+				button_click_pre := -1
+			Else
+			{
+				loop_count_repeat := 1 * loop_count_repeat_base
+				loop_count_skip := 1 * loop_count_skip_base
+				If (joyp = 0)
+				{
+					If (button_click_pre <> 0)
+					{
+						button_click_pre := 0
+						SendInput, {WheelUp}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {WheelUp}
+					}
+					loop_count++
+				}
+				Else If (joyp = 9000)
+				{
+					If (button_click_pre <> 9000)
+					{
+						button_click_pre := 9000
+						SendInput, {WheelRight}
+						;scroll(1)
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {WheelRight}
+						;scroll(1)
+					}
+					loop_count++
+				}
+				Else If (joyp = 18000)
+				{
+					If (button_click_pre <> 18000)
+					{
+						button_click_pre := 18000
+						SendInput, {WheelDown}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {WheelDown}
+					}
+					loop_count++
+				}
+				Else If (joyp = 27000)
+				{
+					If (button_click_pre <> 27000)
+					{
+						button_click_pre := 27000
+						SendInput, {WheelLeft}
+						;scroll(0)
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {WheelLeft}
+						;scroll(0)
+					}
+					loop_count++
+				}
+				If (joyz > 55)
+				{
+					; || joyu > 10 || joyv > 10
+					If (mouse_click_pre <> 1)
+					{
+						mouse_click_pre := 1
+						MouseClick, Left,,, 1, 0, D  ; Hold down the left mouse button.
+					}
+				}
+				If (joy5 = "D")
+				{
+					If (mouse_click_pre = 4 && mouse_click_pre <> 42)
+					{
+						mouse_click_pre := 42
+						MouseClick, X2,,, 1, 0
+					}
+					Else If (mouse_click_pre <> 2 && mouse_click_pre <> 23 && mouse_click_pre <> 42)
+					{
+						mouse_click_pre := 2
+						MouseClick, Right,,, 1, 0, D
+					}
+				}
+				If (joy2 = "D")
+				{
+					If (mouse_click_pre = 2)
+					{
+						mouse_click_pre := 23
+						MouseClick, Middle,,, 1, 0, D
+						MouseClick, Right,,, 1, 0, U
+						MouseClick, Middle,,, 1, 0, U
+						;SendInput, #{Esc}
+						; MouseClick, Middle,,, 1, 0, D
+					}
+					Else If (mouse_click_pre <> 3 && mouse_click_pre <> 23)
+					{
+						mouse_click_pre := 3
+						; MouseClick, Middle,,, 1, 0, D
+					}
+				}
+				If (joy1 = "D")
+				{
+					If (mouse_click_pre <> 4 && mouse_click_pre <> 42)
+					{
+						mouse_click_pre := 4
+						; MouseClick, X1,,, 1, 0, D
+					}
+				}
+				{
+					If (joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && mouse_click_pre <> -1)
+					{
+						;  && joyu < 10 && joyv < 10
+						If (mouse_click_pre = 1)
+						{
+							MouseClick, Left,,, 1, 0, U
+						}  ; Release the mouse button.
+						Else If (mouse_click_pre = 2)
+						{
+							MouseClick, Right,,, 1, 0, U
+						}  ; Release the mouse button.
+						Else If (mouse_click_pre = 23)
+						{
+						}
+						Else If (mouse_click_pre = 3)
+						{
+							MouseClick, Middle,,, 1, 0
+						}  ; Press the mouse button.
+						Else If (mouse_click_pre = 4)
+						{
+							MouseClick, X1,,, 1, 0
+						}  ; Press the mouse button.
+						mouse_click_pre := -1
+					}
+				}
+				{
+					If (joyp = -1 && button_click_pre <> -1 && button_click_pre <> 9)
+						{
+							button_click_pre := -1
+						}
+				}
 			}
 		}
 	}
 
-  tol = 25
+  ;tol = 25
 	dz = 15
 	joyx -= 50
 	joyy -= 50
@@ -1266,7 +1277,8 @@ Loop
 	region := 45 * pi / 180
 	radius2 := joyx*joyx + joyy*joyy
 	radius := sqrt(radius2)
-	tol := 20 * pi / 180 * exp((dz - radius) * 3 / (50 - dz))
+	; tol := 20 * pi / 180 * exp((dz - radius) * 3 / (50 - dz))
+	tol := 25 * pi / 180 * exp((dz - radius) * 2 / (50 - dz))
 
 	If (radius2 > dz*dz)
 	{
@@ -1386,7 +1398,7 @@ Loop
 	Else If (stick_mode = 1 && radius2 > dz*dz)
 	{
 		character_code_pre := character_code
-		{
+		{ ; Joystick position
 			If (theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol)
 			{
 				character_code := New_Code(character_code, 6)
@@ -1419,59 +1431,58 @@ Loop
 			{
 				character_code := New_Code(character_code, 9)
 			}
+		}
 
-			if (character_code <> character_code_pre && audio_feedback <> 0)
+		if (character_code <> character_code_pre && audio_feedback <> 0)
+		{ ; Joystick position audio feedback
+			If (character_code > 9)
 			{
-			  If (character_code > 9)
+				BeepDur := 100
+				character_code_audio := character_code
+				If (Mod(character_code, 10) = 0)
+					character_code_audio /= 10
+				If (false)
 				{
-					BeepDur := 100
-					If (Mod(character_code, 10) = 0)
-					{
-						If (character_code = 10)
-							SoundBeep,440.000,BeepDur
-						Else If (character_code = 20)
-							SoundBeep,493.883,BeepDur
-						Else If (character_code = 30)
-							SoundBeep,523.251,BeepDur
-						Else If (character_code = 40)
-							SoundBeep,880.000,BeepDur
-						Else If (character_code = 50)
-							SoundBeep,2106,BeepDur
-						Else If (character_code = 60)
-							SoundBeep,587.330,BeepDur
-						Else If (character_code = 70)
-							SoundBeep,783.991,BeepDur
-						Else If (character_code = 80)
-							SoundBeep,698.456,BeepDur
-						Else If (character_code = 90)
-							SoundBeep,659.255,BeepDur
-					}
-					Else ;If (Mod(character_code, 10) = 0)
-					{
-						If (Mod(character_code, 10) = 1)
-							SoundBeep,440.000,BeepDur
-						Else If (Mod(character_code, 10) = 2)
-							SoundBeep,493.883,BeepDur
-						Else If (Mod(character_code, 10) = 3)
-							SoundBeep,523.251,BeepDur
-						Else If (Mod(character_code, 10) = 4)
-							SoundBeep,880.000,BeepDur
-						Else If (Mod(character_code, 10) = 5)
-							SoundBeep,2106,BeepDur
-						Else If (Mod(character_code, 10) = 6)
-							SoundBeep,587.330,BeepDur
-						Else If (Mod(character_code, 10) = 7)
-							SoundBeep,783.991,BeepDur
-						Else If (Mod(character_code, 10) = 8)
-							SoundBeep,698.456,BeepDur
-						Else If (Mod(character_code, 10) = 9)
-							SoundBeep,659.255,BeepDur
-					}
+					If (Mod(character_code_audio, 10) = 1)
+						SoundBeep,440.000,BeepDur
+					Else If (Mod(character_code_audio, 10) = 2)
+						SoundBeep,493.883,BeepDur
+					Else If (Mod(character_code_audio, 10) = 3)
+						SoundBeep,523.251,BeepDur
+					Else If (Mod(character_code_audio, 10) = 4)
+						SoundBeep,880.000,BeepDur
+					Else If (Mod(character_code_audio, 10) = 6)
+						SoundBeep,587.330,BeepDur
+					Else If (Mod(character_code_audio, 10) = 7)
+						SoundBeep,783.991,BeepDur
+					Else If (Mod(character_code_audio, 10) = 8)
+						SoundBeep,698.456,BeepDur
+					Else If (Mod(character_code_audio, 10) = 9)
+						SoundBeep,659.255,BeepDur
+				}
+				If (true)
+				{
+					If (Mod(character_code_audio, 10) = 2)
+						SoundBeep, 440.000, BeepDur
+					Else If (Mod(character_code_audio, 10) = 1)
+						SoundBeep, 493.883, BeepDur
+					Else If (Mod(character_code_audio, 10) = 3)
+						SoundBeep, 523.251, BeepDur
+					Else If (Mod(character_code_audio, 10) = 4)
+						SoundBeep, 587.330, BeepDur
+					Else If (Mod(character_code_audio, 10) = 6)
+						SoundBeep, 659.255, BeepDur
+					Else If (Mod(character_code_audio, 10) = 7)
+						SoundBeep, 698.456, BeepDur
+					Else If (Mod(character_code_audio, 10) = 9)
+						SoundBeep, 783.991, BeepDur
+					Else If (Mod(character_code_audio, 10) = 8)
+						SoundBeep, 880.000, BeepDur
 				}
 			}
 		}
 
-		{
+		{ ; Joystick position visual feedback
 		  If (character_code > 9 && audio_feedback <> 2)
 		  {
 			  If (character_code_pre = 0)
@@ -1889,18 +1900,7 @@ Loop
       ; SendInput, %character_code%
 			If (character_code = 20 || character_code = 22)
       {
-				If (mod(character_mode, 10) = 5)
-				{
-					MouseClick, X2,,, 1, 0
-					;MouseClick, X2,,, 1, 0, D
-					;MouseClick, X1,,, 1, 0, D
-					;Sleep, 100
-					;MouseClick, X1,,, 1, 0, U
-					;Sleep, 100
-					;MouseClick, X2,,, 1, 0, U
-				}
-				Else
-        	SendInput, {Backspace}
+        SendInput, {Backspace}
       }
       Else If (character_code = 21) ; || character_code = 24)
       {
@@ -1945,12 +1945,7 @@ Loop
       }
       Else If (character_code = 80 || character_code = 88)
       {
-				If (mod(character_mode, 10) = 5)
-				{
-					MouseClick, X2,,, 1, 0
-				}
-				Else
-        	SendInput, {Space}
+        SendInput, {Space}
       }
       Else If (character_code = 87) ; || character_code = 84)
       {
