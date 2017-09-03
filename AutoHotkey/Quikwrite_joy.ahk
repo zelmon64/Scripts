@@ -55,15 +55,15 @@ JoystickNumber = 0
 	StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
 
 	mode_3_characters =    %A_Space%            ,,,,,,,,,
-	mode_3_characters =  %mode_3_characters% *, *, {, }, @,,,In,,,
+	mode_3_characters =  %mode_3_characters% ~, ~, {, }, @,,,In,,,
 	mode_3_characters =  %mode_3_characters%BS,Sy,BS,UC,,,,Sy,Fn,UC,
 	mode_3_characters =  %mode_3_characters% C, (, ), C,,, [,,, ],
 	mode_3_characters =  %mode_3_characters%%A_Space%;,%A_Space%#,,,%A_Space%;,,,%A_Space%:,,,
 	mode_3_characters =  %mode_3_characters%,,,,,,,,,,
-	mode_3_characters =  %mode_3_characters% ',,, ",,, ',,, &,
+	mode_3_characters =  %mode_3_characters% ',,, ",,, ',,, ``,
 	mode_3_characters =  %mode_3_characters% |,Ec,,, ^,,, |, /, \,
 	mode_3_characters =  %mode_3_characters%Sp,Tb,Fn,No,,,,En,Sp,No,
-	mode_3_characters =  %mode_3_characters% .,,, !,,, ?, _, -, .,
+	mode_3_characters =  %mode_3_characters% .,,, !,,, ?, _, &, .,
 	StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
 	ArrayIndex := 30
 	all_characters%ArrayIndex3%%ArrayIndex% := " ,"
@@ -965,8 +965,13 @@ Loop
 			loop_count_skip := 4 * loop_count_skip_base
 			If (joyp = 0 && dasher_mode = 0)
 			{
-				amoffsetx := -(joyx - 50) / 100
-				amoffsety := -(joyy - 50) / 100
+				If (mouse_click_pre <> 2)
+				{
+					mouse_click_pre := 2
+					MouseClick, Right,,, 1, 0, ;D
+				}
+				;amoffsetx := -(joyx - 50) / 100
+				;amoffsety := -(joyy - 50) / 100
 			}
 			Else If (joyp = 0)
 			{
@@ -1043,10 +1048,16 @@ Loop
 			}
 			If (joy5 = "D")
 			{
-				If (mouse_click_pre <> 2)
+				If (mouse_click_pre <> 2 && dasher_mode = 1)
 				{
 					mouse_click_pre := 2
 					MouseClick, Right,,, 1, 0, ;D
+				}
+				Else If (button_click_pre <> 5 && dasher_mode = 0)
+				{
+					button_click_pre := 5
+					amoffsetx := (joyx - 50) ;/ 100
+					amoffsety := (joyy - 50) ;/ 100
 				}
 			}
 			If (joy1 = "D")
@@ -1066,7 +1077,7 @@ Loop
 				}
 			}
 			{
-				If (joyz < 55 && joy5 <> "D" && mouse_click_pre <> -1)
+				If (joyz < 55 && joy5 <> "D" && joyp = -1 && mouse_click_pre <> -1)
 				{
 					;  && joyu < 10 && joyv < 10
 					If (mouse_click_pre = 1)
@@ -1082,7 +1093,7 @@ Loop
 				}
 			}
 			{
-				If (joy1 <> "D" && joy2 <> "D" && joyp = -1 && button_click_pre <> -1)
+				If (joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && joyp = -1 && button_click_pre <> -1)
 				{
 					button_click_pre := -1
 				}
@@ -1303,7 +1314,9 @@ Loop
 				stick_centre := 0
 			Else
 				stick_centre := 1
+
 			SetMouseDelay, -1  ; Makes movement smoother.
+
 			If (abs(joyx) < mdz)
 				joyx := 0
 			Else If (joyx > 0)
@@ -1317,10 +1330,29 @@ Loop
 				joyy -= mdz
 			Else
 				joyy += mdz
-			joyx += 50 - mdz
-			joyy += 50 - mdz
+			;joyx += 50 - mdz
+			;joyy += 50 - mdz
+
+			If ((amoffsetx) > mdz)
+				joyx += 50 - mdz + amoffsetx - mdz
+			Else If (amoffsetx < -mdz)
+				joyx += 50 + amoffsetx
+			Else
+				joyx += 50 - mdz
+
+			If ((amoffsety) > mdz)
+				joyy += 50 - mdz + amoffsety - mdz
+			Else If (amoffsety < -mdz)
+				joyy += 50 + amoffsety
+			Else
+				joyy += 50 - mdz
+
 			joyx /= (100 - mdz - mdz)
 			joyy /= (100 - mdz - mdz)
+			;amoffsetx += 50 - mdz
+			;amoffsetx /= (100 - mdz - mdz)
+			;amoffsety += 50 - mdz
+			;amoffsety /= (100 - mdz - mdz)
 
 			If (dasher_mode = 1)
 			{
@@ -1339,13 +1371,15 @@ Loop
 				Height -= DasherTb + DasherBb
 				DasherY += DasherTb
 				CoordMode, Mouse, Screen
-				MouseMove, DasherX + (joyx - amoffsetx) * Width, DasherY + (joyy - amoffsety) * Height, 0
+				MouseMove, DasherX + (joyx) * Width, DasherY + (joyy) * Height, 0
 			}
 			Else
 			{
 				WinGetPos, , , Width, Height, A
 				CoordMode, Mouse, Window
-				MouseMove, (joyx - amoffsetx) * Width, (joyy - amoffsety) * Height, 0
+				;MouseMove, (joyx - amoffsetx) * Width, (joyy - amoffsety) * Height, 0
+				MouseMove, (joyx) * Width, (joyy) * Height, 0
+				;MouseMove, (joyx - (amoffsetx - mdz) / (100 - mdz - mdz)) * Width, (joyy - (amoffsety - mdz) / (100 - mdz - mdz)) * Height, 0
 			}
 		}
 	}
@@ -1975,51 +2009,62 @@ Loop
 	      {
 					;SendRaw, 11
 					;SendEvent, {Numpad1}
-					SendEvent, {1}{1}
+					;SendEvent, {1}{1}
 					;Sleep, 200
 					;SendEvent, {1}
-					;SetKeyDelay, 100
-					;Send {1 Down}
-					;Send {1 Up}
-					;Send {1 Down}
-					;Send {1 Up}
-					;SetKeyDelay, -1
-					;SendEvent, {1}
-					;SetKeyDelay, 500
-					;Send {Blind}{1 DownTemp}
-					;Send {Blind}{1 Up}
-					;Send {Blind}{1 DownTemp}
-					;Send {Blind}{1 Up}
-					;SetKeyDelay, -1
+					SetKeyDelay, 100
+					Send {1}
+					Send {1}
+					SetKeyDelay, -1
 	      }
 	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "2")
 	      {
 					;SendRaw, 22
-					SendEvent, {2}{2}
+					SetKeyDelay, 100
+					Send {2}
+					Send {2}
+					SetKeyDelay, -1
+					;SendEvent, {2}{2}
 					;SendEvent, {Numpad2}
 	      }
 	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "3")
 	      {
 					;SendRaw, 33
-					SendEvent, {3}{3}
+					SetKeyDelay, 100
+					Send {3}
+					Send {3}
+					SetKeyDelay, -1
+					;SendEvent, {3}{3}
 					;SendEvent, {Numpad3}
 	      }
 	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "4")
 	      {
 					;SendRaw, 44
-					SendEvent, {4}{4}
+					SetKeyDelay, 100
+					Send {4}
+					Send {4}
+					SetKeyDelay, -1
+					;SendEvent, {4}{4}
 					;SendEvent, {Numpad4}
 	      }
 	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "5")
 	      {
 					;SendRaw, 55
-					SendEvent, {5}{5}
+					SetKeyDelay, 100
+					Send {5}
+					Send {5}
+					SetKeyDelay, -1
+					;SendEvent, {5}{5}
 					;SendEvent, {Numpad5}
 	      }
 	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "6")
 	      {
 					;SendRaw, 66
-					SendEvent, {6}{6}
+					SetKeyDelay, 100
+					Send {6}
+					Send {6}
+					SetKeyDelay, -1
+					;SendEvent, {6}{6}
 					;SendEvent, {Numpad6}
 	      }
       }
