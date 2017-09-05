@@ -33,20 +33,20 @@ JoystickNumber = 0
 	{ ; abc
 		mode_1_characters =  %A_Space%              ,,,,,,,,,
 		mode_1_characters =  %mode_1_characters% a, a, s, k, m,,, q,,TAid1,
-		mode_1_characters =  %mode_1_characters%BS,SL,BS,UL,,,,Sy,FL,Ca,
-		mode_1_characters =  %mode_1_characters% n, p, f, n,,, l,TAid4,, x,
-		mode_1_characters =  %mode_1_characters% e, h,,, e,,TAid2, c,,,
+		mode_1_characters =  %mode_1_characters%BS,SL,BS,CL,,,,Sy,FL,Ca,
+		mode_1_characters =  %mode_1_characters% n, p, f, n,,, l,TAid2,, x,
+		mode_1_characters =  %mode_1_characters% e, h,,TAid3, e,,TAid5, c,,TAid7,
 		mode_1_characters =  %mode_1_characters%,,,,,,,,,,
-		mode_1_characters =  %mode_1_characters% t,,, u,TAid5,, t,,, y,
-		mode_1_characters =  %mode_1_characters% o, v,,TAid3, w,,, o, g, z,
+		mode_1_characters =  %mode_1_characters% t,TAid4,, u,TAid6,, t,TAid8,, y,
+		mode_1_characters =  %mode_1_characters% o, v,,TAid9, w,,, o, g, z,
 		mode_1_characters =  %mode_1_characters%Sp,Tb,Fn,No,,,,En,Sp,NL,
-		mode_1_characters =  %mode_1_characters% i,TAid6,, j,,, r, b, d, i,
+		mode_1_characters =  %mode_1_characters% i,TAid0,, j,,, r, b, d, i,
 		StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
 	}
 	{ ; ABC
 		mode_2_characters =   %A_Space%             ,,,,,,,,,
 		mode_2_characters =  %mode_2_characters% A, A, S, K, M,,, Q,,,
-		mode_2_characters =  %mode_2_characters%BS,SL,BS,UL,,,,Sy,FL,Ca,
+		mode_2_characters =  %mode_2_characters%BS,SL,BS,CL,,,,Sy,FL,Ca,
 		mode_2_characters =  %mode_2_characters% N, P, F, N,,, L,,, X,
 		mode_2_characters =  %mode_2_characters% E, H,,, E,,, C,,,
 		mode_2_characters =  %mode_2_characters%,,,,,,,,,,
@@ -59,7 +59,7 @@ JoystickNumber = 0
 	{ ; Symbols
 		mode_3_characters =    %A_Space%            ,,,,,,,,,
 		mode_3_characters =  %mode_3_characters% ~, ~, {, }, @,,,In,,,
-		mode_3_characters =  %mode_3_characters%BS,SL,BS,UL,,,,Sy,FL,Ca,
+		mode_3_characters =  %mode_3_characters%BS,SL,BS,CL,,,,Sy,FL,Ca,
 		mode_3_characters =  %mode_3_characters% C, (, ), C,,, [,,, ],
 		mode_3_characters =  %mode_3_characters%%A_Space%;,%A_Space%#,,,%A_Space%;,,,%A_Space%:,,,
 		mode_3_characters =  %mode_3_characters%,,,,,,,,,,
@@ -76,7 +76,7 @@ JoystickNumber = 0
 	{ ; Numbers
 		mode_4_characters =  %A_Space%            ,,,,,,,,,
 		mode_4_characters =  %mode_4_characters% 0, 0, <, >, 1,,, 2,,,
-		mode_4_characters =  %mode_4_characters%BS,SL,BS,UL,,,,Sy,FL,Ca,
+		mode_4_characters =  %mode_4_characters%BS,SL,BS,CL,,,,Sy,FL,Ca,
 		mode_4_characters =  %mode_4_characters% C, (, ), C,,, [,,, ],
 		mode_4_characters =  %mode_4_characters% 3, #,,, 3,,, 4,,,
 		mode_4_characters =  %mode_4_characters%,,,,,,,,,,
@@ -95,7 +95,7 @@ JoystickNumber = 0
 	{ ; Functions
 		mode_5_characters =  %A_Space%            ,,,,,,,,,
 		mode_5_characters =  %mode_5_characters%^s,^s,Hm,Ed,PU,,,PD,,,
-		mode_5_characters =  %mode_5_characters%BS,SL,BS,UL,,,,Sy,FL,Ca,
+		mode_5_characters =  %mode_5_characters%BS,SL,BS,CL,,,,Sy,FL,Ca,
 		mode_5_characters =  %mode_5_characters%VM,V+,V-,VM,,,#x,,,F4,
 		mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,^h,,,
 		mode_5_characters =  %mode_5_characters%,,,,,,,,,,
@@ -204,6 +204,7 @@ if JoystickNumber <= 0
 	amoffsetx := 0
 	amoffsety := 0
 	dasher_mode := 0
+	double_tap := 1
 	audio_feedback := 1
 	hold_pose := 0
 	loop_count_max := 15
@@ -376,6 +377,15 @@ Loop
 						Else
 							audio_feedback := 0
 					}
+					If (joyz > 55)
+					{
+						button_click_pre := 10
+						;loop_count := 0
+						If (double_tap = 0)
+							double_tap := 1
+						Else
+							double_tap := 0
+					}
 				}
 			}
 			Else If (joy1 = "D")
@@ -422,7 +432,7 @@ Loop
 				}
 				Else If (joyp = 9000)
 				{
-					If (button_click_pre <> 9000)
+					If (button_click_pre <> 9000 && button_click_pre <> 95)
 					{
 						button_click_pre := 9000
 						loop_count_max := 30
@@ -431,7 +441,7 @@ Loop
 				}
 				Else If (joyp = 27000)
 				{
-					If (button_click_pre <> 27000)
+					If (button_click_pre <> 27000 && button_click_pre <> 95)
 					{
 						button_click_pre := 27000
 						loop_count_max := 15
@@ -496,7 +506,7 @@ Loop
 				}
 				Else If (joy2 = "D")
 				{
-					If (button_click_pre <> 3)
+					If (button_click_pre <> 3 && button_click_pre <> 95)
 					{
 						button_click_pre := 3
 						hold_pose := 0
@@ -505,7 +515,7 @@ Loop
 				}
 				Else If (joy1 = "D")
 				{
-					If (button_click_pre <> 1)
+					If (button_click_pre <> 1 && button_click_pre <> 95)
 					{
 						button_click_pre := 1
 						hold_pose := 1
@@ -593,20 +603,40 @@ Loop
 					}
 					loop_count++
 				}
-				If (joy5 = "D")
+				If (joy5 = "D" && button_click_pre <> 10)
 				{
-					If (button_click_pre <> 5)
+					If (double_tap = 0)
 					{
-						button_click_pre := 5
+						button_click_pre := 10
+						SetKeyDelay, 100
+						Send {/}
+						SetKeyDelay, -1
+					}
+					Else If (button_click_pre <> 5)
+					{
+						If (button_click_pre = 2)
+							button_click_pre := 10
+						Else
+							button_click_pre := 5
 						SendInput, {Control down}
 					}
 				}
-				If (joyz > 55)
+				If (joyz > 55 && button_click_pre <> 10)
 				{
 					; || joyu > 10 || joyv > 10
-					If (button_click_pre <> 2)
+					If (double_tap = 0)
 					{
-						button_click_pre := 2
+						button_click_pre := 10
+						SetKeyDelay, 100
+						Send {#}
+						SetKeyDelay, -1
+					}
+					Else If (button_click_pre <> 2)
+					{
+						If (button_click_pre = 5)
+							button_click_pre := 10
+						Else
+							button_click_pre := 2
 						SendInput, {Shift down}
 					}
 				}
@@ -630,7 +660,7 @@ Loop
 					If (joyp = -1 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
 						{
 							; || joyu > 10 || joyv > 10  && joyu < 10 && joyv < 10
-							If (button_click_pre > 0 && button_click_pre < 9)
+							;If (button_click_pre > 0 && button_click_pre < 9)
 							{
 								SendInput, {Control up}
 								SendInput, {Shift up}
@@ -1555,7 +1585,12 @@ Loop
 				    {
 							character_index := 41
 							character41 := % all_characters%ch_mode%%character_index%
-							character_index += 3
+							character_index += 2
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								character43 = % "  "
+							Else
+								character43 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index++
 							character44 := % all_characters%ch_mode%%character_index%
 							character_index += 2
 							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
@@ -1564,10 +1599,20 @@ Loop
 								character46 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
 							character_index++
 							character47 := % all_characters%ch_mode%%character_index%
+							character_index += 2
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								character49 = % "  "
+							Else
+								character49 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
 						}
 
 				    {
-							character_index := 63
+							character_index := 61
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								character61 = % "  "
+							Else
+								character61 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index += 2
 							character63 := % all_characters%ch_mode%%character_index%
 							character_index++
 							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
@@ -1576,7 +1621,12 @@ Loop
 								character64 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
 							character_index += 2
 							character66 := % all_characters%ch_mode%%character_index%
-							character_index += 3
+							character_index++
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								character67 = % "  "
+							Else
+								character67 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index += 2
 							character69 := % all_characters%ch_mode%%character_index%
 						}
 
@@ -1691,7 +1741,12 @@ Loop
 				    {
 							character_index := 41
 							option1 := % all_characters%ch_mode%%character_index%
-							character_index += 3
+							character_index += 2
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								option3 = % "  "
+							Else
+								option3 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index++
 							option4 := % all_characters%ch_mode%%character_index%
 							character_index += 2
 							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
@@ -1700,10 +1755,20 @@ Loop
 								option6 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
 							character_index++
 							option7 := % all_characters%ch_mode%%character_index%
+							character_index += 2
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								option9 = % "  "
+							Else
+								option9 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
 						}
 						Else If (character_code < 70)
 				    {
-							character_index := 63
+							character_index := 61
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								option1 = % "  "
+							Else
+								option1 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index += 2
 							option3 := % all_characters%ch_mode%%character_index%
 							character_index++
 							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
@@ -1712,7 +1777,12 @@ Loop
 								option4 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
 							character_index += 2
 							option6 := % all_characters%ch_mode%%character_index%
-							character_index += 3
+							character_index++
+							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+								option7 = % "  "
+							Else
+								option7 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+							character_index += 2
 							option9 := % all_characters%ch_mode%%character_index%
 						}
 						Else If (character_code < 80)
@@ -1786,9 +1856,9 @@ Loop
 										|%character14% %character19%    |%character27% %character28% %character29% |   %character37% %character36% |`n
 										|%character17%    %option1% |   %option2%    |%option3%    %character39% |`n
 										|---------+---------+---------|`n
-										|%character41%       |         |      %character63% |`n
+										|%character41% %character43%    |         |   %character61% %character63% |`n
 										|%character44% %character46% %option4% |         |%option6% %character64% %character66% |`n
-										|%character47%       |         |      %character69% |`n
+										|%character47% %character49%    |         |   %character67% %character69% |`n
 										|---------+---------+---------|`n
 										|%character71%    %option7% |   %option8%    |%option9%    %character93% |`n
 										|%character74% %character73%    |%character81% %character82% %character83% |   %character91% %character96% |`n
@@ -2009,7 +2079,8 @@ Loop
 					;SendEvent, {1}
 					SetKeyDelay, 100
 					Send {1}
-					Send {1}
+					If (double_tap)
+						Send {1}
 					SetKeyDelay, -1
 	      }
 	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "2")
@@ -2017,7 +2088,8 @@ Loop
 					;SendRaw, 22
 					SetKeyDelay, 100
 					Send {2}
-					Send {2}
+					If (double_tap)
+						Send {2}
 					SetKeyDelay, -1
 					;SendEvent, {2}{2}
 					;SendEvent, {Numpad2}
@@ -2027,7 +2099,8 @@ Loop
 					;SendRaw, 33
 					SetKeyDelay, 100
 					Send {3}
-					Send {3}
+					If (double_tap)
+						Send {3}
 					SetKeyDelay, -1
 					;SendEvent, {3}{3}
 					;SendEvent, {Numpad3}
@@ -2037,7 +2110,8 @@ Loop
 					;SendRaw, 44
 					SetKeyDelay, 100
 					Send {4}
-					Send {4}
+					If (double_tap)
+						Send {4}
 					SetKeyDelay, -1
 					;SendEvent, {4}{4}
 					;SendEvent, {Numpad4}
@@ -2047,7 +2121,8 @@ Loop
 					;SendRaw, 55
 					SetKeyDelay, 100
 					Send {5}
-					Send {5}
+					If (double_tap)
+						Send {5}
 					SetKeyDelay, -1
 					;SendEvent, {5}{5}
 					;SendEvent, {Numpad5}
@@ -2057,10 +2132,43 @@ Loop
 					;SendRaw, 66
 					SetKeyDelay, 100
 					Send {6}
-					Send {6}
+					If (double_tap)
+						Send {6}
 					SetKeyDelay, -1
 					;SendEvent, {6}{6}
 					;SendEvent, {Numpad6}
+	      }
+	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "7")
+	      {
+					SetKeyDelay, 100
+					Send {7}
+					If (double_tap)
+						Send {7}
+					SetKeyDelay, -1
+	      }
+	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "8")
+	      {
+					SetKeyDelay, 100
+					Send {8}
+					If (double_tap)
+						Send {8}
+					SetKeyDelay, -1
+	      }
+	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "9")
+	      {
+					SetKeyDelay, 100
+					Send {9}
+					If (double_tap)
+						Send {9}
+					SetKeyDelay, -1
+	      }
+	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "0")
+	      {
+					SetKeyDelay, 100
+					Send {0}
+					If (double_tap)
+						Send {0}
+					SetKeyDelay, -1
 	      }
       }
       Else
@@ -2091,7 +2199,7 @@ Loop
 			}
 
 	    character_code = 0
-			HUD_loop_count = 0
+			;HUD_loop_count = 0
 			HUD_loop_count := -HUD_loop_count_delay
 	    Progress, 1:Off
 	    Progress, 2:Off
