@@ -203,6 +203,7 @@ if JoystickNumber <= 0
 	ch_mode := 1
 	amoffsetx := 0
 	amoffsety := 0
+	media_mode := 4
 	dasher_mode := 0
 	double_tap := 1
 	audio_feedback := 1
@@ -292,8 +293,12 @@ Loop
 			axis_info = %axis_info%%a_space%%a_space%POV%joyp%
 		}
 		If (joyp = 4500) ; || joyp = 13500)
-			joy2 := "D"
+			joy5 := "D"
 		If (joyp = 31500) ; || joyp = 22500)
+			joyz := 100
+		If (joyp = 13500)
+			joy2 := "D"
+		If (joyp = 22500)
 			joy1 := "D"
 	}
 
@@ -363,6 +368,24 @@ Loop
 					stick_mode := 3
 				}
 			}
+			Else If (joyp = 9000 && button_click_pre <> 9000)
+			{
+				{
+					button_click_pre := 9000
+					stick_mode := 1
+					loop_count := 1
+					double_tap := 1
+				}
+			}
+			Else If (joyp = 27000 && button_click_pre <> 27000)
+			{
+				{
+					button_click_pre := 27000
+					stick_mode := 1
+					loop_count := 1
+					double_tap := 0
+				}
+			}
 			Else If (joy5 = "D")
 			{
 				If (button_click_pre <> 5)
@@ -380,15 +403,6 @@ Loop
 							audio_feedback := 2
 						Else
 							audio_feedback := 0
-					}
-					If (joyz > 55)
-					{
-						button_click_pre := 10
-						;loop_count := 0
-						If (double_tap = 0)
-							double_tap := 1
-						Else
-							double_tap := 0
 					}
 				}
 			}
