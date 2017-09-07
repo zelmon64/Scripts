@@ -291,6 +291,10 @@ Loop
 			GetKeyState, joyp, %JoystickNumber%JoyPOV
 			axis_info = %axis_info%%a_space%%a_space%POV%joyp%
 		}
+		If (joyp = 4500) ; || joyp = 13500)
+			joy2 := "D"
+		If (joyp = 31500) ; || joyp = 22500)
+			joy1 := "D"
 	}
 
 	tdz := 60
@@ -510,7 +514,7 @@ Loop
 					{
 						button_click_pre := 3
 						hold_pose := 0
-						Progress, Off
+						;Progress, Off
 					}
 				}
 				Else If (joy1 = "D")
@@ -519,7 +523,7 @@ Loop
 					{
 						button_click_pre := 1
 						hold_pose := 1
-						Progress, Off
+						;Progress, Off
 					}
 				}
 				Else If (button_click_pre <> -1 && button_click_pre <> 9 && button_click_pre <> 95)
@@ -603,16 +607,16 @@ Loop
 					}
 					loop_count++
 				}
-				If (joy5 = "D" && button_click_pre <> 10)
+				If (joy5 = "D" && button_click_pre <> 5 && button_click_pre <> 10)
 				{
 					If (double_tap = 0)
 					{
 						button_click_pre := 10
 						SetKeyDelay, 100
-						Send {/}
+						Send {#}
 						SetKeyDelay, -1
 					}
-					Else If (button_click_pre <> 5)
+					Else
 					{
 						If (button_click_pre = 2)
 							button_click_pre := 10
@@ -624,14 +628,14 @@ Loop
 				If (joyz > 55 && button_click_pre <> 10)
 				{
 					; || joyu > 10 || joyv > 10
-					If (double_tap = 0)
+					If (joyz > 75 && double_tap = 0)
 					{
 						button_click_pre := 10
 						SetKeyDelay, 100
-						Send {#}
+						Send {/}
 						SetKeyDelay, -1
 					}
-					Else If (button_click_pre <> 2)
+					Else If (button_click_pre <> 2 && double_tap = 1)
 					{
 						If (button_click_pre = 5)
 							button_click_pre := 10
