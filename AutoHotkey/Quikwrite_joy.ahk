@@ -97,7 +97,7 @@ JoystickNumber = 0
 		mode_5_characters =  %mode_5_characters%^s,^s,Hm,Ed,PU,,,PD,,,
 		mode_5_characters =  %mode_5_characters%BS,SL,BS,CL,,,,Sy,FL,Ca,
 		mode_5_characters =  %mode_5_characters%VM,V+,V-,VM,,,#x,,,F4,
-		mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,^h,,,
+		mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,F2,,,
 		mode_5_characters =  %mode_5_characters%,,,,,,,,,,
 		mode_5_characters =  %mode_5_characters%!c,,,!z,,,!c,,,!x,
 		mode_5_characters =  %mode_5_characters%Sr,Z-,,,Z+,,,Sr,CT,CW,
@@ -105,7 +105,8 @@ JoystickNumber = 0
 		mode_5_characters =  %mode_5_characters%PS,,,F6,,,F5,11,12,PS,
 		StringSplit, all_characters%ArrayIndex5%, mode_5_characters, `,
 
-		StringReplace, mode_5_characters_long, mode_5_characters, F3 , {F3} , All
+		StringReplace, mode_5_characters_long, mode_5_characters, F2 , {F2} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, F3 , {F3} , All
 		StringReplace, mode_5_characters_long, mode_5_characters_long, F4 , !{F4} , All
 		StringReplace, mode_5_characters_long, mode_5_characters_long, F5 , {F5} , All
 		StringReplace, mode_5_characters_long, mode_5_characters_long, F6 , {F6} , All
@@ -169,7 +170,7 @@ if JoystickNumber <= 0
 		{
 			; MsgBox The system does not appear to have any joysticks.
 			; ExitApp
-			Sleep, 10000
+			Sleep, 1000
 		}
 		Else
 		{
@@ -292,6 +293,17 @@ Loop
 			GetKeyState, joyp, %JoystickNumber%JoyPOV
 			axis_info = %axis_info%%a_space%%a_space%POV%joyp%
 		}
+
+		If (false)
+		{
+			joyx := 100 - joyx
+			joyy := 100 - joyy
+			If (joyp <> -1) ; || joyp = 13500)
+				joyp := joyp + 18000
+			If (joyp > 31500) ; || joyp = 22500)
+				joyp := joyp - 18000 - 18000
+		}
+
 		If (joyp = 4500) ; || joyp = 13500)
 			joy5 := "D"
 		If (joyp = 31500) ; || joyp = 22500)
@@ -1236,9 +1248,12 @@ Loop
 				If (joyz > 55)
 				{
 					; || joyu > 10 || joyv > 10
-					If (mouse_click_pre <> 1)
+					If (mouse_click_pre <> 1 && mouse_click_pre <> 21 && mouse_click_pre <> 12)
 					{
-						mouse_click_pre := 1
+						If (mouse_click_pre = 2)
+							mouse_click_pre := 21
+						Else
+							mouse_click_pre := 1
 						MouseClick, Left,,, 1, 0, D  ; Hold down the left mouse button.
 					}
 				}
@@ -1249,9 +1264,12 @@ Loop
 						mouse_click_pre := 42
 						MouseClick, X2,,, 1, 0
 					}
-					Else If (mouse_click_pre <> 2 && mouse_click_pre <> 23 && mouse_click_pre <> 42)
+					Else If (mouse_click_pre <> 2 && mouse_click_pre <> 23 && mouse_click_pre <> 42 && mouse_click_pre <> 21 && mouse_click_pre <> 12)
 					{
-						mouse_click_pre := 2
+						If (mouse_click_pre = 1)
+							mouse_click_pre := 12
+						Else
+							mouse_click_pre := 2
 						MouseClick, Right,,, 1, 0, D
 					}
 				}
@@ -1292,6 +1310,11 @@ Loop
 						{
 							MouseClick, Right,,, 1, 0, U
 						}  ; Release the mouse button.
+						Else If (mouse_click_pre = 12 || mouse_click_pre = 21)
+						{
+							MouseClick, Left,,, 1, 0, U
+							MouseClick, Right,,, 1, 0, U
+						}  ; Release the mouse buttons.
 						Else If (mouse_click_pre = 23)
 						{
 						}
@@ -1317,7 +1340,7 @@ Loop
 	}
 
   ;tol = 25
-	dz = 15
+	dz := 5
 	joyx -= 50
 	joyy -= 50
 	theta := 0
@@ -1326,7 +1349,8 @@ Loop
 	radius2 := joyx*joyx + joyy*joyy
 	radius := sqrt(radius2)
 	; tol := 20 * pi / 180 * exp((dz - radius) * 3 / (50 - dz))
-	tol := 25 * pi / 180 * exp((dz - radius) * 2 / (50 - dz))
+	; tol := 25 * pi / 180 * exp((dz - radius) * 2 / (50 - dz))
+	tol := 22.5 * pi / 180 * exp((dz - radius) * 5 / (50 - dz))
 
 	If (radius2 > dz*dz)
 	{
@@ -2037,7 +2061,7 @@ Loop
       }
       Else If (character_code = 87) ; || character_code = 84)
       {
-				If (mod(character_mode, 10) = 5)
+				If (false) ;(mod(character_mode, 10) = 5)
 				{
         	SendInput, !{Enter}
 					If (character_mode > 20)
