@@ -14,6 +14,12 @@ SetTimer, WatchHotkeys, 1
   audio_feedback := 1
   character_mode_lists = Lowercase,Capitals,Symbols,Numbers,Functions
   StringSplit, character_mode_list, character_mode_lists, `,
+  NumsDown := "0"
+	button_click_pre := -1 ;95 ;
+	mouse_click_pre := 0
+	loop_count := 0
+	loop_count_repeat_base := 30 ;10
+	loop_count_skip_base := 2 ;3
 }
 
 
@@ -150,61 +156,164 @@ New_Code(character_code, this_code)
 
 Numpad2::
 Numpad4::
+Numpad5::
 Numpad6::
 Numpad8::
 Return
 
 WatchHotkeys:
 {
-  NumsDown := 0
-  if GetKeyState("Numpad2")
-    NumsDown += 4
-  if GetKeyState("Numpad4")
-    NumsDown += 16
-  if GetKeyState("Numpad6")
-    NumsDown += 64
-  if GetKeyState("Numpad8")
-    NumsDown += 256
+  { ; poll numpad keys
+    NumsDownPre = %NumsDown%
+    NumsDown := "0"
+    if GetKeyState("Numpad2")
+      NumsDown = %NumsDown%1
+    else
+      NumsDown = %NumsDown%0
+    NumsDown = %NumsDown%0
+    if GetKeyState("Numpad4")
+      NumsDown = %NumsDown%1
+    else
+      NumsDown = %NumsDown%0
+    if ((GetKeyState("Numpad5") && character_code = 0) || (SubStr(NumsDownPre, 5, 1) = "1" && button_click_pre <> -1))
+      NumsDown = %NumsDown%1
+    else
+      NumsDown = %NumsDown%0
+    if GetKeyState("Numpad6")
+      NumsDown = %NumsDown%1
+    else
+      NumsDown = %NumsDown%0
+    NumsDown = %NumsDown%0
+    if GetKeyState("Numpad8")
+      NumsDown = %NumsDown%1
+    else
+      NumsDown = %NumsDown%0
 
-  ;StringRight, Key, A_ThisHotkey, 1 ;Grab just the number pushed, trim off the "$Numpad"
-  ;ToolTip % "You pressed the " A_ThisHotkey ", NumsDown: " NumsDown
-  ;ToolTip, NumsDown: %NumsDown%
+    ;StringRight, Key, A_ThisHotkey, 1 ;Grab just the number pushed, trim off the "$Numpad"
+    ;ToolTip % "You pressed the " A_ThisHotkey ", NumsDown: " NumsDown
+    ;ToolTip, NumsDown: %NumsDown%
+  }
 
   ch_mode := mod(character_mode, 10)
 
-  If (NumsDown <> 0)
+  If (SubStr(NumsDown, 5, 1) = "1")
+  {
+    loop_count_repeat := 1 * loop_count_repeat_base
+    loop_count_skip := 2 * loop_count_skip_base
+    If (NumsDown = "00001001")
+    {
+      If (button_click_pre <> "00001001")
+      {
+        button_click_pre := "00001001"
+        SendInput, {Up}
+        loop_count := 1
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        SendInput, {Up}
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "00001100")
+    {
+      If (button_click_pre <> "00001100")
+      {
+        button_click_pre := "00001100"
+        SendInput, {Right}
+        loop_count := 1
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        SendInput, {Right}
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "01001000")
+    {
+      If (button_click_pre <> "01001000")
+      {
+        button_click_pre := "01001000"
+        SendInput, {Down}
+        loop_count := 1
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        SendInput, {Down}
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "00011000")
+    {
+      If (button_click_pre <> "00011000")
+      {
+        button_click_pre := "00011000"
+        SendInput, {Left}
+        loop_count := 1
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        SendInput, {Left}
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "00011001" && button_click_pre <> NumsDown)
+    {
+      button_click_pre := NumsDown
+      SendInput, {Home}
+    }
+    Else If (NumsDown = "01011000" && button_click_pre <> NumsDown)
+    {
+      button_click_pre := NumsDown
+      SendInput, {End}
+    }
+    Else If (NumsDown = "00001101" && button_click_pre <> NumsDown)
+    {
+      button_click_pre := NumsDown
+      SendInput, {PgUp}
+    }
+    Else If (NumsDown = "01001100" && button_click_pre <> NumsDown)
+    {
+      button_click_pre := NumsDown
+      SendInput, {PgDn}
+    }
+    Else If (button_click_pre <> -1)
+    {
+      button_click_pre := -1
+    }
+  }
+  Else If (NumsDown <> "00000000")
   {
     character_code_pre := character_code
     { ; Joystick position
-      If (NumsDown = 64)
+      If (NumsDown = "00000100")
       {
         character_code := New_Code(character_code, 6)
       }
-      Else If (NumsDown = 64 + 256)
+      Else If (NumsDown = "00000101")
       {
         character_code := New_Code(character_code, 3)
       }
-      Else If (NumsDown = 256)
+      Else If (NumsDown = "00000001")
       {
         character_code := New_Code(character_code, 2)
       }
-      Else If (NumsDown = 16 + 256)
+      Else If (NumsDown = "00010001")
       {
         character_code := New_Code(character_code, 1)
       }
-      Else If (NumsDown = 16)
+      Else If (NumsDown = "00010000")
       {
         character_code := New_Code(character_code, 4)
       }
-      Else If (NumsDown = 16 + 4)
+      Else If (NumsDown = "01010000")
       {
         character_code := New_Code(character_code, 7)
       }
-      Else If (NumsDown = 4)
+      Else If (NumsDown = "01000000")
       {
         character_code := New_Code(character_code, 8)
       }
-      Else If (NumsDown = 64 + 4)
+      Else If (NumsDown = "01000100")
       {
         character_code := New_Code(character_code, 9)
       }
@@ -259,459 +368,456 @@ WatchHotkeys:
       }
     }
 
-		{ ; Joystick position visual feedback
-		  If (character_code > 9 && audio_feedback <> 2)
-		  {
-			  If (character_code_pre = 0)
-			  {
-					; Space
-					{
-						option1 := "  "
-						option2 := "  "
-						option3 := "  "
-						option4 := "  "
-						option6 := "  "
-						option7 := "  "
-						option8 := "  "
-						option9 := "  "
-					}
+    If (character_code > 9 && audio_feedback <> 2)
+    { ; Joystick position visual feedback
+      If (character_code_pre = 0)
+      {
+        ; Space
+        {
+          option1 := "  "
+          option2 := "  "
+          option3 := "  "
+          option4 := "  "
+          option6 := "  "
+          option7 := "  "
+          option8 := "  "
+          option9 := "  "
+        }
 
-					; Outer Ring
-					{
-			    	{
-							character_index := 11
-							character11 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character12 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character13 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character14 := % all_characters%ch_mode%%character_index%
-							character_index += 3
-							character17 = % all_characters%ch_mode%%character_index%
-							character_index += 2
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								character19 = % "  "
-							Else
-								character19 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-						}
+        ; Outer Ring
+        {
+          {
+            character_index := 11
+            character11 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character12 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character13 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character14 := % all_characters%ch_mode%%character_index%
+            character_index += 3
+            character17 = % all_characters%ch_mode%%character_index%
+            character_index += 2
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              character19 = % "  "
+            Else
+              character19 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+          }
 
-				    {
-							character_index := 21
-							character21 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character22 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character23 := % all_characters%ch_mode%%character_index%
-							character_index += 4
-							character27 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character28 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character29 := % all_characters%ch_mode%%character_index%
-						}
+          {
+            character_index := 21
+            character21 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character22 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character23 := % all_characters%ch_mode%%character_index%
+            character_index += 4
+            character27 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character28 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character29 := % all_characters%ch_mode%%character_index%
+          }
 
-				    {
-							character_index := 31
-							character31 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character32 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character33 := % all_characters%ch_mode%%character_index%
-							character_index += 3
-							character36 := % all_characters%ch_mode%%character_index%
-							character_index++
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								character37 = % "  "
-							Else
-								character37 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index += 2
-							character39 := % all_characters%ch_mode%%character_index%
-						}
+          {
+            character_index := 31
+            character31 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character32 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character33 := % all_characters%ch_mode%%character_index%
+            character_index += 3
+            character36 := % all_characters%ch_mode%%character_index%
+            character_index++
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              character37 = % "  "
+            Else
+              character37 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index += 2
+            character39 := % all_characters%ch_mode%%character_index%
+          }
 
-				    {
-							character_index := 41
-							character41 := % all_characters%ch_mode%%character_index%
-							character_index += 2
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								character43 = % "  "
-							Else
-								character43 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index++
-							character44 := % all_characters%ch_mode%%character_index%
-							character_index += 2
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								character46 = % "  "
-							Else
-								character46 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index++
-							character47 := % all_characters%ch_mode%%character_index%
-							character_index += 2
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								character49 = % "  "
-							Else
-								character49 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-						}
+          {
+            character_index := 41
+            character41 := % all_characters%ch_mode%%character_index%
+            character_index += 2
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              character43 = % "  "
+            Else
+              character43 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index++
+            character44 := % all_characters%ch_mode%%character_index%
+            character_index += 2
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              character46 = % "  "
+            Else
+              character46 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index++
+            character47 := % all_characters%ch_mode%%character_index%
+            character_index += 2
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              character49 = % "  "
+            Else
+              character49 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+          }
 
-				    {
-							character_index := 61
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								character61 = % "  "
-							Else
-								character61 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index += 2
-							character63 := % all_characters%ch_mode%%character_index%
-							character_index++
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								character64 = % "  "
-							Else
-								character64 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index += 2
-							character66 := % all_characters%ch_mode%%character_index%
-							character_index++
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								character67 = % "  "
-							Else
-								character67 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index += 2
-							character69 := % all_characters%ch_mode%%character_index%
-						}
+          {
+            character_index := 61
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              character61 = % "  "
+            Else
+              character61 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index += 2
+            character63 := % all_characters%ch_mode%%character_index%
+            character_index++
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              character64 = % "  "
+            Else
+              character64 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index += 2
+            character66 := % all_characters%ch_mode%%character_index%
+            character_index++
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              character67 = % "  "
+            Else
+              character67 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index += 2
+            character69 := % all_characters%ch_mode%%character_index%
+          }
 
-				    {
-							character_index := 71
-							character71 := % all_characters%ch_mode%%character_index%
-							character_index += 2
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								character73 = % "  "
-							Else
-								character73 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index++
-							character74 := % all_characters%ch_mode%%character_index%
-							character_index += 3
-							character77 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character78 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character79 := % all_characters%ch_mode%%character_index%
-						}
+          {
+            character_index := 71
+            character71 := % all_characters%ch_mode%%character_index%
+            character_index += 2
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              character73 = % "  "
+            Else
+              character73 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index++
+            character74 := % all_characters%ch_mode%%character_index%
+            character_index += 3
+            character77 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character78 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character79 := % all_characters%ch_mode%%character_index%
+          }
 
-				    {
-							character_index := 83
-							;character84 := % all_characters%ch_mode%%character_index%
-							;character_index--
-							character83 := % all_characters%ch_mode%%character_index%
-							character_index--
-							character82 := % all_characters%ch_mode%%character_index%
-							character_index--
-							character81 := % all_characters%ch_mode%%character_index%
-							character_index := 87
-							character87 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character88 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character89 := % all_characters%ch_mode%%character_index%
-						}
+          {
+            character_index := 83
+            ;character84 := % all_characters%ch_mode%%character_index%
+            ;character_index--
+            character83 := % all_characters%ch_mode%%character_index%
+            character_index--
+            character82 := % all_characters%ch_mode%%character_index%
+            character_index--
+            character81 := % all_characters%ch_mode%%character_index%
+            character_index := 87
+            character87 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character88 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character89 := % all_characters%ch_mode%%character_index%
+          }
 
-				    {
-							character_index := 91
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								character91 = % "  "
-							Else
-								character91 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index += 2
-							character93 := % all_characters%ch_mode%%character_index%
-							character_index += 3
-							character96 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character97 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character98 := % all_characters%ch_mode%%character_index%
-							character_index++
-							character99 := % all_characters%ch_mode%%character_index%
-						}
-					}
+          {
+            character_index := 91
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              character91 = % "  "
+            Else
+              character91 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index += 2
+            character93 := % all_characters%ch_mode%%character_index%
+            character_index += 3
+            character96 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character97 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character98 := % all_characters%ch_mode%%character_index%
+            character_index++
+            character99 := % all_characters%ch_mode%%character_index%
+          }
+        }
 
-					; Inner Ring
-					{
-						If (character_code < 20)
-				    {
-							character_index := 11
-							option1 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option2 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option3 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option4 := % all_characters%ch_mode%%character_index%
-							character_index += 3
-							option7 = % all_characters%ch_mode%%character_index%
-							character_index += 2
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								option9 = % "  "
-							Else
-								option9 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-						}
-						Else If (character_code < 30)
-				    {
-							character_index := 21
-							option1 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option2 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option3 := % all_characters%ch_mode%%character_index%
-							character_index += 4
-							option7 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option8 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option9 := % all_characters%ch_mode%%character_index%
-						}
-						Else If (character_code < 40)
-				    {
-							character_index := 31
-							option1 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option2 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option3 := % all_characters%ch_mode%%character_index%
-							character_index += 3
-							option6 := % all_characters%ch_mode%%character_index%
-							character_index++
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								option7 = % "  "
-							Else
-								option7 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index += 2
-							option9 := % all_characters%ch_mode%%character_index%
-						}
-						Else If (character_code < 60)
-				    {
-							character_index := 41
-							option1 := % all_characters%ch_mode%%character_index%
-							character_index += 2
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								option3 = % "  "
-							Else
-								option3 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index++
-							option4 := % all_characters%ch_mode%%character_index%
-							character_index += 2
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								option6 = % "  "
-							Else
-								option6 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index++
-							option7 := % all_characters%ch_mode%%character_index%
-							character_index += 2
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								option9 = % "  "
-							Else
-								option9 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-						}
-						Else If (character_code < 70)
-				    {
-							character_index := 61
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								option1 = % "  "
-							Else
-								option1 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index += 2
-							option3 := % all_characters%ch_mode%%character_index%
-							character_index++
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								option4 = % "  "
-							Else
-								option4 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index += 2
-							option6 := % all_characters%ch_mode%%character_index%
-							character_index++
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								option7 = % "  "
-							Else
-								option7 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index += 2
-							option9 := % all_characters%ch_mode%%character_index%
-						}
-						Else If (character_code < 80)
-				    {
-							character_index := 71
-							option1 := % all_characters%ch_mode%%character_index%
-							character_index += 2
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								option3 = % "  "
-							Else
-								option3 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index++
-							option4 := % all_characters%ch_mode%%character_index%
-							character_index += 3
-							option7 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option8 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option9 := % all_characters%ch_mode%%character_index%
-						}
-						Else If (character_code < 90)
-				    {
-							character_index := 83
-							;option4 := % all_characters%ch_mode%%character_index%
-							;character_index--
-							option3 := % all_characters%ch_mode%%character_index%
-							character_index--
-							option2 := % all_characters%ch_mode%%character_index%
-							character_index--
-							option1 := % all_characters%ch_mode%%character_index%
-							character_index := 87
-							option7 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option8 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option9 := % all_characters%ch_mode%%character_index%
-						}
-						Else
-				    {
-							character_index := 91
-							If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
-								option1 = % "  "
-							Else
-								option1 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
-							character_index += 2
-							option3 := % all_characters%ch_mode%%character_index%
-							character_index += 3
-							option6 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option7 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option8 := % all_characters%ch_mode%%character_index%
-							character_index++
-							option9 := % all_characters%ch_mode%%character_index%
-						}
-					}
-			  }
+        ; Inner Ring
+        {
+          If (character_code < 20)
+          {
+            character_index := 11
+            option1 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option2 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option3 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option4 := % all_characters%ch_mode%%character_index%
+            character_index += 3
+            option7 = % all_characters%ch_mode%%character_index%
+            character_index += 2
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              option9 = % "  "
+            Else
+              option9 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+          }
+          Else If (character_code < 30)
+          {
+            character_index := 21
+            option1 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option2 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option3 := % all_characters%ch_mode%%character_index%
+            character_index += 4
+            option7 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option8 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option9 := % all_characters%ch_mode%%character_index%
+          }
+          Else If (character_code < 40)
+          {
+            character_index := 31
+            option1 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option2 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option3 := % all_characters%ch_mode%%character_index%
+            character_index += 3
+            option6 := % all_characters%ch_mode%%character_index%
+            character_index++
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              option7 = % "  "
+            Else
+              option7 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index += 2
+            option9 := % all_characters%ch_mode%%character_index%
+          }
+          Else If (character_code < 60)
+          {
+            character_index := 41
+            option1 := % all_characters%ch_mode%%character_index%
+            character_index += 2
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              option3 = % "  "
+            Else
+              option3 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index++
+            option4 := % all_characters%ch_mode%%character_index%
+            character_index += 2
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              option6 = % "  "
+            Else
+              option6 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index++
+            option7 := % all_characters%ch_mode%%character_index%
+            character_index += 2
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              option9 = % "  "
+            Else
+              option9 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+          }
+          Else If (character_code < 70)
+          {
+            character_index := 61
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              option1 = % "  "
+            Else
+              option1 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index += 2
+            option3 := % all_characters%ch_mode%%character_index%
+            character_index++
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              option4 = % "  "
+            Else
+              option4 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index += 2
+            option6 := % all_characters%ch_mode%%character_index%
+            character_index++
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              option7 = % "  "
+            Else
+              option7 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index += 2
+            option9 := % all_characters%ch_mode%%character_index%
+          }
+          Else If (character_code < 80)
+          {
+            character_index := 71
+            option1 := % all_characters%ch_mode%%character_index%
+            character_index += 2
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              option3 = % "  "
+            Else
+              option3 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index++
+            option4 := % all_characters%ch_mode%%character_index%
+            character_index += 3
+            option7 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option8 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option9 := % all_characters%ch_mode%%character_index%
+          }
+          Else If (character_code < 90)
+          {
+            character_index := 83
+            ;option4 := % all_characters%ch_mode%%character_index%
+            ;character_index--
+            option3 := % all_characters%ch_mode%%character_index%
+            character_index--
+            option2 := % all_characters%ch_mode%%character_index%
+            character_index--
+            option1 := % all_characters%ch_mode%%character_index%
+            character_index := 87
+            option7 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option8 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option9 := % all_characters%ch_mode%%character_index%
+          }
+          Else
+          {
+            character_index := 91
+            If (StrLen(all_characters%ch_mode%%character_index%) <> 5 )
+              option1 = % "  "
+            Else
+              option1 = % " " + SubStr(all_characters%ch_mode%%character_index%, 5, 1)
+            character_index += 2
+            option3 := % all_characters%ch_mode%%character_index%
+            character_index += 3
+            option6 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option7 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option8 := % all_characters%ch_mode%%character_index%
+            character_index++
+            option9 := % all_characters%ch_mode%%character_index%
+          }
+        }
+      }
 
-				character := % all_characters%ch_mode%%character_code%
-				If (character = "")
-					character := "  "
+      character := % all_characters%ch_mode%%character_code%
+      If (character = "")
+        character := "  "
 
-				mode_title := % character_mode_list%ch_mode%
-				If (character_mode > 20)
-				{
-					mode_title = %mode_title% Latch
-				}
+      mode_title := % character_mode_list%ch_mode%
+      If (character_mode > 20)
+      {
+        mode_title = %mode_title% Latch
+      }
 
-				SubText = %A_Space%|---------+---------+---------|`n
-										|%character11% %character12% %character13% |%character21% %character22% %character23% |%character31% %character32% %character33% |`n
-										|%character14% %character19%    |%character27% %character28% %character29% |   %character37% %character36% |`n
-										|%character17%    %option1% |   %option2%    |%option3%    %character39% |`n
-										|---------+---------+---------|`n
-										|%character41% %character43%    |         |   %character61% %character63% |`n
-										|%character44% %character46% %option4% |         |%option6% %character64% %character66% |`n
-										|%character47% %character49%    |         |   %character67% %character69% |`n
-										|---------+---------+---------|`n
-										|%character71%    %option7% |   %option8%    |%option9%    %character93% |`n
-										|%character74% %character73%    |%character81% %character82% %character83% |   %character91% %character96% |`n
-										|%character77% %character78% %character79% |%character87% %character88% %character89% |%character97% %character98% %character99% |`n
-										|---------+---------+---------|
+      SubText = %A_Space%|---------+---------+---------|`n
+                  |%character11% %character12% %character13% |%character21% %character22% %character23% |%character31% %character32% %character33% |`n
+                  |%character14% %character19%    |%character27% %character28% %character29% |   %character37% %character36% |`n
+                  |%character17%    %option1% |   %option2%    |%option3%    %character39% |`n
+                  |---------+---------+---------|`n
+                  |%character41% %character43%    |         |   %character61% %character63% |`n
+                  |%character44% %character46% %option4% |         |%option6% %character64% %character66% |`n
+                  |%character47% %character49%    |         |   %character67% %character69% |`n
+                  |---------+---------+---------|`n
+                  |%character71%    %option7% |   %option8%    |%option9%    %character93% |`n
+                  |%character74% %character73%    |%character81% %character82% %character83% |   %character91% %character96% |`n
+                  |%character77% %character78% %character79% |%character87% %character88% %character89% |%character97% %character98% %character99% |`n
+                  |---------+---------+---------|
 
-				HUD_loop_count++
+      HUD_loop_count++
 
-				DetectHiddenWindows, on
-				bar_TransValue_steps := 4
-				bar_TransValue := 150 / bar_TransValue_steps
+      DetectHiddenWindows, on
+      bar_TransValue_steps := 4
+      bar_TransValue := 150 / bar_TransValue_steps
 
-				If (HUD_loop_count > 0 && mod(HUD_loop_count, HUD_loop_count_skip) = 0)
-				{
-					bar_TransValue_step := HUD_loop_count / HUD_loop_count_skip
-					If (bar_TransValue_step < bar_TransValue_steps + 1)
-					{
-						bar_TransValue_current := bar_TransValue * bar_TransValue_step
-						If (mod(bar_TransValue_step, 4) = 1)
-						{
-							{
-								Progress, 1:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      	, %A_Space%%SubText% , % mode_title, HUDbackground1, Courier New
-								WinSet, Transparent, % bar_TransValue_current, HUDbackground1
-								Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      	, `n`n`n`n`n`n`n`n`n`n`n`n
-					        , % mode_title, HUDforeground5, Courier New
-								WinSet, Transparent, 100, HUDforeground5
-								WinSet, TransColor, 000000, HUDforeground5
-								Progress, 9:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
-					        , %A_Space%, HUDforeground2, Courier New
-								WinSet, TransColor, 000000, HUDforeground2
-							}
-						}
-						Else If (mod(bar_TransValue_step, 4) = 2)
-						{
-							{
-								Progress, 3:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      	, %A_Space%%SubText% , % mode_title, HUDbackground3, Courier New
-								WinSet, Transparent, % bar_TransValue_current, HUDbackground3
-								Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      	, `n`n`n`n`n`n`n`n`n`n`n`n
-					        , % mode_title, HUDforeground5, Courier New
-								WinSet, Transparent, 100, HUDforeground5
-								WinSet, TransColor, 000000, HUDforeground5
-								Progress, 7:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
-					        , %A_Space%, HUDforeground3, Courier New
-								WinSet, TransColor, 000000, HUDforeground3
-							}
-						}
-						Else If (mod(bar_TransValue_step, 4) = 3)
-						{
-							{
-								Progress, 4:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      	, %A_Space%%SubText% , % mode_title, HUDbackground4, Courier New
-								WinSet, Transparent, % bar_TransValue_current, HUDbackground4
-								Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      	, `n`n`n`n`n`n`n`n`n`n`n`n
-					        , % mode_title, HUDforeground5, Courier New
-								WinSet, Transparent, 100, HUDforeground5
-								WinSet, TransColor, 000000, HUDforeground5
-								Progress, 6:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
-					        , %A_Space%, HUDforeground4, Courier New
-								WinSet, TransColor, 000000, HUDforeground4
-							}
-						}
-						Else
-						{
-							{
-								Progress, 2:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      	, %A_Space%%SubText% , % mode_title, HUDbackground2, Courier New
-								WinSet, Transparent, % bar_TransValue_current, HUDbackground2
-								Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      	, `n`n`n`n`n`n`n`n`n`n`n`n
-					        , % mode_title, HUDforeground5, Courier New
-								WinSet, Transparent, 100, HUDforeground5
-								WinSet, TransColor, 000000, HUDforeground5
-								Progress, 8:b zh0 fm32 fs28 w800 ctRed cwBlack
-					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
-					        , %A_Space%, HUDforeground3, Courier New
-								WinSet, TransColor, 000000, HUDforeground3
-							}
-						}
-					}
-				}
+      If (HUD_loop_count > 0 && mod(HUD_loop_count, HUD_loop_count_skip) = 0)
+      {
+        bar_TransValue_step := HUD_loop_count / HUD_loop_count_skip
+        If (bar_TransValue_step < bar_TransValue_steps + 1)
+        {
+          bar_TransValue_current := bar_TransValue * bar_TransValue_step
+          If (mod(bar_TransValue_step, 4) = 1)
+          {
+            {
+              Progress, 1:b zh0 fm32 fs28 w800 ctRed cwBlack
+                , %A_Space%%SubText% , % mode_title, HUDbackground1, Courier New
+              WinSet, Transparent, % bar_TransValue_current, HUDbackground1
+              Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
+                , `n`n`n`n`n`n`n`n`n`n`n`n
+                , % mode_title, HUDforeground5, Courier New
+              WinSet, Transparent, 100, HUDforeground5
+              WinSet, TransColor, 000000, HUDforeground5
+              Progress, 9:b zh0 fm32 fs28 w800 ctRed cwBlack
+                , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+                , %A_Space%, HUDforeground2, Courier New
+              WinSet, TransColor, 000000, HUDforeground2
+            }
+          }
+          Else If (mod(bar_TransValue_step, 4) = 2)
+          {
+            {
+              Progress, 3:b zh0 fm32 fs28 w800 ctRed cwBlack
+                , %A_Space%%SubText% , % mode_title, HUDbackground3, Courier New
+              WinSet, Transparent, % bar_TransValue_current, HUDbackground3
+              Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
+                , `n`n`n`n`n`n`n`n`n`n`n`n
+                , % mode_title, HUDforeground5, Courier New
+              WinSet, Transparent, 100, HUDforeground5
+              WinSet, TransColor, 000000, HUDforeground5
+              Progress, 7:b zh0 fm32 fs28 w800 ctRed cwBlack
+                , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+                , %A_Space%, HUDforeground3, Courier New
+              WinSet, TransColor, 000000, HUDforeground3
+            }
+          }
+          Else If (mod(bar_TransValue_step, 4) = 3)
+          {
+            {
+              Progress, 4:b zh0 fm32 fs28 w800 ctRed cwBlack
+                , %A_Space%%SubText% , % mode_title, HUDbackground4, Courier New
+              WinSet, Transparent, % bar_TransValue_current, HUDbackground4
+              Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
+                , `n`n`n`n`n`n`n`n`n`n`n`n
+                , % mode_title, HUDforeground5, Courier New
+              WinSet, Transparent, 100, HUDforeground5
+              WinSet, TransColor, 000000, HUDforeground5
+              Progress, 6:b zh0 fm32 fs28 w800 ctRed cwBlack
+                , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+                , %A_Space%, HUDforeground4, Courier New
+              WinSet, TransColor, 000000, HUDforeground4
+            }
+          }
+          Else
+          {
+            {
+              Progress, 2:b zh0 fm32 fs28 w800 ctRed cwBlack
+                , %A_Space%%SubText% , % mode_title, HUDbackground2, Courier New
+              WinSet, Transparent, % bar_TransValue_current, HUDbackground2
+              Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
+                , `n`n`n`n`n`n`n`n`n`n`n`n
+                , % mode_title, HUDforeground5, Courier New
+              WinSet, Transparent, 100, HUDforeground5
+              WinSet, TransColor, 000000, HUDforeground5
+              Progress, 8:b zh0 fm32 fs28 w800 ctRed cwBlack
+                , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+                , %A_Space%, HUDforeground3, Courier New
+              WinSet, TransColor, 000000, HUDforeground3
+            }
+          }
+        }
+      }
 
-				If (character_code <> character_code_pre)
-				{
-					Progress, 6:OFF
-					Progress, 7:OFF
-					Progress, 8:OFF
-					Progress, 9:OFF
-					Progress, 10:b zh0 fm32 fs28 w800 ctRed cwBlack
-		      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
-		        , %A_Space%, HUDforeground, Courier New
-					WinSet, TransColor, 000000, HUDforeground
-				}
-		  }
-		}
+      If (character_code <> character_code_pre)
+      {
+        Progress, 6:OFF
+        Progress, 7:OFF
+        Progress, 8:OFF
+        Progress, 9:OFF
+        Progress, 10:b zh0 fm32 fs28 w800 ctRed cwBlack
+        , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+          , %A_Space%, HUDforeground, Courier New
+        WinSet, TransColor, 000000, HUDforeground
+      }
+    }
   }
   Else
   {
-
     If (character_code <> 0)
     {
       ; SendInput, %character_code%
@@ -960,21 +1066,5 @@ WatchHotkeys:
 			Progress, 10:Off
     }
   }
-
-
 }
 Return
-
-;Loop
-;{
-;  ToolTip, NumsDown: %NumsDown%
-;}
-;Return
-
-;Numpad2 Up::
-;Numpad4 Up::
-;Numpad5 Up::
-;Numpad6 Up::
-;Numpad8 Up::
-;  ToolTip,
-;Return
