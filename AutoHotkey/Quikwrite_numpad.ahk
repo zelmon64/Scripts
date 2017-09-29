@@ -18,13 +18,14 @@ SetMouseDelay, -1  ; Makes movement smoother.
 
 SetTimer, WatchHotkeys, 1
 
-{
+{ ; Variables
   character_mode := 1
   character_code := 0
   HUD_loop_count_skip := 12 ;10 ;3
   HUD_loop_count_delay := 80 ;30
   HUD_loop_count := -HUD_loop_count_delay
   audio_feedback := 1
+	double_tap := 1 ; 0 ;
   character_mode_lists = Lowercase,Capitals,Symbols,Numbers,Functions
   StringSplit, character_mode_list, character_mode_lists, `,
   NumsDown := "0"
@@ -108,7 +109,7 @@ SetTimer, WatchHotkeys, 1
 	}
 	{ ; Functions
 		mode_5_characters =  %A_Space%            ,,,,,,,,,
-		mode_5_characters =  %mode_5_characters%^s,^s,Hm,Ed,PU,,,PD,,,
+		mode_5_characters =  %mode_5_characters%^s,^s,Hm,DT,PU,,,PD,,,
 		mode_5_characters =  %mode_5_characters%BS,SL,BS,CL,,,,Sy,FL,Ca,
 		mode_5_characters =  %mode_5_characters%VM,V+,V-,VM,,,#x,,,F4,
 		mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,F2,,,
@@ -523,13 +524,18 @@ WatchHotkeys:
       }
       loop_count++
     }
-    Else If (NumsDown = "0001100100" && button_click_pre <> NumsDown)
+    Else If (NumsDown = "0001100100" && button_click_pre <> NumsDown && double_tap = 0)
+    {
+      button_click_pre := NumsDown
+      SendInput, {/}
+    }
+    Else If (NumsDown = "0001100100" && double_tap = 1)
     {
       If (button_click_pre <> NumsDown)
       {
         button_click_pre := NumsDown
         SendInput, {BackSpace}
-        loop_count := 1
+        loop_count := -loop_count_repeat
       }
       Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
       {
@@ -542,13 +548,18 @@ WatchHotkeys:
       button_click_pre := NumsDown
       SendInput, {Home}
     }
-    Else If (NumsDown = "0000110100" && button_click_pre <> NumsDown)
+    Else If (NumsDown = "0000110100" && button_click_pre <> NumsDown && double_tap = 0)
+    {
+      button_click_pre := NumsDown
+      SendInput, {#}
+    }
+    Else If (NumsDown = "0000110100" && double_tap = 1)
     {
       If (button_click_pre <> NumsDown)
       {
         button_click_pre := NumsDown
         SendInput, {Delete}
-        loop_count := 1
+        loop_count := -loop_count_repeat
       }
       Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
       {
@@ -1193,6 +1204,21 @@ WatchHotkeys:
 				Else
         	character_mode := 5
       }
+      Else If (all_characters%ch_mode%%character_code% = "DT")
+      {
+				If (double_tap = 0)
+        {
+          double_tap = 1
+          SoundBeep, 900, 100
+          SoundBeep, 1000, 100
+        }
+        Else
+        {
+          double_tap = 0
+          SoundBeep, 1000, 100
+          SoundBeep, 900, 100
+        }
+      }
       Else If (all_characters%ch_mode%%character_code% = "Ec")
       {
 				SendInput, {Escape}
@@ -1207,106 +1233,16 @@ WatchHotkeys:
       }
       Else If (StrLen(all_characters%ch_mode%%character_code%) = 5 && SubStr(all_characters%ch_mode%%character_code%, 1, 4) = "TAid")
       {
-				;SendEvent, % " " + SubStr(all_characters%ch_mode%%character_code%, 2, 1)
-	      If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "1")
+        TAidnum := SubStr(all_characters%ch_mode%%character_code%, 5, 1)
+	      If (TAidnum >= 0 && TAidnum <= 9)
 	      {
-					;SendRaw, 11
-					;SendEvent, {Numpad1}
-					;SendEvent, {1}{1}
-					;Sleep, 200
-					;SendEvent, {1}
-					SetKeyDelay, 100
-					Send {1}
+          TAidnum := SubStr(all_characters%ch_mode%%character_code%, 5, 1)
+					SendInput, %TAidnum%
 					If (double_tap)
-						Send {1}
-					SetKeyDelay, -1
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "2")
-	      {
-					;SendRaw, 22
-					SetKeyDelay, 100
-					Send {2}
-					If (double_tap)
-						Send {2}
-					SetKeyDelay, -1
-					;SendEvent, {2}{2}
-					;SendEvent, {Numpad2}
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "3")
-	      {
-					;SendRaw, 33
-					SetKeyDelay, 100
-					Send {3}
-					If (double_tap)
-						Send {3}
-					SetKeyDelay, -1
-					;SendEvent, {3}{3}
-					;SendEvent, {Numpad3}
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "4")
-	      {
-					;SendRaw, 44
-					SetKeyDelay, 100
-					Send {4}
-					If (double_tap)
-						Send {4}
-					SetKeyDelay, -1
-					;SendEvent, {4}{4}
-					;SendEvent, {Numpad4}
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "5")
-	      {
-					;SendRaw, 55
-					SetKeyDelay, 100
-					Send {5}
-					If (double_tap)
-						Send {5}
-					SetKeyDelay, -1
-					;SendEvent, {5}{5}
-					;SendEvent, {Numpad5}
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "6")
-	      {
-					;SendRaw, 66
-					SetKeyDelay, 100
-					Send {6}
-					If (double_tap)
-						Send {6}
-					SetKeyDelay, -1
-					;SendEvent, {6}{6}
-					;SendEvent, {Numpad6}
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "7")
-	      {
-					SetKeyDelay, 100
-					Send {7}
-					If (double_tap)
-						Send {7}
-					SetKeyDelay, -1
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "8")
-	      {
-					SetKeyDelay, 100
-					Send {8}
-					If (double_tap)
-						Send {8}
-					SetKeyDelay, -1
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "9")
-	      {
-					SetKeyDelay, 100
-					Send {9}
-					If (double_tap)
-						Send {9}
-					SetKeyDelay, -1
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "0")
-	      {
-					SetKeyDelay, 100
-					Send {0}
-					If (double_tap)
-						Send {0}
-					SetKeyDelay, -1
+					{
+            Sleep 100
+            SendInput,  %TAidnum%
+          }
 	      }
       }
       Else
