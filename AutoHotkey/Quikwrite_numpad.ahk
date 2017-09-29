@@ -2,6 +2,19 @@
 ; #Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+#SingleInstance
+SetMouseDelay, -1  ; Makes movement smoother.
+
+;Menu, tray, Icon, %A_ScriptDir%\wheel.ico, ,1
+{
+	 If A_IsCompiled
+   {
+      Menu, tray, Icon, %A_ScriptFullPath%\wheel_green.ico, -159
+   } else
+   {
+      Menu, tray, Icon, %A_ScriptDir%\wheel_green.ico, ,1
+   }
+ }
 
 SetTimer, WatchHotkeys, 1
 
@@ -21,7 +34,6 @@ SetTimer, WatchHotkeys, 1
 	loop_count_repeat_base := 30 ;10
 	loop_count_skip_base := 2 ;3
 }
-
 
 { ; Quikwrite definitions
 	all_characters := Object()
@@ -154,23 +166,34 @@ New_Code(character_code, this_code)
   Return character_code
 }
 
+Numpad1::
 Numpad2::
+Numpad3::
 Numpad4::
 Numpad5::
 Numpad6::
+Numpad7::
 Numpad8::
+Numpad9::
+Numpad0::
 Return
 
 WatchHotkeys:
 {
   { ; poll numpad keys
     NumsDownPre = %NumsDown%
-    NumsDown := "0"
+    if GetKeyState("Numpad1")
+      NumsDown := "1"
+    else
+      NumsDown := "0"
     if GetKeyState("Numpad2")
       NumsDown = %NumsDown%1
     else
       NumsDown = %NumsDown%0
-    NumsDown = %NumsDown%0
+    if GetKeyState("Numpad3")
+      NumsDown = %NumsDown%1
+    else
+      NumsDown = %NumsDown%0
     if GetKeyState("Numpad4")
       NumsDown = %NumsDown%1
     else
@@ -183,8 +206,19 @@ WatchHotkeys:
       NumsDown = %NumsDown%1
     else
       NumsDown = %NumsDown%0
-    NumsDown = %NumsDown%0
+    if GetKeyState("Numpad7")
+      NumsDown = %NumsDown%1
+    else
+      NumsDown = %NumsDown%0
     if GetKeyState("Numpad8")
+      NumsDown = %NumsDown%1
+    else
+      NumsDown = %NumsDown%0
+    if GetKeyState("Numpad9")
+      NumsDown = %NumsDown%1
+    else
+      NumsDown = %NumsDown%0
+    if ((GetKeyState("Numpad0") && button_click_pre = -1) || (SubStr(NumsDownPre, 10, 1) = "1" && button_click_pre <> -1))
       NumsDown = %NumsDown%1
     else
       NumsDown = %NumsDown%0
@@ -196,15 +230,248 @@ WatchHotkeys:
 
   ch_mode := mod(character_mode, 10)
 
-  If (SubStr(NumsDown, 5, 1) = "1")
+  If (SubStr(NumsDown, 10, 1) = "1")
   {
     loop_count_repeat := 1 * loop_count_repeat_base
     loop_count_skip := 2 * loop_count_skip_base
-    If (NumsDown = "00001001")
+    If (loop_count > loop_count_repeat * 5)
     {
-      If (button_click_pre <> "00001001")
+      loop_count_skip := loop_count_skip_base / 2
+    }
+
+    If (NumsDown = "0000000011")
+    {
+      If (button_click_pre <> NumsDown)
       {
-        button_click_pre := "00001001"
+        If button_click_pre = -1
+          loop_count := 1
+        button_click_pre := NumsDown
+        SendInput, {WheelUp}
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+  			SendInput, {WheelUp}
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "0000001001")
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        If button_click_pre = -1
+          loop_count := 1
+        button_click_pre := NumsDown
+  			SendInput, {WheelRight}
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        SendInput, {WheelRight}
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "1000000001")
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        If button_click_pre = -1
+          loop_count := 1
+        button_click_pre := NumsDown
+        SendInput, {WheelDown}
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        SendInput, {WheelDown}
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "0010000001")
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        If button_click_pre = -1
+          loop_count := 1
+        button_click_pre := NumsDown
+        SendInput, {WheelLeft}
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        SendInput, {WheelLeft}
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "0010000011" && button_click_pre <> NumsDown)
+    {
+      button_click_pre := NumsDown
+      MouseClick, Left,,, 1, 0, D
+    }
+    Else If (NumsDown = "1010000001" && button_click_pre <> NumsDown)
+    {
+      button_click_pre := NumsDown
+      MouseClick, X1,,, 1, 0
+    }
+    Else If (NumsDown = "0000001011" && button_click_pre <> NumsDown)
+    {
+      button_click_pre := NumsDown
+      MouseClick, Right,,, 1, 0, D
+    }
+    Else If (NumsDown = "1000001001" && button_click_pre <> NumsDown)
+    {
+      button_click_pre := NumsDown
+      MouseClick, Middle,,, 1, 0
+    }
+    Else If (NumsDown = "0000000001" && button_click_pre <> -1)
+    {
+      If (button_click_pre = "0010000011")
+      {
+        MouseClick, Left,,, 1, 0, U
+      }
+      Else If (button_click_pre = "0000001011")
+      {
+        MouseClick, Right,,, 1, 0, U
+      }
+      button_click_pre := -1
+    }
+  }
+  Else If (SubStr(NumsDown, 1, 1) = "1" || SubStr(NumsDown, 3, 1) = "1" || SubStr(NumsDown, 7, 1) = "1" || SubStr(NumsDown, 9, 1) = "1")
+  {
+    loop_count_repeat := 1 * loop_count_repeat_base
+    loop_count_skip := 2 * loop_count_skip_base
+    If (loop_count > loop_count_repeat * 4)
+    {
+      loop_count_skip := loop_count_skip_base / 2
+    }
+    mouse_move_mult := 15
+
+    If (NumsDown = "0000000010")
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        If button_click_pre = -1
+          loop_count := 1
+        button_click_pre := NumsDown
+  			MouseMove, 0, -mouse_move_mult, 0, R
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+  			MouseMove, 0, -mouse_move_mult, 0, R
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "0000001000")
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        If button_click_pre = -1
+          loop_count := 1
+        button_click_pre := NumsDown
+  			MouseMove, mouse_move_mult, 0, 0, R
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        MouseMove, mouse_move_mult, 0, 0, R
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "1000000000")
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        If button_click_pre = -1
+          loop_count := 1
+        button_click_pre := NumsDown
+        MouseMove, 0, mouse_move_mult, 0, R
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        MouseMove, 0, mouse_move_mult, 0, R
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "0010000000")
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        If button_click_pre = -1
+          loop_count := 1
+        button_click_pre := NumsDown
+        MouseMove, -mouse_move_mult, 0, 0, R
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        MouseMove, -mouse_move_mult, 0, 0, R
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "0010000010")
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        If button_click_pre = -1
+          loop_count := 1
+        button_click_pre := NumsDown
+        MouseMove, -mouse_move_mult, -mouse_move_mult, 0, R
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        MouseMove, -mouse_move_mult, -mouse_move_mult, 0, R
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "1010000000")
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        If button_click_pre = -1
+          loop_count := 1
+        button_click_pre := NumsDown
+        MouseMove, -mouse_move_mult, mouse_move_mult, 0, R
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        MouseMove, -mouse_move_mult, mouse_move_mult, 0, R
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "0000001010")
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        If button_click_pre = -1
+          loop_count := 1
+        button_click_pre := NumsDown
+        MouseMove, mouse_move_mult, -mouse_move_mult, 0, R
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        MouseMove, mouse_move_mult, -mouse_move_mult, 0, R
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "1000001000")
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        If button_click_pre = -1
+          loop_count := 1
+        button_click_pre := NumsDown
+        MouseMove, mouse_move_mult, mouse_move_mult, 0, R
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        MouseMove, mouse_move_mult, mouse_move_mult, 0, R
+      }
+      loop_count++
+    }
+  }
+  Else If (SubStr(NumsDown, 5, 1) = "1")
+  {
+    loop_count_repeat := 1 * loop_count_repeat_base
+    loop_count_skip := 2 * loop_count_skip_base
+    If (NumsDown = "0000100100")
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        button_click_pre := NumsDown
         SendInput, {Up}
         loop_count := 1
       }
@@ -214,11 +481,11 @@ WatchHotkeys:
       }
       loop_count++
     }
-    Else If (NumsDown = "00001100")
+    Else If (NumsDown = "0000110000")
     {
-      If (button_click_pre <> "00001100")
+      If (button_click_pre <> NumsDown)
       {
-        button_click_pre := "00001100"
+        button_click_pre := NumsDown
         SendInput, {Right}
         loop_count := 1
       }
@@ -228,11 +495,11 @@ WatchHotkeys:
       }
       loop_count++
     }
-    Else If (NumsDown = "01001000")
+    Else If (NumsDown = "0100100000")
     {
-      If (button_click_pre <> "01001000")
+      If (button_click_pre <> NumsDown)
       {
-        button_click_pre := "01001000"
+        button_click_pre := NumsDown
         SendInput, {Down}
         loop_count := 1
       }
@@ -242,11 +509,11 @@ WatchHotkeys:
       }
       loop_count++
     }
-    Else If (NumsDown = "00011000")
+    Else If (NumsDown = "0001100000")
     {
-      If (button_click_pre <> "00011000")
+      If (button_click_pre <> NumsDown)
       {
-        button_click_pre := "00011000"
+        button_click_pre := NumsDown
         SendInput, {Left}
         loop_count := 1
       }
@@ -256,64 +523,82 @@ WatchHotkeys:
       }
       loop_count++
     }
-    Else If (NumsDown = "00011001" && button_click_pre <> NumsDown)
+    Else If (NumsDown = "0001100100" && button_click_pre <> NumsDown)
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        button_click_pre := NumsDown
+        SendInput, {BackSpace}
+        loop_count := 1
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        SendInput, {BackSpace}
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "0101100000" && button_click_pre <> NumsDown)
     {
       button_click_pre := NumsDown
       SendInput, {Home}
     }
-    Else If (NumsDown = "01011000" && button_click_pre <> NumsDown)
+    Else If (NumsDown = "0000110100" && button_click_pre <> NumsDown)
+    {
+      If (button_click_pre <> NumsDown)
+      {
+        button_click_pre := NumsDown
+        SendInput, {Delete}
+        loop_count := 1
+      }
+      Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+      {
+        SendInput, {Delete}
+      }
+      loop_count++
+    }
+    Else If (NumsDown = "0100110000" && button_click_pre <> NumsDown)
     {
       button_click_pre := NumsDown
       SendInput, {End}
     }
-    Else If (NumsDown = "00001101" && button_click_pre <> NumsDown)
-    {
-      button_click_pre := NumsDown
-      SendInput, {PgUp}
-    }
-    Else If (NumsDown = "01001100" && button_click_pre <> NumsDown)
-    {
-      button_click_pre := NumsDown
-      SendInput, {PgDn}
-    }
-    Else If (button_click_pre <> -1)
+    Else If (NumsDown = "0000100000" && button_click_pre <> -1)
     {
       button_click_pre := -1
     }
   }
-  Else If (NumsDown <> "00000000")
+  Else If (SubStr(NumsDown, 2, 1) = "1" || SubStr(NumsDown, 4, 1) = "1" || SubStr(NumsDown, 6, 1) = "1" || SubStr(NumsDown, 8, 1) = "1")
   {
     character_code_pre := character_code
     { ; Joystick position
-      If (NumsDown = "00000100")
+      If (NumsDown = "0000010000")
       {
         character_code := New_Code(character_code, 6)
       }
-      Else If (NumsDown = "00000101")
+      Else If (NumsDown = "0000010100")
       {
         character_code := New_Code(character_code, 3)
       }
-      Else If (NumsDown = "00000001")
+      Else If (NumsDown = "0000000100")
       {
         character_code := New_Code(character_code, 2)
       }
-      Else If (NumsDown = "00010001")
+      Else If (NumsDown = "0001000100")
       {
         character_code := New_Code(character_code, 1)
       }
-      Else If (NumsDown = "00010000")
+      Else If (NumsDown = "0001000000")
       {
         character_code := New_Code(character_code, 4)
       }
-      Else If (NumsDown = "01010000")
+      Else If (NumsDown = "0101000000")
       {
         character_code := New_Code(character_code, 7)
       }
-      Else If (NumsDown = "01000000")
+      Else If (NumsDown = "0100000000")
       {
         character_code := New_Code(character_code, 8)
       }
-      Else If (NumsDown = "01000100")
+      Else If (NumsDown = "0100010000")
       {
         character_code := New_Code(character_code, 9)
       }
@@ -1064,6 +1349,10 @@ WatchHotkeys:
 			Progress, 8:Off
 			Progress, 9:Off
 			Progress, 10:Off
+    }
+    Else If (button_click_pre <> -1)
+    {
+      button_click_pre := -1
     }
   }
 }
