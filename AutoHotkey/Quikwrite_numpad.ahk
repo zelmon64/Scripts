@@ -109,7 +109,7 @@ SetTimer, WatchHotkeys, 1
 	}
 	{ ; Functions
 		mode_5_characters =  %A_Space%            ,,,,,,,,,
-		mode_5_characters =  %mode_5_characters%^s,^s,Hm,DT,PU,,,PD,,,
+		mode_5_characters =  %mode_5_characters%^s,^s,AF,DT,PU,,,PD,,,
 		mode_5_characters =  %mode_5_characters%BS,SL,BS,CL,,,,Sy,FL,Ca,
 		mode_5_characters =  %mode_5_characters%VM,V+,V-,VM,,,#x,,,F4,
 		mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,F2,,,
@@ -1208,16 +1208,44 @@ WatchHotkeys:
       {
 				If (double_tap = 0)
         {
-          double_tap = 1
+          double_tap := 1
           SoundBeep, 900, 100
           SoundBeep, 1000, 100
         }
         Else
         {
-          double_tap = 0
+          double_tap := 0
           SoundBeep, 1000, 100
           SoundBeep, 900, 100
         }
+				If (character_mode > 20)
+        	character_mode := 1
+      }
+      Else If (all_characters%ch_mode%%character_code% = "AF")
+      {
+				If (audio_feedback = 0)
+        {
+          audio_feedback := 1
+          SoundBeep, 900, 100
+        }
+        Else If (audio_feedback = 1)
+        {
+          audio_feedback := 2
+          SoundBeep, 900, 100
+          Sleep, 100
+          SoundBeep, 900, 100
+        }
+        Else
+        {
+          audio_feedback := 0
+          SoundBeep, 900, 100
+          Sleep, 100
+          SoundBeep, 900, 100
+          Sleep, 100
+          SoundBeep, 900, 100
+        }
+				If (character_mode > 20)
+        	character_mode := 1
       }
       Else If (all_characters%ch_mode%%character_code% = "Ec")
       {
