@@ -3,8 +3,6 @@
 ;
 JoystickNumber = 0
 ;
-;   █▲►▼◄●
-;   ─│┌┐└┘├┤┬┴┼
 ;
 ;   0    2  3   1  0  3   1  2    0
 ;     a  s  k │ █  ◄  ▲ │ p  f  n
@@ -145,10 +143,10 @@ JoystickNumber = 0
 {
 	 If A_IsCompiled
    {
-      Menu, tray, Icon, %A_ScriptFullPath%, -159
+      Menu, tray, Icon, %A_ScriptFullPath%,1,1
    } else
    {
-      Menu, tray, Icon, %A_ScriptDir%\wheel.ico
+      Menu, tray, Icon, %A_ScriptDir%\wheel.ico, ,1
    }
  }
 
@@ -210,6 +208,10 @@ if JoystickNumber <= 0
 	audio_feedback := 1
 	hold_pose := 0
 	loop_count_max := 15
+	joy_mode := 0
+	joyx_pre := 0
+	joyy_pre := 0
+	radius_pre := 0
 }
 
 character_mode_lists = Lowercase,Capitals,Symbols,Numbers,Functions
@@ -235,19 +237,6 @@ New_Code(character_code, this_code)
   }
   Return character_code
 }
-scroll(direction)
-{
-	ControlGetFocus, fcontrol, A
-	SendMessage, 0x114, %direction%, 0, %fcontrol%, A
-}
-
-WindowGetRect(windowTitle*) {
-    if hwnd := WinExist(windowTitle*) {
-        VarSetCapacity(rect, 16, 0)
-        DllCall("GetClientRect", "Ptr", hwnd, "Ptr", &rect)
-        return {width: NumGet(rect, 8, "Int"), height: NumGet(rect, 12, "Int")}
-    }
-}
 
 #SingleInstance
 SetFormat, float, 03.3  ; Omit decimal point from axis position percentages. (03)
@@ -256,6 +245,10 @@ GetKeyState, joy_name, %JoystickNumber%JoyName
 GetKeyState, joy_info, %JoystickNumber%JoyInfo
 Loop
 {
+	joyx_pre := joyx
+	joyy_pre := joyy
+	radius_pre := radius
+
 	{ ; Joystick polling
 		buttons_down =
 		Loop, %joy_buttons%
@@ -293,20 +286,139 @@ Loop
 			GetKeyState, joyp, %JoystickNumber%JoyPOV
 			axis_info = %axis_info%%a_space%%a_space%POV%joyp%
 		}
+	}
 
-		If (false)
+	If joyx <>
+	{}
+	Else If joyy <>
+	{}
+	Else
+	{
+		SoundBeep, 900, 100
+		SoundBeep, 700, 100
+		SoundBeep, 500, 200
+		; break
+		Reload
+		Sleep 1000
+		continue
+	}
+
+	{ ; calculate theta
+	  ;tol = 25
+		dz := 10
+		joyx -= 50
+		joyy -= 50
+		theta := 0
+		pi := 4 * atan(1)
+		region := 45 * pi / 180
+		radius2 := joyx*joyx + joyy*joyy
+		radius := sqrt(radius2)
+		; tol := 20 * pi / 180 * exp((dz - radius) * 3 / (50 - dz))
+		; tol := 25 * pi / 180 * exp((dz - radius) * 2 / (50 - dz))
+		tol := 22.5 * pi / 180 * exp((dz - radius) * 5 / (50 - dz))
+
+		If (radius2 > dz*dz)
 		{
-			joyx := 100 - joyx
-			joyy := 100 - joyy
-			If (joyp <> -1) ; || joyp = 13500)
+			theta := atan( abs(joyy / joyx) )
+			If (joyy > 0)
+			{
+				If (joyx < 0)
+				{
+					theta := pi + theta
+				}
+				Else
+				{
+					theta := 2 * pi - theta
+				}
+			}
+			Else
+			{
+				If (joyx < 0)
+				{
+					theta := pi - theta
+				}
+			}
+		}
+	}
+
+	{ ; button conversions
+		If (false) ; rotate 180 degrees
+		{
+			joyx := - joyx
+			joyy := - joyy
+			If (joyp <> -1)
 				joyp := joyp + 18000
-			If (joyp > 31500) ; || joyp = 22500)
+			If (joyp > 31500)
 				joyp := joyp - 18000 - 18000
 		}
 
-		If (joyp = 4500) ; || joyp = 13500)
+		If (radius_pre < 5) ; sudden perimeter events
+		{
+			rmin := 10
+			rmax := 45
+			If (joy_mode < 2 && radius > rmax)
+			{
+				joy_mode := 1
+			}
+			Else If (joy_mode > 0 && radius < rmax && radius > rmin)
+			{
+				joy_mode := 2
+			}
+			Else If (joy_mode > 1 && radius > rmax)
+			{
+				joy_mode := 3
+			}
+			Else
+				joy_mode := 0
+
+			If (joy_mode > 0)
+			{
+				joyx := 0
+				joyy := 0
+				radius := 0
+				radius2 := 0
+			}
+
+			{ ; Joystick position
+				If ((theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol) && joy_mode > 0)
+				{
+					joyp := 9000
+				}
+			  Else If (theta < region * 3 / 2 - tol && theta > region / 2 + tol && joy_mode = 3)
+				{
+					joyp := 4500
+				}
+			  Else If (theta < region * 5 / 2 - tol && theta > region * 3 / 2 + tol && joy_mode > 0)
+				{
+					joyp := 0000
+				}
+			  Else If (theta < region * 7 / 2 - tol && theta > region * 5 / 2 + tol && joy_mode = 3)
+				{
+					joyp := 31500
+				}
+			  Else If (theta < region * 9 / 2 - tol && theta > region * 7 / 2 + tol && joy_mode > 0)
+				{
+					joyp := 27000
+				}
+			  Else If (theta < region * 11 / 2 - tol && theta > region * 9 / 2 + tol && joy_mode = 3)
+				{
+					joyp := 22500
+				}
+			  Else If (theta < region * 13 / 2 - tol && theta > region * 11 / 2 + tol && joy_mode > 0)
+				{
+					joyp := 18000
+				}
+			  Else If (theta < region * 15 / 2 - tol && theta > region * 13 / 2 + tol && joy_mode = 3)
+				{
+					joyp := 13500
+				}
+			}
+		}
+    ;ToolTip, radius_pre: %radius_pre% `njoyp: %joyyp% `njoy_mode: %joy_mode%
+
+		If (joyp = 4500)
 			joy5 := "D"
-		If (joyp = 31500) ; || joyp = 22500)
+		If (joyp = 31500)
 			joyz := 100
 		If (joyp = 13500)
 			joy2 := "D"
@@ -318,7 +430,7 @@ Loop
 	{ ; Modes
 		If (stick_mode = 0) ; Mode selection
 		{
-			If (abs(joyx-50) > 15 || abs(joyy-50) > 15)
+			If (abs(joyx) > 15 || abs(joyy) > 15)
 			{
 				If (button_click_pre <> 9)
 				{
@@ -642,7 +754,7 @@ Loop
 						Send {#}
 						SetKeyDelay, -1
 					}
-					Else
+					Else If (joy_mode < 3)
 					{
 						If (button_click_pre = 2)
 							button_click_pre := 10
@@ -650,18 +762,32 @@ Loop
 							button_click_pre := 5
 						SendInput, {Control down}
 					}
+					Else If (button_click_pre <> 53 && joy_mode = 3)
+					{
+						button_click_pre := 53
+						SendInput, {Delete}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0 && joy_mode = 3)
+					{
+						SendInput, {Delete}
+					}
+					loop_count++
 				}
-				If (joyz > 55 && button_click_pre <> 10)
+				If (joyz > 55 && button_click_pre <> 10 && button_click_pre <> 2)
 				{
 					; || joyu > 10 || joyv > 10
-					If (joyz > 75 && double_tap = 0)
+					If ( double_tap = 0)
 					{
-						button_click_pre := 10
-						SetKeyDelay, 100
-						Send {/}
-						SetKeyDelay, -1
+						If (joyz > 75)
+						{
+							button_click_pre := 10
+							SetKeyDelay, 100
+							Send {/}
+							SetKeyDelay, -1
+						}
 					}
-					Else If (button_click_pre <> 2 && double_tap = 1)
+					Else If (joy_mode < 3)
 					{
 						If (button_click_pre = 5)
 							button_click_pre := 10
@@ -669,28 +795,48 @@ Loop
 							button_click_pre := 2
 						SendInput, {Shift down}
 					}
+					Else If (button_click_pre <> 103 && joy_mode = 3)
+					{
+						button_click_pre := 103
+						SendInput, {BackSpace}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0 && joy_mode = 3)
+					{
+						SendInput, {BackSpace}
+					}
+					loop_count++
 				}
-				If (joy1 = "D")
+				If (joy1 = "D" && button_click_pre <> 1)
 				{
-					If (button_click_pre <> 1)
+					If (joy_mode < 3)
 					{
 						button_click_pre := 1
 						SendInput, {LWin down}
 					}
+					Else
+					{
+						button_click_pre := 1
+						SendInput, {Home}
+					}
 				}
-				If (joy2 = "D")
+				If (joy2 = "D" && button_click_pre <> 3)
 				{
-					If (button_click_pre <> 3)
+					If (joy_mode < 3)
 					{
 						button_click_pre := 3
 						SendInput, {Alt down}
+					}
+					Else
+					{
+						button_click_pre := 3
+						SendInput, {End}
 					}
 				}
 				{
 					If (joyp = -1 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
 						{
-							; || joyu > 10 || joyv > 10  && joyu < 10 && joyv < 10
-							;If (button_click_pre > 0 && button_click_pre < 9)
+							If (joy_mode < 3)
 							{
 								SendInput, {Control up}
 								SendInput, {Shift up}
@@ -751,6 +897,17 @@ Loop
 					If (button_click_pre <> 9000)
 					{
 						button_click_pre := 9000
+						SendInput, {Right}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Right}
+					}
+					loop_count++
+					If (button_click_pre <> 9000)
+					{
+						button_click_pre := 9000
 						SendInput, {Media_Next}
 					}
 				}
@@ -759,64 +916,58 @@ Loop
 					If (button_click_pre <> 27000)
 					{
 						button_click_pre := 27000
+						SendInput, {Left}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Left}
+					}
+					loop_count++
+				}
+				Else If (joyy < -20 && joyx > -20 && joyx < 20)
+				{
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
+						SendInput, {Volume_Up}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Volume_Up}
+					}
+					loop_count++
+				}
+				Else If (joyy > 20 && joyx > -20 && joyx < 20)
+				{
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
+						SendInput, {Volume_Down}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					{
+						SendInput, {Volume_Down}
+					}
+					loop_count++
+				}
+				Else If (joyx < -40 && joyy > -10 && joyy < 10)
+				{
+					If (button_click_pre <> 2)
+					{
+						button_click_pre := 2
 						SendInput, {Media_Prev}
 					}
 				}
-				Else If (joyy < 30 && joyx > 30 && joyx < 70)
+				Else If (joyx > 40 && joyy > -10 && joyy < 10)
 				{
 					If (button_click_pre <> 2)
 					{
 						button_click_pre := 2
-						SendInput, {Volume_Up}
-						loop_count := 1
+						SendInput, {Media_Next}
 					}
-					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-					{
-						SendInput, {Volume_Up}
-					}
-					loop_count++
-				}
-				Else If (joyy > 70 && joyx > 30 && joyx < 70)
-				{
-					If (button_click_pre <> 2)
-					{
-						button_click_pre := 2
-						SendInput, {Volume_Down}
-						loop_count := 1
-					}
-					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-					{
-						SendInput, {Volume_Down}
-					}
-					loop_count++
-				}
-				Else If (joyx < 30 && joyy > 40 && joyy < 60)
-				{
-					If (button_click_pre <> 2)
-					{
-						button_click_pre := 2
-						SendInput, {Left}
-						loop_count := 1
-					}
-					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-					{
-						SendInput, {Left}
-					}
-					loop_count++
-				}
-				Else If (joyx > 70 && joyy > 40 && joyy < 60)
-				{
-					If (button_click_pre <> 2)
-					{
-						button_click_pre := 2
-						SendInput, {Right}
-						loop_count := 1
-					}
-					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
-					{
-						SendInput, {Right}
-					}
-					loop_count++
 				}
 				If (joy5 = "D")
 				{
@@ -840,7 +991,7 @@ Loop
 					If (button_click_pre <> 1)
 					{
 						button_click_pre := 1
-						SendInput, {F11}
+						SendInput, !{Enter}
 					}
 				}
 				If (joy2 = "D")
@@ -852,7 +1003,7 @@ Loop
 					}
 				}
 				{
-					If (joyp = -1 && abs(joyx-50) < 5 && abs(joyy-50) < 5 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
+					If (joyp = -1 && abs(joyx) < 5 && abs(joyy) < 5 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
 						{
 							button_click_pre := -1
 						}
@@ -931,7 +1082,7 @@ Loop
 					}
 					loop_count++
 				}
-				Else If (joyy < 30 && joyx > 30 && joyx < 70)
+				Else If (joyy < -20 && joyx > -20 && joyx < 20)
 				{
 					If (button_click_pre <> 2)
 					{
@@ -945,7 +1096,7 @@ Loop
 					}
 					loop_count++
 				}
-				Else If (joyy > 70 && joyx > 30 && joyx < 70)
+				Else If (joyy > 20 && joyx > -20 && joyx < 20)
 				{
 					If (button_click_pre <> 2)
 					{
@@ -959,7 +1110,7 @@ Loop
 					}
 					loop_count++
 				}
-				Else If (joyx < 30 && joyy > 40 && joyy < 60)
+				Else If (joyx < -20 && joyy > -10 && joyy < 10)
 				{
 					If (button_click_pre <> 2)
 					{
@@ -967,7 +1118,7 @@ Loop
 						SendInput, {Volume_Mute}
 					}
 				}
-				Else If (joyx > 70 && joyy > 40 && joyy < 60)
+				Else If (joyx > 20 && joyy > -10 && joyy < 10)
 				{
 					If (button_click_pre <> 2)
 					{
@@ -1009,7 +1160,7 @@ Loop
 					}
 				}
 				{
-					If (joyp = -1 && abs(joyx-50) < 5 && abs(joyy-50) < 5 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
+					If (joyp = -1 && abs(joyx) < 5 && abs(joyy) < 5 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
 						{
 							button_click_pre := -1
 						}
@@ -1039,8 +1190,6 @@ Loop
 						mouse_click_pre := 2
 						MouseClick, Right,,, 1, 0, ;D
 					}
-					;amoffsetx := -(joyx - 50) / 100
-					;amoffsety := -(joyy - 50) / 100
 				}
 				Else If (joyp = 0)
 				{
@@ -1125,8 +1274,8 @@ Loop
 					Else If (button_click_pre <> 5 && dasher_mode = 0)
 					{
 						button_click_pre := 5
-						amoffsetx := (joyx - 50) ;/ 100
-						amoffsety := (joyy - 50) ;/ 100
+						amoffsetx := (joyx)
+						amoffsety := (joyy)
 					}
 				}
 				If (joy1 = "D")
@@ -1185,9 +1334,18 @@ Loop
 			{
 				loop_count_repeat := 1 * loop_count_repeat_base
 				loop_count_skip := 1 * loop_count_skip_base
-				If (joyp = 0)
+		    If (loop_count > loop_count_repeat * 5)
+		    {
+		      loop_count_skip := loop_count_skip_base / 2
+		    }
+				If (joyp = 0 && button_click_pre <> 03)
 				{
-					If (button_click_pre <> 0)
+					If (joy_mode = 3)
+					{
+						button_click_pre := 03
+						SendInput, {Home}
+					}
+					Else If (button_click_pre <> 0)
 					{
 						button_click_pre := 0
 						SendInput, {WheelUp}
@@ -1199,9 +1357,14 @@ Loop
 					}
 					loop_count++
 				}
-				Else If (joyp = 9000)
+				Else If (joyp = 9000 && button_click_pre <> 90003)
 				{
-					If (button_click_pre <> 9000)
+					If (joy_mode = 3)
+					{
+						button_click_pre := 90003
+						MouseClick, X2,,, 1, 0
+					}
+					Else If (button_click_pre <> 9000)
 					{
 						button_click_pre := 9000
 						SendInput, {WheelRight}
@@ -1215,9 +1378,14 @@ Loop
 					}
 					loop_count++
 				}
-				Else If (joyp = 18000)
+				Else If (joyp = 18000 && button_click_pre <> 180003)
 				{
-					If (button_click_pre <> 18000)
+					If (joy_mode = 3)
+					{
+						button_click_pre := 180003
+						SendInput, {End}
+					}
+					Else If (button_click_pre <> 18000)
 					{
 						button_click_pre := 18000
 						SendInput, {WheelDown}
@@ -1229,9 +1397,14 @@ Loop
 					}
 					loop_count++
 				}
-				Else If (joyp = 27000)
+				Else If (joyp = 27000 && button_click_pre <> 270003)
 				{
-					If (button_click_pre <> 27000)
+					If (joy_mode = 3)
+					{
+						button_click_pre := 270003
+						MouseClick, X1,,, 1, 0
+					}
+					Else If (button_click_pre <> 27000)
 					{
 						button_click_pre := 27000
 						SendInput, {WheelLeft}
@@ -1290,9 +1463,13 @@ Loop
 						; MouseClick, Middle,,, 1, 0, D
 					}
 				}
-				If (joy1 = "D")
+				If (joy1 = "D" && mouse_click_pre <> 3)
 				{
-					If (mouse_click_pre <> 4 && mouse_click_pre <> 42)
+					If (joy_mode = 3)
+					{
+						mouse_click_pre := 3
+					}
+					Else If (mouse_click_pre <> 4 && mouse_click_pre <> 42)
 					{
 						mouse_click_pre := 4
 						; MouseClick, X1,,, 1, 0, D
@@ -1335,42 +1512,6 @@ Loop
 							button_click_pre := -1
 						}
 				}
-			}
-		}
-	}
-
-  ;tol = 25
-	dz := 5
-	joyx -= 50
-	joyy -= 50
-	theta := 0
-	pi := 4 * atan(1)
-	region := 45 * pi / 180
-	radius2 := joyx*joyx + joyy*joyy
-	radius := sqrt(radius2)
-	; tol := 20 * pi / 180 * exp((dz - radius) * 3 / (50 - dz))
-	; tol := 25 * pi / 180 * exp((dz - radius) * 2 / (50 - dz))
-	tol := 22.5 * pi / 180 * exp((dz - radius) * 5 / (50 - dz))
-
-	If (radius2 > dz*dz)
-	{
-		theta := atan( abs(joyy / joyx) )
-		If (joyy > 0)
-		{
-			If (joyx < 0)
-			{
-				theta := pi + theta
-			}
-			Else
-			{
-				theta := 2 * pi - theta
-			}
-		}
-		Else
-		{
-			If (joyx < 0)
-			{
-				theta := pi - theta
 			}
 		}
 	}
@@ -2111,106 +2252,16 @@ Loop
       }
       Else If (StrLen(all_characters%ch_mode%%character_code%) = 5 && SubStr(all_characters%ch_mode%%character_code%, 1, 4) = "TAid")
       {
-				;SendEvent, % " " + SubStr(all_characters%ch_mode%%character_code%, 2, 1)
-	      If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "1")
+        TAidnum := SubStr(all_characters%ch_mode%%character_code%, 5, 1)
+	      If (TAidnum >= 0 && TAidnum <= 9)
 	      {
-					;SendRaw, 11
-					;SendEvent, {Numpad1}
-					;SendEvent, {1}{1}
-					;Sleep, 200
-					;SendEvent, {1}
-					SetKeyDelay, 100
-					Send {1}
+          TAidnum := SubStr(all_characters%ch_mode%%character_code%, 5, 1)
+					SendInput, %TAidnum%
 					If (double_tap)
-						Send {1}
-					SetKeyDelay, -1
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "2")
-	      {
-					;SendRaw, 22
-					SetKeyDelay, 100
-					Send {2}
-					If (double_tap)
-						Send {2}
-					SetKeyDelay, -1
-					;SendEvent, {2}{2}
-					;SendEvent, {Numpad2}
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "3")
-	      {
-					;SendRaw, 33
-					SetKeyDelay, 100
-					Send {3}
-					If (double_tap)
-						Send {3}
-					SetKeyDelay, -1
-					;SendEvent, {3}{3}
-					;SendEvent, {Numpad3}
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "4")
-	      {
-					;SendRaw, 44
-					SetKeyDelay, 100
-					Send {4}
-					If (double_tap)
-						Send {4}
-					SetKeyDelay, -1
-					;SendEvent, {4}{4}
-					;SendEvent, {Numpad4}
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "5")
-	      {
-					;SendRaw, 55
-					SetKeyDelay, 100
-					Send {5}
-					If (double_tap)
-						Send {5}
-					SetKeyDelay, -1
-					;SendEvent, {5}{5}
-					;SendEvent, {Numpad5}
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "6")
-	      {
-					;SendRaw, 66
-					SetKeyDelay, 100
-					Send {6}
-					If (double_tap)
-						Send {6}
-					SetKeyDelay, -1
-					;SendEvent, {6}{6}
-					;SendEvent, {Numpad6}
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "7")
-	      {
-					SetKeyDelay, 100
-					Send {7}
-					If (double_tap)
-						Send {7}
-					SetKeyDelay, -1
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "8")
-	      {
-					SetKeyDelay, 100
-					Send {8}
-					If (double_tap)
-						Send {8}
-					SetKeyDelay, -1
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "9")
-	      {
-					SetKeyDelay, 100
-					Send {9}
-					If (double_tap)
-						Send {9}
-					SetKeyDelay, -1
-	      }
-	      Else If (SubStr(all_characters%ch_mode%%character_code%, 5, 1) = "0")
-	      {
-					SetKeyDelay, 100
-					Send {0}
-					If (double_tap)
-						Send {0}
-					SetKeyDelay, -1
+					{
+            Sleep 100
+            SendInput,  %TAidnum%
+          }
 	      }
       }
       Else
