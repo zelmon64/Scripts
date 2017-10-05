@@ -56,15 +56,15 @@ JoystickNumber = 0
 	}
 	{ ; Symbols
 		mode_3_characters =    %A_Space%            ,,,,,,,,,
-		mode_3_characters =  %mode_3_characters% ~, ~, {, }, @,,,In,,,
+		mode_3_characters =  %mode_3_characters% @, @, {, }, ^,,,In,,,
 		mode_3_characters =  %mode_3_characters%BS,SL,BS,CL,,,,Sy,FL,Ca,
-		mode_3_characters =  %mode_3_characters% C, (, ), C,,, [,,, ],
-		mode_3_characters =  %mode_3_characters%%A_Space%;,%A_Space%#,,,%A_Space%;,,,%A_Space%:,,,
+		mode_3_characters =  %mode_3_characters% C, (, ), C,,, #,,, ~,
+		mode_3_characters =  %mode_3_characters%%A_Space%;,%A_Space%*,,,%A_Space%;,,,%A_Space%:,,,
 		mode_3_characters =  %mode_3_characters%,,,,,,,,,,
 		mode_3_characters =  %mode_3_characters% ',,, ",,, ',,, ``,
-		mode_3_characters =  %mode_3_characters% |,Ec,,, ^,,, |, /, \,
+		mode_3_characters =  %mode_3_characters% |,Ec,,, &,,, |, /, \,
 		mode_3_characters =  %mode_3_characters%Sp,Tb,Fn,No,,,,En,Sp,NL,
-		mode_3_characters =  %mode_3_characters% .,,, !,,, ?, _, &, .,
+		mode_3_characters =  %mode_3_characters% .,,, !,,, ?, _, -, .,
 		StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
 		ArrayIndex := 30
 		all_characters%ArrayIndex3%%ArrayIndex% := " ,"
@@ -75,8 +75,8 @@ JoystickNumber = 0
 		mode_4_characters =  %A_Space%            ,,,,,,,,,
 		mode_4_characters =  %mode_4_characters% 0, 0, <, >, 1,,, 2,,,
 		mode_4_characters =  %mode_4_characters%BS,SL,BS,CL,,,,Sy,FL,Ca,
-		mode_4_characters =  %mode_4_characters% C, (, ), C,,, [,,, ],
-		mode_4_characters =  %mode_4_characters% 3, #,,, 3,,, 4,,,
+		mode_4_characters =  %mode_4_characters% C, [, ], C,,,%A_Space%;,,, :,
+		mode_4_characters =  %mode_4_characters% 3, !,,, 3,,, 4,,,
 		mode_4_characters =  %mode_4_characters%,,,,,,,,,,
 		mode_4_characters =  %mode_4_characters% =,,, +,,, =,,, -,
 		mode_4_characters =  %mode_4_characters% 5, /,,, *,,, 5, 6, 7,
@@ -92,7 +92,7 @@ JoystickNumber = 0
 	}
 	{ ; Functions
 		mode_5_characters =  %A_Space%            ,,,,,,,,,
-		mode_5_characters =  %mode_5_characters%^s,^s,Hm,Ed,PU,,,PD,,,
+		mode_5_characters =  %mode_5_characters%^s,^s,RC,UD,PU,,,PD,,,
 		mode_5_characters =  %mode_5_characters%BS,SL,BS,CL,,,,Sy,FL,Ca,
 		mode_5_characters =  %mode_5_characters%VM,V+,V-,VM,,,#x,,,F4,
 		mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,F2,,,
@@ -208,10 +208,16 @@ if JoystickNumber <= 0
 	audio_feedback := 1
 	hold_pose := 0
 	loop_count_max := 15
+	rmin := 1
+	rmax := 45
 	joy_mode := 0
 	joyx_pre := 0
 	joyy_pre := 0
+	joyx_0 := 0
+	joyy_0 := 0
 	radius_pre := 0
+	rotate := 0
+	recentre := 1
 }
 
 character_mode_lists = Lowercase,Capitals,Symbols,Numbers,Functions
@@ -249,181 +255,216 @@ Loop
 	joyy_pre := joyy
 	radius_pre := radius
 
-	{ ; Joystick polling
-		buttons_down =
-		Loop, %joy_buttons%
-		{
-			GetKeyState, joy%a_index%, %JoystickNumber%joy%a_index%
-			if joy%a_index% = D
-				buttons_down = %buttons_down%%a_space%%a_index%
-		}
-		GetKeyState, joyx, %JoystickNumber%JoyX
-		axis_info = X%joyx%
-		GetKeyState, joyy, %JoystickNumber%JoyY
-		axis_info = %axis_info%%a_space%%a_space%Y%joyy%
-		IfInString, joy_info, Z
-		{
-			GetKeyState, joyz, %JoystickNumber%JoyZ
-			axis_info = %axis_info%%a_space%%a_space%Z%joyz%
-		}
-		IfInString, joy_info, R
-		{
-			GetKeyState, joyr, %JoystickNumber%JoyR
-			axis_info = %axis_info%%a_space%%a_space%R%joyr%
-		}
-		IfInString, joy_info, U
-		{
-			GetKeyState, joyu, %JoystickNumber%JoyU
-			axis_info = %axis_info%%a_space%%a_space%U%joyu%
-		}
-		IfInString, joy_info, V
-		{
-			GetKeyState, joyv, %JoystickNumber%JoyV
-			axis_info = %axis_info%%a_space%%a_space%V%joyv%
-		}
-		IfInString, joy_info, P
-		{
-			GetKeyState, joyp, %JoystickNumber%JoyPOV
-			axis_info = %axis_info%%a_space%%a_space%POV%joyp%
-		}
-	}
-
-	If joyx <>
-	{}
-	Else If joyy <>
-	{}
-	Else
-	{
-		SoundBeep, 900, 100
-		SoundBeep, 700, 100
-		SoundBeep, 500, 200
-		; break
-		Reload
-		Sleep 1000
-		continue
-	}
-
-	{ ; calculate theta
-	  ;tol = 25
-		dz := 10
-		joyx -= 50
-		joyy -= 50
-		theta := 0
-		pi := 4 * atan(1)
-		region := 45 * pi / 180
-		radius2 := joyx*joyx + joyy*joyy
-		radius := sqrt(radius2)
-		; tol := 20 * pi / 180 * exp((dz - radius) * 3 / (50 - dz))
-		; tol := 25 * pi / 180 * exp((dz - radius) * 2 / (50 - dz))
-		tol := 22.5 * pi / 180 * exp((dz - radius) * 5 / (50 - dz))
-
-		If (radius2 > dz*dz)
-		{
-			theta := atan( abs(joyy / joyx) )
-			If (joyy > 0)
+	{ ; Controller input manipulations
+		{ ; Joystick polling
+			buttons_down =
+			Loop, %joy_buttons%
 			{
-				If (joyx < 0)
-				{
-					theta := pi + theta
-				}
-				Else
-				{
-					theta := 2 * pi - theta
-				}
+				GetKeyState, joy%a_index%, %JoystickNumber%joy%a_index%
+				if joy%a_index% = D
+					buttons_down = %buttons_down%%a_space%%a_index%
 			}
+			GetKeyState, joyx, %JoystickNumber%JoyX
+			axis_info = X%joyx%
+			GetKeyState, joyy, %JoystickNumber%JoyY
+			axis_info = %axis_info%%a_space%%a_space%Y%joyy%
+			IfInString, joy_info, Z
+			{
+				GetKeyState, joyz, %JoystickNumber%JoyZ
+				axis_info = %axis_info%%a_space%%a_space%Z%joyz%
+			}
+			IfInString, joy_info, R
+			{
+				GetKeyState, joyr, %JoystickNumber%JoyR
+				axis_info = %axis_info%%a_space%%a_space%R%joyr%
+			}
+			IfInString, joy_info, U
+			{
+				GetKeyState, joyu, %JoystickNumber%JoyU
+				axis_info = %axis_info%%a_space%%a_space%U%joyu%
+			}
+			IfInString, joy_info, V
+			{
+				GetKeyState, joyv, %JoystickNumber%JoyV
+				axis_info = %axis_info%%a_space%%a_space%V%joyv%
+			}
+			IfInString, joy_info, P
+			{
+				GetKeyState, joyp, %JoystickNumber%JoyPOV
+				axis_info = %axis_info%%a_space%%a_space%POV%joyp%
+			}
+		}
+
+		{ ; Controller disconnect
+			If joyx <>
+			{}
+			Else If joyy <>
+			{}
 			Else
 			{
-				If (joyx < 0)
-				{
-					theta := pi - theta
-				}
+				SoundBeep, 900, 100
+				SoundBeep, 700, 100
+				SoundBeep, 500, 200
+				; break
+				Reload
+				Sleep 1000
+				continue
 			}
 		}
-	}
 
-	{ ; button conversions
-		If (false) ; rotate 180 degrees
+		joyx -= 50
+		joyy -= 50
+
+		If recentre
+		{ ; Adaptive Centering
+			If (joy_mode < 1 && (joyx <> joyx_pre || joyy <> joyy_pre))
+			{
+				If (joy_mode = 0 && radius_pre < 0.0001)
+				{
+					radius0 := (joyx * joyx + joyy * joyy)
+					If (radius0 < rmax * rmax && radius0 > 0.0001)
+					{
+						joy_mode := -1
+						joyx_0 := joyx
+						joyy_0 := joyy
+						joyx := joyx_pre
+						joyy := joyy_pre
+					}
+				}
+				Else If (joy_mode = -1 && joyx * joyx + joyy * joyy < 0.0001 )
+				{
+					joy_mode := 0
+					joyx_0 := 0
+					joyy_0 := 0
+				}
+				Else If (joy_mode = -1)
+				{
+					joyx -= joyx_0
+					joyy -= joyy_0
+				}
+			}
+	    ;ToolTip, joyx: %joyx% `njoyy: %joyy% `njoyx_0: %joyx_0% `njoyy_0: %joyy_0%
+		}
+
+		If (rotate) ; rotate 180 degrees
 		{
 			joyx := - joyx
 			joyy := - joyy
+			joyz := 50
 			If (joyp <> -1)
 				joyp := joyp + 18000
 			If (joyp > 31500)
 				joyp := joyp - 18000 - 18000
 		}
 
-		If (radius_pre < 5) ; sudden perimeter events
-		{
-			rmin := 10
-			rmax := 45
-			If (joy_mode < 2 && radius > rmax)
-			{
-				joy_mode := 1
-			}
-			Else If (joy_mode > 0 && radius < rmax && radius > rmin)
-			{
-				joy_mode := 2
-			}
-			Else If (joy_mode > 1 && radius > rmax)
-			{
-				joy_mode := 3
-			}
-			Else
-				joy_mode := 0
+		{ ; calculate theta
+		  ;tol = 25
+			dz := 10
+			theta := 0
+			pi := 4 * atan(1)
+			region := 45 * pi / 180
+			radius2 := joyx*joyx + joyy*joyy
+			radius := sqrt(radius2)
+			; tol := 20 * pi / 180 * exp((dz - radius) * 3 / (50 - dz))
+			; tol := 25 * pi / 180 * exp((dz - radius) * 2 / (50 - dz))
+			tol := 22.5 * pi / 180 * exp((dz - radius) * 5 / (50 - dz))
 
-			If (joy_mode > 0)
+			If (radius > 1.5)
 			{
-				joyx := 0
-				joyy := 0
-				radius := 0
-				radius2 := 0
-			}
-
-			{ ; Joystick position
-				If ((theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol) && joy_mode > 0)
+				theta := atan( abs(joyy / joyx) )
+				If (joyy > 0)
 				{
-					joyp := 9000
+					If (joyx < 0)
+					{
+						theta := pi + theta
+					}
+					Else
+					{
+						theta := 2 * pi - theta
+					}
 				}
-			  Else If (theta < region * 3 / 2 - tol && theta > region / 2 + tol && joy_mode = 3)
+				Else
 				{
-					joyp := 4500
-				}
-			  Else If (theta < region * 5 / 2 - tol && theta > region * 3 / 2 + tol && joy_mode > 0)
-				{
-					joyp := 0000
-				}
-			  Else If (theta < region * 7 / 2 - tol && theta > region * 5 / 2 + tol && joy_mode = 3)
-				{
-					joyp := 31500
-				}
-			  Else If (theta < region * 9 / 2 - tol && theta > region * 7 / 2 + tol && joy_mode > 0)
-				{
-					joyp := 27000
-				}
-			  Else If (theta < region * 11 / 2 - tol && theta > region * 9 / 2 + tol && joy_mode = 3)
-				{
-					joyp := 22500
-				}
-			  Else If (theta < region * 13 / 2 - tol && theta > region * 11 / 2 + tol && joy_mode > 0)
-				{
-					joyp := 18000
-				}
-			  Else If (theta < region * 15 / 2 - tol && theta > region * 13 / 2 + tol && joy_mode = 3)
-				{
-					joyp := 13500
+					If (joyx < 0)
+					{
+						theta := pi - theta
+					}
 				}
 			}
 		}
-    ;ToolTip, radius_pre: %radius_pre% `njoyp: %joyyp% `njoy_mode: %joy_mode%
 
-		If (joyp = 4500)
-			joy5 := "D"
-		If (joyp = 31500)
-			joyz := 100
-		If (joyp = 13500)
-			joy2 := "D"
-		If (joyp = 22500)
-			joy1 := "D"
+		{ ; button conversions
+			If (radius_pre < 5 && joy_mode <> -1) ; sudden perimeter events
+			{
+				If (joy_mode < 2 && radius > rmax)
+				{
+					joy_mode := 1
+				}
+				Else If (joy_mode > 0 && radius < rmax && radius > rmin)
+				{
+					joy_mode := 2
+				}
+				Else If (joy_mode > 1 && radius > rmax)
+				{
+					joy_mode := 3
+				}
+				Else
+					joy_mode := 0
+
+				If (joy_mode > 0)
+				{
+					joyx := 0
+					joyy := 0
+					radius := 0
+					radius2 := 0
+				}
+
+				{ ; Joystick position
+					If ((theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol) && joy_mode > 0)
+					{
+						joyp := 9000
+					}
+				  Else If (theta < region * 3 / 2 - tol && theta > region / 2 + tol && joy_mode = 3)
+					{
+						joyp := 4500
+					}
+				  Else If (theta < region * 5 / 2 - tol && theta > region * 3 / 2 + tol && joy_mode > 0)
+					{
+						joyp := 0000
+					}
+				  Else If (theta < region * 7 / 2 - tol && theta > region * 5 / 2 + tol && joy_mode = 3)
+					{
+						joyp := 31500
+					}
+				  Else If (theta < region * 9 / 2 - tol && theta > region * 7 / 2 + tol && joy_mode > 0)
+					{
+						joyp := 27000
+					}
+				  Else If (theta < region * 11 / 2 - tol && theta > region * 9 / 2 + tol && joy_mode = 3)
+					{
+						joyp := 22500
+					}
+				  Else If (theta < region * 13 / 2 - tol && theta > region * 11 / 2 + tol && joy_mode > 0)
+					{
+						joyp := 18000
+					}
+				  Else If (theta < region * 15 / 2 - tol && theta > region * 13 / 2 + tol && joy_mode = 3)
+					{
+						joyp := 13500
+					}
+				}
+			}
+	    ;ToolTip, radius_pre: %radius_pre% `njoyp: %joyyp% `njoy_mode: %joy_mode%
+
+			If (joyp = 4500)
+				joy5 := "D"
+			If (joyp = 31500)
+				joyz := 100
+			If (joyp = 13500)
+				joy2 := "D"
+			If (joyp = 22500)
+				joy1 := "D"
+		}
 	}
 
 	tdz := 60
@@ -1448,7 +1489,7 @@ Loop
 				}
 				If (joy2 = "D")
 				{
-					If (mouse_click_pre = 2)
+					If (mouse_click_pre = 2 && mouse_click_pre <> 23)
 					{
 						mouse_click_pre := 23
 						MouseClick, Middle,,, 1, 0, D
@@ -1467,7 +1508,20 @@ Loop
 				{
 					If (joy_mode = 3)
 					{
-						mouse_click_pre := 3
+						If (mouse_click_pre = 2 && mouse_click_pre <> 23)
+						{
+							mouse_click_pre := 23
+							MouseClick, Middle,,, 1, 0, D
+							MouseClick, Right,,, 1, 0, U
+							MouseClick, Middle,,, 1, 0, U
+							;SendInput, #{Esc}
+							; MouseClick, Middle,,, 1, 0, D
+						}
+						Else If (mouse_click_pre <> 3 && mouse_click_pre <> 23)
+						{
+							mouse_click_pre := 3
+							; MouseClick, Middle,,, 1, 0, D
+						}
 					}
 					Else If (mouse_click_pre <> 4 && mouse_click_pre <> 42)
 					{
@@ -1520,9 +1574,9 @@ Loop
 
 	If (stick_mode = 2) ; Relative mouse positioning
 	{
-		mdz := 5
+		mdz := 2.5
 		ms := 0.01 ; 10
-		If (radius2 > mdz*mdz)
+		If (radius > mdz)
 		{
 			SetMouseDelay, -1  ; Makes movement smoother.
 			; Relative mouse positioning
@@ -1533,9 +1587,9 @@ Loop
 	{
 		mdz := 2.5 ;5
 		; If (abs(joyx) > mdz || abs(joyy) > mdz)
-		If (radius2 > mdz*mdz || !stick_centre)
+		If (radius > mdz || !stick_centre)
 		{
-			If (radius2 > mdz*mdz)
+			If (radius > mdz)
 				stick_centre := 0
 			Else
 				stick_centre := 1
@@ -1558,6 +1612,11 @@ Loop
 			;joyx += 50 - mdz
 			;joyy += 50 - mdz
 
+			;round2square := (abs(sqrt(0.5) * sin(2 * theta) * sin(2 * theta)) + abs((0.5) * (1 - sin(2 * theta) * sin(2 * theta)))) / 0.5
+			;joyx *= round2square
+			;joyy *= round2square
+	    ;ToolTip, round2square: %round2square% `njoyx: %joyx% `joyy: %joyy%
+
 			If ((amoffsetx) > mdz)
 				joyx += 50 - mdz + amoffsetx - mdz
 			Else If (amoffsetx < -mdz)
@@ -1572,8 +1631,8 @@ Loop
 			Else
 				joyy += 50 - mdz
 
-			joyx /= (100 - mdz - mdz)
-			joyy /= (100 - mdz - mdz)
+			joyx /= (100 - mdz - mdz) ;* round2square
+			joyy /= (100 - mdz - mdz) ;* round2square
 			;amoffsetx += 50 - mdz
 			;amoffsetx /= (100 - mdz - mdz)
 			;amoffsety += 50 - mdz
@@ -2247,6 +2306,24 @@ Loop
       Else If (all_characters%ch_mode%%character_code% = "In")
       {
 				SendInput, {Insert}
+				If (character_mode > 20)
+        	character_mode := 1
+      }
+      Else If (all_characters%ch_mode%%character_code% = "RC")
+      {
+				If recentre
+					recentre := 0
+				Else
+					recentre := 1
+				If (character_mode > 20)
+        	character_mode := 1
+      }
+      Else If (all_characters%ch_mode%%character_code% = "UD")
+      {
+				If rotate
+					rotate := 0
+				Else
+					rotate := 1
 				If (character_mode > 20)
         	character_mode := 1
       }
