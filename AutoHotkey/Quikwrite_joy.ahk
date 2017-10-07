@@ -92,7 +92,7 @@ JoystickNumber = 0
 	}
 	{ ; Functions
 		mode_5_characters =  %A_Space%            ,,,,,,,,,
-		mode_5_characters =  %mode_5_characters%^s,^s,RC,UD,PU,,,PD,,,
+		mode_5_characters =  %mode_5_characters%^s,^s,RC,UD,HF,,,DN,,,
 		mode_5_characters =  %mode_5_characters%BS,SL,BS,CL,,,,Sy,FL,Ca,
 		mode_5_characters =  %mode_5_characters%VM,V+,V-,VM,,,#x,,,F4,
 		mode_5_characters =  %mode_5_characters%^f,F3,,,^f,,,F2,,,
@@ -218,6 +218,8 @@ if JoystickNumber <= 0
 	radius_pre := 0
 	rotate := 0
 	recentre := 1
+	daynight := 1
+	RumbleEnabled := 1
 }
 
 character_mode_lists = Lowercase,Capitals,Symbols,Numbers,Functions
@@ -249,11 +251,15 @@ SetFormat, float, 03.3  ; Omit decimal point from axis position percentages. (03
 GetKeyState, joy_buttons, %JoystickNumber%JoyButtons
 GetKeyState, joy_name, %JoystickNumber%JoyName
 GetKeyState, joy_info, %JoystickNumber%JoyInfo
+#Include XInput.ahk
+; XInput_Init()
+; State := XInput_GetState(JoystickNumber-1)
 Loop
 {
 	joyx_pre := joyx
 	joyy_pre := joyy
 	radius_pre := radius
+	joy_mode_pre := joy_mode
 
 	{ ; Controller input manipulations
 		{ ; Joystick polling
@@ -396,61 +402,83 @@ Loop
 		{ ; button conversions
 			If (radius_pre < 5 && joy_mode <> -1) ; sudden perimeter events
 			{
-				If (joy_mode < 2 && radius > rmax)
-				{
-					joy_mode := 1
-				}
-				Else If (joy_mode > 0 && radius < rmax && radius > rmin)
-				{
-					joy_mode := 2
-				}
-				Else If (joy_mode > 1 && radius > rmax)
-				{
-					joy_mode := 3
-				}
-				Else
-					joy_mode := 0
+				{ ; joy_mode
+					If (joy_mode < 2 && radius > rmax)
+					{
+						joy_mode := 1
+					}
+					Else If (joy_mode > 0 && radius < rmax && radius > rmin)
+					{
+						joy_mode := 2
+					}
+					Else If (joy_mode > 1 && radius > rmax)
+					{
+						joy_mode := 3
+					}
+					Else
+						joy_mode := 0
 
-				If (joy_mode > 0)
-				{
-					joyx := 0
-					joyy := 0
-					radius := 0
-					radius2 := 0
+					If (joy_mode > 0)
+					{
+						joyx := 0
+						joyy := 0
+						radius := 0
+						radius2 := 0
+					}
 				}
 
 				{ ; Joystick position
-					If ((theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol) && joy_mode > 0)
+					tolp := 11 * pi / 180
+					If ((theta < region / 2 - tolp || theta > 2 * pi - region / 2 + tolp) && joy_mode > 0)
 					{
 						joyp := 9000
 					}
-				  Else If (theta < region * 3 / 2 - tol && theta > region / 2 + tol && joy_mode = 3)
+				  Else If (theta < region * 3 / 2 - tolp && theta > region / 2 + tolp && joy_mode = 3)
 					{
 						joyp := 4500
 					}
-				  Else If (theta < region * 5 / 2 - tol && theta > region * 3 / 2 + tol && joy_mode > 0)
+				  Else If (theta < region * 5 / 2 - tolp && theta > region * 3 / 2 + tolp && joy_mode > 0)
 					{
 						joyp := 0000
 					}
-				  Else If (theta < region * 7 / 2 - tol && theta > region * 5 / 2 + tol && joy_mode = 3)
+				  Else If (theta < region * 7 / 2 - tolp && theta > region * 5 / 2 + tolp && joy_mode = 3)
 					{
 						joyp := 31500
 					}
-				  Else If (theta < region * 9 / 2 - tol && theta > region * 7 / 2 + tol && joy_mode > 0)
+				  Else If (theta < region * 9 / 2 - tolp && theta > region * 7 / 2 + tolp && joy_mode > 0)
 					{
 						joyp := 27000
 					}
-				  Else If (theta < region * 11 / 2 - tol && theta > region * 9 / 2 + tol && joy_mode = 3)
+				  Else If (theta < region * 11 / 2 - tolp && theta > region * 9 / 2 + tolp && joy_mode = 3)
 					{
 						joyp := 22500
 					}
-				  Else If (theta < region * 13 / 2 - tol && theta > region * 11 / 2 + tol && joy_mode > 0)
+				  Else If (theta < region * 13 / 2 - tolp && theta > region * 11 / 2 + tolp && joy_mode > 0)
 					{
 						joyp := 18000
 					}
-				  Else If (theta < region * 15 / 2 - tol && theta > region * 13 / 2 + tol && joy_mode = 3)
+				  Else If (theta < region * 15 / 2 - tolp && theta > region * 13 / 2 + tolp && joy_mode = 3)
 					{
 						joyp := 13500
+					}
+				}
+
+				{ ; Joystick Rumble
+					; RumbleEnabled := 1
+					RumbleL := 0
+					RumbleR := 512
+					RumbleDur := 10
+					If ((joyp_pre <> joyp || joy_mode <> joy_mode_pre)) ;&& joy_mode <> 0)
+					{
+						If (RumbleEnabled <> 0)
+						{
+							XInput_Init()
+							XInput_SetState(JoystickNumber-1, RumbleL, RumbleR)
+							Sleep, RumbleDur
+							XInput_SetState(JoystickNumber-1, 0, 0)
+							XInput_Term()
+						}
+						joyp_pre := joyp
 					}
 				}
 			}
@@ -2113,6 +2141,11 @@ Loop
 				bar_TransValue_steps := 4
 				bar_TransValue := 150 / bar_TransValue_steps
 
+				If (daynight)
+					colour_text := "00FF00" ; Red FF0000 ; Green 008000 ; Lime 00FF00
+				Else
+					colour_text := "FF0000" ; Red FF0000 ; Green 008000 ; Lime 00FF00
+
 				If (HUD_loop_count > 0 && mod(HUD_loop_count, HUD_loop_count_skip) = 0)
 				{
 					bar_TransValue_step := HUD_loop_count / HUD_loop_count_skip
@@ -2122,15 +2155,15 @@ Loop
 						If (mod(bar_TransValue_step, 4) = 1)
 						{
 							{
-								Progress, 1:b zh0 fm32 fs28 w800 ctRed cwBlack
+								Progress, 1:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 					      	, %A_Space%%SubText% , % mode_title, HUDbackground1, Courier New
 								WinSet, Transparent, % bar_TransValue_current, HUDbackground1
-								Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
+								Progress, 5:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 					      	, `n`n`n`n`n`n`n`n`n`n`n`n
 					        , % mode_title, HUDforeground5, Courier New
 								WinSet, Transparent, 100, HUDforeground5
 								WinSet, TransColor, 000000, HUDforeground5
-								Progress, 9:b zh0 fm32 fs28 w800 ctRed cwBlack
+								Progress, 9:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
 					        , %A_Space%, HUDforeground2, Courier New
 								WinSet, TransColor, 000000, HUDforeground2
@@ -2139,15 +2172,15 @@ Loop
 						Else If (mod(bar_TransValue_step, 4) = 2)
 						{
 							{
-								Progress, 3:b zh0 fm32 fs28 w800 ctRed cwBlack
+								Progress, 3:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 					      	, %A_Space%%SubText% , % mode_title, HUDbackground3, Courier New
 								WinSet, Transparent, % bar_TransValue_current, HUDbackground3
-								Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
+								Progress, 5:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 					      	, `n`n`n`n`n`n`n`n`n`n`n`n
 					        , % mode_title, HUDforeground5, Courier New
 								WinSet, Transparent, 100, HUDforeground5
 								WinSet, TransColor, 000000, HUDforeground5
-								Progress, 7:b zh0 fm32 fs28 w800 ctRed cwBlack
+								Progress, 7:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
 					        , %A_Space%, HUDforeground3, Courier New
 								WinSet, TransColor, 000000, HUDforeground3
@@ -2156,15 +2189,15 @@ Loop
 						Else If (mod(bar_TransValue_step, 4) = 3)
 						{
 							{
-								Progress, 4:b zh0 fm32 fs28 w800 ctRed cwBlack
+								Progress, 4:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 					      	, %A_Space%%SubText% , % mode_title, HUDbackground4, Courier New
 								WinSet, Transparent, % bar_TransValue_current, HUDbackground4
-								Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
+								Progress, 5:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 					      	, `n`n`n`n`n`n`n`n`n`n`n`n
 					        , % mode_title, HUDforeground5, Courier New
 								WinSet, Transparent, 100, HUDforeground5
 								WinSet, TransColor, 000000, HUDforeground5
-								Progress, 6:b zh0 fm32 fs28 w800 ctRed cwBlack
+								Progress, 6:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
 					        , %A_Space%, HUDforeground4, Courier New
 								WinSet, TransColor, 000000, HUDforeground4
@@ -2173,15 +2206,15 @@ Loop
 						Else
 						{
 							{
-								Progress, 2:b zh0 fm32 fs28 w800 ctRed cwBlack
+								Progress, 2:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 					      	, %A_Space%%SubText% , % mode_title, HUDbackground2, Courier New
 								WinSet, Transparent, % bar_TransValue_current, HUDbackground2
-								Progress, 5:b zh0 fm32 fs28 w800 ctRed cwBlack
+								Progress, 5:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 					      	, `n`n`n`n`n`n`n`n`n`n`n`n
 					        , % mode_title, HUDforeground5, Courier New
 								WinSet, Transparent, 100, HUDforeground5
 								WinSet, TransColor, 000000, HUDforeground5
-								Progress, 8:b zh0 fm32 fs28 w800 ctRed cwBlack
+								Progress, 8:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
 					        , %A_Space%, HUDforeground3, Courier New
 								WinSet, TransColor, 000000, HUDforeground3
@@ -2196,7 +2229,7 @@ Loop
 					Progress, 7:OFF
 					Progress, 8:OFF
 					Progress, 9:OFF
-					Progress, 10:b zh0 fm32 fs28 w800 ctRed cwBlack
+					Progress, 10:b zh0 fm32 fs28 w800 ct%colour_text% cwBlack
 		      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
 		        , %A_Space%, HUDforeground, Courier New
 					WinSet, TransColor, 000000, HUDforeground
@@ -2312,18 +2345,68 @@ Loop
       Else If (all_characters%ch_mode%%character_code% = "RC")
       {
 				If recentre
+				{
 					recentre := 0
+					SoundBeep, 700, 200
+					SoundBeep, 500, 200
+				}
 				Else
+				{
 					recentre := 1
+					SoundBeep, 500, 200
+					SoundBeep, 700, 200
+				}
+				If (character_mode > 20)
+        	character_mode := 1
+      }
+      Else If (all_characters%ch_mode%%character_code% = "DN")
+      {
+				If daynight
+				{
+					daynight := 0
+					SoundBeep, 700, 200
+					SoundBeep, 500, 200
+				}
+				Else
+				{
+					daynight := 1
+					SoundBeep, 500, 200
+					SoundBeep, 700, 200
+				}
 				If (character_mode > 20)
         	character_mode := 1
       }
       Else If (all_characters%ch_mode%%character_code% = "UD")
       {
 				If rotate
+				{
 					rotate := 0
+					SoundBeep, 700, 200
+					SoundBeep, 500, 200
+				}
 				Else
+				{
 					rotate := 1
+					SoundBeep, 500, 200
+					SoundBeep, 700, 200
+				}
+				If (character_mode > 20)
+        	character_mode := 1
+      }
+      Else If (all_characters%ch_mode%%character_code% = "HF")
+      {
+				If RumbleEnabled
+				{
+					RumbleEnabled := 0
+					SoundBeep, 700, 200
+					SoundBeep, 500, 200
+				}
+				Else
+				{
+					RumbleEnabled := 1
+					SoundBeep, 500, 200
+					SoundBeep, 700, 200
+				}
 				If (character_mode > 20)
         	character_mode := 1
       }
