@@ -160,8 +160,12 @@ if JoystickNumber <= 0
 			GetKeyState, JoyName, %A_Index%JoyName
 			if JoyName <>
 			{
-				JoystickNumber = %A_Index%
-				break
+				GetKeyState, joy_info, %A_Index%JoyInfo
+				IfInString, joy_info, Z
+				{
+					JoystickNumber = %A_Index%
+					break
+				}
 			}
 		}
 		if JoystickNumber <= 0
@@ -177,6 +181,21 @@ if JoystickNumber <= 0
 			SoundBeep, 900, 200
 			break
 		}
+	}
+}
+Else
+{
+	Loop  ; Query each joystick number to find out which ones exist.
+	{
+		GetKeyState, JoyName, %JoystickNumber%JoyName
+		if JoyName <>
+		{
+			SoundBeep, 500, 100
+			SoundBeep, 700, 100
+			SoundBeep, 900, 200
+			break
+		}
+		Sleep, 1000
 	}
 }
 
@@ -219,7 +238,7 @@ if JoystickNumber <= 0
 	rotate := 0
 	recentre := 1
 	daynight := 1
-	RumbleEnabled := 1
+	Rumble_Mode := 1 ; 0 ;
 }
 
 character_mode_lists = Lowercase,Capitals,Symbols,Numbers,Functions
@@ -258,6 +277,7 @@ Loop
 {
 	joyx_pre := joyx
 	joyy_pre := joyy
+	joyp_pre := joyp
 	radius_pre := radius
 	joy_mode_pre := joy_mode
 
@@ -433,52 +453,70 @@ Loop
 					{
 						joyp := 9000
 					}
-				  Else If (theta < region * 3 / 2 - tolp && theta > region / 2 + tolp && joy_mode = 3)
+				  Else If (theta < region * 3 / 2 - tolp && theta > region / 2 + tolp && joy_mode > 0)
 					{
-						joyp := 4500
+						If (joy_mode <> 3)
+							joyp := -2
+						Else
+							joyp := 4500
 					}
 				  Else If (theta < region * 5 / 2 - tolp && theta > region * 3 / 2 + tolp && joy_mode > 0)
 					{
 						joyp := 0000
 					}
-				  Else If (theta < region * 7 / 2 - tolp && theta > region * 5 / 2 + tolp && joy_mode = 3)
+				  Else If (theta < region * 7 / 2 - tolp && theta > region * 5 / 2 + tolp && joy_mode > 0)
 					{
-						joyp := 31500
+						If (joy_mode <> 3)
+							joyp := -2
+						Else
+							joyp := 31500
 					}
 				  Else If (theta < region * 9 / 2 - tolp && theta > region * 7 / 2 + tolp && joy_mode > 0)
 					{
 						joyp := 27000
 					}
-				  Else If (theta < region * 11 / 2 - tolp && theta > region * 9 / 2 + tolp && joy_mode = 3)
+				  Else If (theta < region * 11 / 2 - tolp && theta > region * 9 / 2 + tolp && joy_mode > 0)
 					{
-						joyp := 22500
+						If (joy_mode <> 3)
+							joyp := -2
+						Else
+							joyp := 22500
 					}
 				  Else If (theta < region * 13 / 2 - tolp && theta > region * 11 / 2 + tolp && joy_mode > 0)
 					{
 						joyp := 18000
 					}
-				  Else If (theta < region * 15 / 2 - tolp && theta > region * 13 / 2 + tolp && joy_mode = 3)
+				  Else If (theta < region * 15 / 2 - tolp && theta > region * 13 / 2 + tolp && joy_mode > 0)
 					{
-						joyp := 13500
+						If (joy_mode <> 3)
+							joyp := -2
+						Else
+							joyp := 13500
 					}
 				}
 
 				{ ; Joystick Rumble
-					; RumbleEnabled := 1
-					RumbleL := 0
+					; Rumble_Mode := 1
+					RumbleL := 512
 					RumbleR := 512
 					RumbleDur := 10
-					If ((joyp_pre <> joyp || joy_mode <> joy_mode_pre)) ;&& joy_mode <> 0)
+					If ((joy_mode > joy_mode_pre && joyp <> -1)
+					|| (joy_mode < joy_mode_pre && joy_mode_pre = 1 && joyp_pre > -1)
+					|| (joyp_pre <> joyp && joy_mode = 1 && (joyp_pre > -1 || joyp > -1)))
 					{
-						If (RumbleEnabled <> 0)
+						If (Rumble_Mode <> 0)
 						{
 							XInput_Init()
-							XInput_SetState(JoystickNumber-1, RumbleL, RumbleR)
+							If Rumble_Mode = 1
+								XInput_SetState(JoystickNumber-1, 0, RumbleR)
+							Else If Rumble_Mode = 2
+								XInput_SetState(JoystickNumber-1, RumbleL, 0)
+							Else
+								XInput_SetState(JoystickNumber-1, RumbleL, RumbleR)
 							Sleep, RumbleDur
 							XInput_SetState(JoystickNumber-1, 0, 0)
 							XInput_Term()
 						}
-						joyp_pre := joyp
 					}
 				}
 			}
@@ -1624,6 +1662,7 @@ Loop
 
 			SetMouseDelay, -1  ; Makes movement smoother.
 
+			/*
 			If (abs(joyx) < mdz)
 				joyx := 0
 			Else If (joyx > 0)
@@ -1639,28 +1678,37 @@ Loop
 				joyy += mdz
 			;joyx += 50 - mdz
 			;joyy += 50 - mdz
+			/*/
 
 			;round2square := (abs(sqrt(0.5) * sin(2 * theta) * sin(2 * theta)) + abs((0.5) * (1 - sin(2 * theta) * sin(2 * theta)))) / 0.5
 			;joyx *= round2square
 			;joyy *= round2square
 	    ;ToolTip, round2square: %round2square% `njoyx: %joyx% `joyy: %joyy%
 
-			If ((amoffsetx) > mdz)
+			/*
+			If ((amoffsetx) > mdz && dasher_mode)
 				joyx += 50 - mdz + amoffsetx - mdz
-			Else If (amoffsetx < -mdz)
+			Else If (amoffsetx < -mdz && dasher_mode)
 				joyx += 50 + amoffsetx
 			Else
 				joyx += 50 - mdz
 
-			If ((amoffsety) > mdz)
+			If ((amoffsety) > mdz && dasher_mode)
 				joyy += 50 - mdz + amoffsety - mdz
-			Else If (amoffsety < -mdz)
+			Else If (amoffsety < -mdz && dasher_mode)
 				joyy += 50 + amoffsety
 			Else
 				joyy += 50 - mdz
+			*/
 
-			joyx /= (100 - mdz - mdz) ;* round2square
-			joyy /= (100 - mdz - mdz) ;* round2square
+			joyx_tmp := joyx
+			joyy_tmp := joyy
+			; joyx += 50
+			; joyy += 50
+			joyx /= (100 - abs(joyx_tmp)*5/8) ;  * abs(cos(theta)) + 1) ; - mdz - mdz) ;* round2square
+			joyy /= (100 - abs(joyx_tmp)*5/8) ;  * abs(sin(theta)) + 1) ; - mdz - mdz) ;* round2square
+			joyx += 0.50
+			joyy += 0.50
 			;amoffsetx += 50 - mdz
 			;amoffsetx /= (100 - mdz - mdz)
 			;amoffsety += 50 - mdz
@@ -1778,6 +1826,26 @@ Loop
 						SoundBeep, 783.991, BeepDur
 					Else If (Mod(character_code_audio, 10) = 8)
 						SoundBeep, 880.000, BeepDur
+				}
+			}
+		}
+
+		if (character_code <> character_code_pre && audio_feedback = 0)
+		{ ; Joystick position haptic feedback
+			If (character_code > 9)
+			{
+				If (Rumble_Mode <> 0)
+				{
+					XInput_Init()
+					If Rumble_Mode = 1
+						XInput_SetState(JoystickNumber-1, 0, RumbleR)
+					Else If Rumble_Mode = 2
+						XInput_SetState(JoystickNumber-1, RumbleL, 0)
+					Else
+						XInput_SetState(JoystickNumber-1, RumbleL, RumbleR)
+					Sleep, RumbleDur
+					XInput_SetState(JoystickNumber-1, 0, 0)
+					XInput_Term()
 				}
 			}
 		}
@@ -2395,15 +2463,31 @@ Loop
       }
       Else If (all_characters%ch_mode%%character_code% = "HF")
       {
-				If RumbleEnabled
+				If Rumble_Mode= 1
 				{
-					RumbleEnabled := 0
+					Rumble_Mode := 2
+					SoundBeep, 700, 200
+					Sleep 100
+					SoundBeep, 700, 200
+				}
+				Else If Rumble_Mode = 2
+				{
+					Rumble_Mode := 3
+					SoundBeep, 700, 200
+					Sleep 100
+					SoundBeep, 700, 200
+					Sleep 100
+					SoundBeep, 700, 200
+				}
+				Else If Rumble_Mode = 3
+				{
+					Rumble_Mode := 0
 					SoundBeep, 700, 200
 					SoundBeep, 500, 200
 				}
 				Else
 				{
-					RumbleEnabled := 1
+					Rumble_Mode := 1
 					SoundBeep, 500, 200
 					SoundBeep, 700, 200
 				}
