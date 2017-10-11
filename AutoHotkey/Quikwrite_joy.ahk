@@ -172,7 +172,8 @@ if JoystickNumber <= 0
 		{
 			; MsgBox The system does not appear to have any joysticks.
 			; ExitApp
-			Sleep, 1000
+			Sleep, 5000
+			Reload
 		}
 		Else
 		{
@@ -1084,7 +1085,7 @@ Loop
 						SendInput, {Media_Play_Pause}
 					}
 				}
-				If (joyz > 95)
+				If (joyz > 99)
 				{
 					; || joyu > 10 || joyv > 10
 					If (button_click_pre <> 2)
