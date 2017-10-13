@@ -172,7 +172,7 @@ if JoystickNumber <= 0
 		{
 			; MsgBox The system does not appear to have any joysticks.
 			; ExitApp
-			Sleep, 5000
+			Sleep, 15000
 			Reload
 		}
 		Else
@@ -191,12 +191,17 @@ Else
 		GetKeyState, JoyName, %JoystickNumber%JoyName
 		if JoyName <>
 		{
-			SoundBeep, 500, 100
-			SoundBeep, 700, 100
-			SoundBeep, 900, 200
-			break
+			GetKeyState, joy_info, %A_Index%JoyInfo
+			IfInString, joy_info, Z
+			{
+				SoundBeep, 500, 100
+				SoundBeep, 700, 100
+				SoundBeep, 900, 200
+				break
+			}
 		}
-		Sleep, 1000
+		Sleep, 10000
+		Reload
 	}
 }
 
@@ -1744,7 +1749,7 @@ Loop
 			}
 		}
 	}
-	Else If (stick_mode = 1 && radius2 > dz*dz)
+	Else If (stick_mode = 1 && radius > dz)
 	{
 		character_code_pre := character_code
 		{ ; Joystick position
@@ -2311,6 +2316,50 @@ Loop
 
     If (character_code <> 0)
     {
+			If (audio_feedback <> 0)
+			{
+				; SoundBeep,987.767,BeepDur ; 391.995
+				{ ; Joystick position audio feedback
+					If (character_code > 9 && radius_pre < dz * 1.25)
+					{
+						BeepDur := 100
+						character_code_audio := character_code
+						If (Mod(character_code, 10) = 0)
+							character_code_audio /= 10
+						{
+							If (Mod(character_code_audio, 10) = 2)
+								SoundBeep, 440.000, BeepDur
+							Else If (Mod(character_code_audio, 10) = 1)
+								SoundBeep, 493.883, BeepDur
+							Else If (Mod(character_code_audio, 10) = 3)
+								SoundBeep, 523.251, BeepDur
+							Else If (Mod(character_code_audio, 10) = 4)
+								SoundBeep, 587.330, BeepDur
+							Else If (Mod(character_code_audio, 10) = 6)
+								SoundBeep, 659.255, BeepDur
+							Else If (Mod(character_code_audio, 10) = 7)
+								SoundBeep, 698.456, BeepDur
+							Else If (Mod(character_code_audio, 10) = 9)
+								SoundBeep, 783.991, BeepDur
+							Else If (Mod(character_code_audio, 10) = 8)
+								SoundBeep, 880.000, BeepDur
+						}
+					}
+				}
+			}
+			Else If (Rumble_Mode <> 0)
+			{
+				XInput_Init()
+				If Rumble_Mode = 1
+					XInput_SetState(JoystickNumber-1, 0, RumbleR)
+				Else If Rumble_Mode = 2
+					XInput_SetState(JoystickNumber-1, RumbleL, 0)
+				Else
+					XInput_SetState(JoystickNumber-1, RumbleL, RumbleR)
+				Sleep, RumbleDur
+				XInput_SetState(JoystickNumber-1, 0, 0)
+				XInput_Term()
+			}
       ; SendInput, %character_code%
 			If (character_code = 20 || character_code = 22)
       {
