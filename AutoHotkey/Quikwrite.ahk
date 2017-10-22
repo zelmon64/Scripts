@@ -338,7 +338,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 		{ ; calculate theta
 		  ;tol = 25
 			dz := 10
-			theta := 0
+			theta := -1
 			pi := 4 * atan(1)
 			region := 45 * pi / 180
 			radius2 := joyx*joyx + joyy*joyy
@@ -369,7 +369,10 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 				}
 			}
-			theta_deg := theta * 180 / pi
+			If (theta = -1)
+				theta_deg := -1
+			Else
+				theta_deg := theta * 180 / pi
 		}
 
 		{ ; button conversions
@@ -390,14 +393,6 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					Else
 						joy_mode := 0
-
-					If (joy_mode > 0)
-					{
-						joyx := 0
-						joyy := 0
-						radius := 0
-						radius2 := 0
-					}
 				}
 
 				{ ; Joystick position
@@ -445,6 +440,16 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 							joyp := -2
 						Else
 							joyp := 13500
+					}
+
+					If (joy_mode > 0)
+					{
+						joyx := 0
+						joyy := 0
+						radius := 0
+						radius2 := 0
+						theta := -1
+						theta_deg := -1
 					}
 				}
 
@@ -1053,11 +1058,6 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						SendInput, {Right}
 					}
 					loop_count++
-					If (button_click_pre <> 9000)
-					{
-						button_click_pre := 9000
-						SendInput, {Media_Next}
-					}
 				}
 				Else If (joyp = 27000)
 				{
@@ -1119,7 +1119,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						SendInput, {Media_Prev}
 					}
 				}
-				Else If ((theta_deg < 10 || theta_deg > 350) && radius > 30)
+				Else If (((theta_deg < 10 && theta_deg > -1) || theta_deg > 350) && radius > 30)
 				{
 					If (button_click_pre <> 2)
 					{
@@ -1169,7 +1169,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					loop_count++
 				}
-				Else If ((theta_deg < 220 || theta_deg > 230) && radius > 30)
+				Else If ((theta_deg < 230 && theta_deg > 220) && radius > 30)
 				{
 					If (button_click_pre <> 2)
 					{
@@ -1193,7 +1193,10 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				}
 				If (joyz > 55 && mod(button_click_pre, 1000) <> 2)
 				{
-					button_click_pre += 2
+					If (button_click_pre = -1)
+						button_click_pre := 2
+					Else
+						button_click_pre += 2
 					If (joy_mode < 3)
 					{
 						SendInput, {Shift down}
@@ -1951,6 +1954,9 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				If (Rumble_Mode <> 0)
 				{
 					XInput_Init()
+					RumbleL := 512
+					RumbleR := 512
+					RumbleDur := 10
 					If Rumble_Mode = 1
 						XInput_SetState(JoystickNumber-1, 0, RumbleR)
 					Else If Rumble_Mode = 2
@@ -2455,9 +2461,12 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 				}
 			}
-			Else If (Rumble_Mode <> 0)
+			Else If (Rumble_Mode <> 0 && radius_pre < dz * 1.25)
 			{
 				XInput_Init()
+				RumbleL := 512
+				RumbleR := 512
+				RumbleDur := 10
 				If Rumble_Mode = 1
 					XInput_SetState(JoystickNumber-1, 0, RumbleR)
 				Else If Rumble_Mode = 2
