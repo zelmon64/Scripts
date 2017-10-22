@@ -78,7 +78,7 @@ Loop
 
 	MainLoop(joyx, joyy, joyz, joyp, joy1, joy2, joy5, joy9
 		, joyx_pre, joyy_pre, joyp_pre, radius_pre, joy_mode_pre
-		, joyx_0, joyy_0
+		, joyx_0, joyy_0, joy_name, JoystickNumber, axis_info, buttons_down
 		, character_code, SubText, button_click_pre, mouse_click_pre
 		, loop_count, loop_count_repeat_base, loop_count_skip_base, HUD_loop_count_skip
 		, HUD_loop_count_delay, HUD_loop_count, this_code, stick_mode, stick_centre

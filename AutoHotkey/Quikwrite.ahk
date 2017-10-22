@@ -280,7 +280,7 @@ GetKeyState, joy_info, %JoystickNumber%JoyInfo
 
 MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2, ByRef joy5, ByRef joy9
 	, ByRef joyx_pre, ByRef joyy_pre, ByRef joyp_pre, ByRef radius_pre, ByRef joy_mode_pre
-	, ByRef joyx_0, ByRef joyy_0
+	, ByRef joyx_0, ByRef joyy_0, ByRef joy_name, ByRef JoystickNumber, ByRef axis_info, ByRef buttons_down
 	, ByRef character_code, ByRef SubText, ByRef button_click_pre, ByRef mouse_click_pre
 	, ByRef loop_count, ByRef loop_count_repeat_base, ByRef loop_count_skip_base, ByRef HUD_loop_count_skip
 	, ByRef HUD_loop_count_delay, ByRef HUD_loop_count, ByRef this_code, ByRef stick_mode, ByRef stick_centre
@@ -538,7 +538,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			{
 				If (button_click_pre <> 0)
 				{
-					button_click_pre := 0
+					button_click_pre := 9
 					loop_count := 1
 					stick_mode := 1
 					character_mode := 5
@@ -555,7 +555,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			Else If (joyp = 9000 && button_click_pre <> 9000)
 			{
 				{
-					button_click_pre := 9000
+					button_click_pre := 9
 					stick_mode := 1
 					loop_count := 1
 					double_tap := 1
@@ -564,7 +564,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			Else If (joyp = 27000 && button_click_pre <> 27000)
 			{
 				{
-					button_click_pre := 27000
+					button_click_pre := 9
 					stick_mode := 1
 					loop_count := 1
 					double_tap := 0
@@ -744,12 +744,15 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				}
 			}
 			Else If (button_click_pre = 9)
-				button_click_pre := -1
+			{
+				If (joyp = -1 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D")
+					button_click_pre := -1
+			}
 			Else
 			{
 				loop_count_repeat := 1 * loop_count_repeat_base
 				loop_count_skip := 2 * loop_count_skip_base
-				If (joyp = 0)
+				If (joyp = 0 && mod(button_click_pre, 1000) <> 100)
 				{
 					button_click_id := 2000
 					If (button_click_pre <> button_click_id && button_click_pre <> (button_click_id + 2)
@@ -768,15 +771,27 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					loop_count++
 				}
-				Else If (joyp = 9000)
+				Else If (joyp = 9000 && mod(button_click_pre, 1000) <> 100)
 				{
-					If (button_click_pre <> joyp && button_click_pre <> (joyp + 2)
+					If (joy_mode = 3)
+					{
+						If (mod(button_click_pre, 1000) = 2)
+							button_click_pre += 98
+						Else If (mod(button_click_pre, 1000) = 5)
+							button_click_pre += 95
+						Else If (mod(button_click_pre, 1000) = 10)
+							button_click_pre += 90
+						Else
+							button_click_pre := 100
+						SendInput, {End}
+					}
+					Else If (button_click_pre <> joyp && button_click_pre <> (joyp + 2)
 					&& button_click_pre <> (joyp + 5) && button_click_pre <> (joyp + 10))
 					{
 						If (button_click_pre = -1)
 							button_click_pre := joyp
 						Else
-							button_click_pre += joyp
+							button_click_pre := joyp + mod(button_click_pre, 1000)
 						SendInput, {Right}
 						loop_count := 1
 					}
@@ -786,7 +801,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					loop_count++
 				}
-				Else If (joyp = 18000)
+				Else If (joyp = 18000 && mod(button_click_pre, 1000) <> 100)
 				{
 					If (button_click_pre <> joyp && button_click_pre <> (joyp + 2)
 					&& button_click_pre <> (joyp + 5) && button_click_pre <> (joyp + 10))
@@ -804,9 +819,21 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					loop_count++
 				}
-				Else If (joyp = 27000)
+				Else If (joyp = 27000 && mod(button_click_pre, 1000) <> 100)
 				{
-					If (button_click_pre <> joyp && button_click_pre <> (joyp + 2)
+					If (joy_mode = 3)
+					{
+						If (mod(button_click_pre, 1000) = 2)
+							button_click_pre += 98
+						Else If (mod(button_click_pre, 1000) = 5)
+							button_click_pre += 95
+						Else If (mod(button_click_pre, 1000) = 10)
+							button_click_pre += 90
+						Else
+							button_click_pre := 100
+						SendInput, {Home}
+					}
+					Else If (button_click_pre <> joyp && button_click_pre <> (joyp + 2)
 					&& button_click_pre <> (joyp + 5) && button_click_pre <> (joyp + 10))
 					{
 						If (button_click_pre = -1)
@@ -829,7 +856,8 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						button_click_pre := mod(button_click_pre, 1000)
 					}
 				}
-				If (joy5 = "D" && mod(button_click_pre, 1000) <> 5 && mod(button_click_pre, 1000) <> 10)
+				If (joy5 = "D" && mod(button_click_pre, 1000) <> 5 && mod(button_click_pre, 1000) <> 10
+						&& mod(button_click_pre, 1000) <> 100)
 				{
 					If (double_tap = 0)
 					{
@@ -860,9 +888,9 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					loop_count++
 				}
-				If (joyz > 55 && mod(button_click_pre, 1000) <> 2 && mod(button_click_pre, 1000) <> 10)
+				If (joyz > 55 && mod(button_click_pre, 1000) <> 2 && mod(button_click_pre, 1000) <> 10
+						&& mod(button_click_pre, 1000) <> 100)
 				{
-					; || joyu > 10 || joyv > 10
 					If ( double_tap = 0)
 					{
 						If (joyz > 75)
@@ -877,10 +905,10 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					{
 						If (mod(button_click_pre, 1000) = 5)
 							button_click_pre += 5
-						Else If (button_click_pre = -1)
-							button_click_pre := 2
-						Else
+						Else If (mod(button_click_pre, 1000) = 0)
 							button_click_pre += 2
+						Else ;If (button_click_pre = -1)
+							button_click_pre := 2
 						SendInput, {Shift down}
 					}
 					Else If (button_click_pre <> 103 && joy_mode = 3)
@@ -895,7 +923,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					loop_count++
 				}
-				If (joy1 = "D" && button_click_pre <> 1)
+				If (joy1 = "D" && mod(button_click_pre, 1000) <> 1 && mod(button_click_pre, 1000) <> 100)
 				{
 					If (joy_mode < 3)
 					{
@@ -904,11 +932,22 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					Else
 					{
-						button_click_pre := 1
-						SendInput, {Home}
+						If (mod(button_click_pre, 1000) = 2)
+							button_click_pre += 98
+						Else If (mod(button_click_pre, 1000) = 5)
+							button_click_pre += 95
+						Else If (mod(button_click_pre, 1000) = 10)
+							button_click_pre += 90
+						Else
+							button_click_pre := 1
+						SendInput, {PgUp}
 					}
 				}
-				If (joy2 = "D" && button_click_pre <> 3)
+				Else If (joy1 <> "D" &&  mod(button_click_pre, 1000) = 100 && joy_mode <> 3)
+				{
+					button_click_pre -= 90
+				}
+				If (joy2 = "D" && button_click_pre <> 3 && mod(button_click_pre, 1000) <> 100)
 				{
 					If (joy_mode < 3)
 					{
@@ -917,22 +956,33 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					Else
 					{
-						button_click_pre := 3
-						SendInput, {End}
+						If (mod(button_click_pre, 1000) = 2)
+							button_click_pre += 98
+						Else If (mod(button_click_pre, 1000) = 5)
+							button_click_pre += 95
+						Else If (mod(button_click_pre, 1000) = 10)
+							button_click_pre += 90
+						Else
+							button_click_pre := 3
+						SendInput, {PgDn}
 					}
 				}
+				Else If (joy2 <> "D" &&  mod(button_click_pre, 1000) = 100 && joy_mode <> 3)
 				{
-					If (joyp = -1 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1 && button_click_pre <> 9)
-						{
-							If (joy_mode < 3)
-							{
-								SendInput, {Control up}
-								SendInput, {Shift up}
-								SendInput, {LWin up}
-								SendInput, {Alt up}
-							}
-							button_click_pre := -1
-						}
+					button_click_pre -= 90
+				}
+				If (joyp = -1 && joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && button_click_pre <> -1)
+				{
+					If (joy_mode < 3)
+					{
+						If (mod(button_click_pre, 1000) = 5 || mod(button_click_pre, 1000) = 10)
+							SendInput, {Control up}
+						If (mod(button_click_pre, 1000) = 2 || mod(button_click_pre, 1000) = 10)
+							SendInput, {Shift up}
+						SendInput, {LWin up}
+						SendInput, {Alt up}
+					}
+					button_click_pre := -1
 				}
 			}
 		}
@@ -2658,7 +2708,8 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			Progress, 10:Off
     }
   }
-	;ToolTip, %joy_name% (#%JoystickNumber%):`n%axis_info%`nButtons Down: %buttons_down%`n`n(right-click the tray icon to exit)`ncharacter_code: %character_code%%A_Space%theta: %theta%%A_Space%loop_count: %loop_count%
+	;ToolTip, %joy_name% (#%JoystickNumber%):`n%axis_info%`nButtons Down: %buttons_down%
+	;`n`n(right-click the tray icon to exit)`ncharacter_code: %character_code%%A_Space%theta: %theta%%A_Space%loop_count: %loop_count%
 	joyx_pre := joyx
 	joyy_pre := joyy
 	joyp_pre := joyp
