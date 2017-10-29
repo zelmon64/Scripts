@@ -160,11 +160,20 @@ if JoystickNumber <= 0
 			GetKeyState, JoyName, %A_Index%JoyName
 			if JoyName <>
 			{
-				GetKeyState, joy_info, %A_Index%JoyInfo
-				IfInString, joy_info, Z
+				IfNotInString, JoyName, "vJoy"
 				{
-					JoystickNumber = %A_Index%
-					break
+					GetKeyState, joy_info, %A_Index%JoyInfo
+					IfInString, joy_info, Z
+					{
+						IfInString, joy_info, U
+						{
+							IfInString, joy_info, R
+							{
+								JoystickNumber = %A_Index%
+								break
+							}
+						}
+					}
 				}
 			}
 		}
@@ -234,7 +243,7 @@ Else
 	hold_pose := 0
 	loop_count_max := 15
 	rmin := 1
-	rmax := 45
+	rmax := 40 ; 45
 	joy_mode := 0
 	joyx_pre := 0
 	joyy_pre := 0
@@ -337,7 +346,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 
 		{ ; calculate theta
 		  ;tol = 25
-			dz := 10
+			dz := 5 ; 10
 			theta := -1
 			pi := 4 * atan(1)
 			region := 45 * pi / 180
@@ -1757,8 +1766,8 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 
 	If (stick_mode = 2) ; Relative mouse positioning
 	{
-		mdz := 2.5
-		ms := 0.01 ; 10
+		mdz := 1.5 ; 2.5
+		ms := 0.02 ; 0.01 ; 10
 		If (radius > mdz)
 		{
 			SetMouseDelay, -1  ; Makes movement smoother.
