@@ -1,7 +1,7 @@
 ; Quikwriting modeled input with a joystick
 ;	v0.12
 ;
-JoystickNumber = 0
+;JoystickNumber = 0
 ;
 ;
 ;   0    2  3   1  0  3   1  2    0
@@ -150,58 +150,43 @@ JoystickNumber = 0
    }
  }
 
-; Auto-detect the joystick number if called for:
-if JoystickNumber <= 0
+;Joystick_Connect(ByRef JoystickNumber)
 {
-	Loop  ; Query each joystick number to find out which ones exist.
+	; Auto-detect the joystick number if called for:
+	if JoystickNumber <= 0 ;|| JoystickNumber =
 	{
-		Loop 16  ; Query each joystick number to find out which ones exist.
+		Loop  ; Query each joystick number to find out which ones exist.
 		{
-			GetKeyState, JoyName, %A_Index%JoyName
-			if JoyName <>
+			Loop 16  ; Query each joystick number to find out which ones exist.
 			{
-				IfNotInString, JoyName, "vJoy"
+				GetKeyState, JoyName, %A_Index%JoyName
+				if JoyName <>
 				{
-					GetKeyState, joy_info, %A_Index%JoyInfo
-					IfInString, joy_info, Z
+					IfNotInString, JoyName, "vJoy"
 					{
-						IfInString, joy_info, U
+						GetKeyState, joy_info, %A_Index%JoyInfo
+						IfInString, joy_info, Z
 						{
-							IfInString, joy_info, R
+							IfInString, joy_info, U
 							{
-								JoystickNumber = %A_Index%
-								break
+								IfInString, joy_info, R
+								{
+									JoystickNumber = %A_Index%
+									break
+								}
 							}
 						}
 					}
 				}
 			}
-		}
-		if JoystickNumber <= 0
-		{
-			; MsgBox The system does not appear to have any joysticks.
-			; ExitApp
-			Sleep, 15000
-			Reload
-		}
-		Else
-		{
-			SoundBeep, 500, 100
-			SoundBeep, 700, 100
-			SoundBeep, 900, 200
-			break
-		}
-	}
-}
-Else
-{
-	Loop  ; Query each joystick number to find out which ones exist.
-	{
-		GetKeyState, JoyName, %JoystickNumber%JoyName
-		if JoyName <>
-		{
-			GetKeyState, joy_info, %A_Index%JoyInfo
-			IfInString, joy_info, Z
+			if JoystickNumber <= 0
+			{
+				; MsgBox The system does not appear to have any joysticks.
+				; ExitApp
+				Sleep, 15000
+				Reload
+			}
+			Else
 			{
 				SoundBeep, 500, 100
 				SoundBeep, 700, 100
@@ -209,8 +194,26 @@ Else
 				break
 			}
 		}
-		Sleep, 10000
-		Reload
+	}
+	Else
+	{
+		Loop  ; Query each joystick number to find out which ones exist.
+		{
+			GetKeyState, JoyName, %JoystickNumber%JoyName
+			if JoyName <>
+			{
+				GetKeyState, joy_info, %A_Index%JoyInfo
+				IfInString, joy_info, Z
+				{
+					SoundBeep, 500, 100
+					SoundBeep, 700, 100
+					SoundBeep, 900, 200
+					break
+				}
+			}
+			Sleep, 10000
+			Reload
+		}
 	}
 }
 
@@ -242,8 +245,6 @@ Else
 	audio_feedback := 1
 	hold_pose := 0
 	loop_count_max := 15
-	rmin := 1
-	rmax := 40 ; 45
 	joy_mode := 0
 	joyx_pre := 0
 	joyy_pre := 0
@@ -298,6 +299,19 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 	, ByRef joy_mode, ByRef rotate, ByRef recentre, ByRef daynight, ByRef Rumble_Mode)
 {
 
+	dz := 5 ; 10
+	pi := 4 * atan(1)
+	region := 45 * pi / 180
+	rmin := 1
+	rmax := 35 ; 45
+	mdzAbs := 2.5 ;5
+	mdzRel := 1.5 ;5
+	ms := 0.02
+	tdz := 60
+	RumbleL := 512
+	RumbleR := 512
+	RumbleDur := 10
+
 	{ ; Controller input manipulations
 		joyx -= 50
 		joyy -= 50
@@ -346,10 +360,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 
 		{ ; calculate theta
 		  ;tol = 25
-			dz := 5 ; 10
 			theta := -1
-			pi := 4 * atan(1)
-			region := 45 * pi / 180
 			radius2 := joyx*joyx + joyy*joyy
 			radius := sqrt(radius2)
 			; tol := 20 * pi / 180 * exp((dz - radius) * 3 / (50 - dz))
@@ -464,11 +475,8 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 
 				{ ; Joystick Rumble
 					; Rumble_Mode := 1
-					RumbleL := 512
-					RumbleR := 512
-					RumbleDur := 10
-					If ((joy_mode > joy_mode_pre && joyp <> -1)
-					|| (joy_mode < joy_mode_pre && joy_mode_pre = 1 && joyp_pre > -1)
+					If ((joy_mode > joy_mode_pre && joy_mode_pre > -1) ; && joyp <> -1)
+					|| (joy_mode < joy_mode_pre && (joy_mode_pre = 1 || (joy_mode_pre = 3 && joy_mode <> 0)) && joyp_pre > -1)
 					|| (joyp_pre <> joyp && joy_mode = 1 && (joyp_pre > -1 || joyp > -1)))
 					{
 						If (Rumble_Mode <> 0)
@@ -500,7 +508,6 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 		}
 	}
 
-	tdz := 60
 	{ ; Modes
 		If (stick_mode = 0) ; Mode selection
 		{
@@ -785,7 +792,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					loop_count++
 				}
-				Else If (joyp = 9000 && mod(button_click_pre, 1000) <> 100)
+				Else If (joyp = 9000 && joy_mode <> 2 && mod(button_click_pre, 1000) <> 100)
 				{
 					If (joy_mode = 3)
 					{
@@ -833,7 +840,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					loop_count++
 				}
-				Else If (joyp = 27000 && mod(button_click_pre, 1000) <> 100)
+				Else If (joyp = 27000 && joy_mode <> 2 && mod(button_click_pre, 1000) <> 100)
 				{
 					If (joy_mode = 3)
 					{
@@ -1571,7 +1578,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 		    {
 		      loop_count_skip := loop_count_skip_base / 2
 		    }
-				If (joyp = 0 && button_click_pre <> 03)
+				If (joyp = 0 && joy_mode <> 2 && button_click_pre <> 03)
 				{
 					If (joy_mode = 3)
 					{
@@ -1611,7 +1618,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					loop_count++
 				}
-				Else If (joyp = 18000 && button_click_pre <> 180003)
+				Else If (joyp = 18000 && joy_mode <> 2 && button_click_pre <> 180003)
 				{
 					If (joy_mode = 3)
 					{
@@ -1766,9 +1773,9 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 
 	If (stick_mode = 2) ; Relative mouse positioning
 	{
-		mdz := 1.5 ; 2.5
-		ms := 0.02 ; 0.01 ; 10
-		If (radius > mdz)
+		; mdz := 1.5 ; 2.5
+		; ms := 0.02 ; 0.01 ; 10
+		If (radius > mdzRel)
 		{
 			SetMouseDelay, -1  ; Makes movement smoother.
 			; Relative mouse positioning
@@ -1777,11 +1784,11 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 	}
 	Else If (stick_mode = 6) ; Absolute mouse positioning
 	{
-		mdz := 2.5 ;5
+		; mdz := 2.5 ;5
 		; If (abs(joyx) > mdz || abs(joyy) > mdz)
-		If (radius > mdz || !stick_centre)
+		If (radius > mdzAbs || !stick_centre)
 		{
-			If (radius > mdz)
+			If (radius > mdzAbs)
 				stick_centre := 0
 			Else
 				stick_centre := 1
@@ -1963,9 +1970,6 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				If (Rumble_Mode <> 0)
 				{
 					XInput_Init()
-					RumbleL := 512
-					RumbleR := 512
-					RumbleDur := 10
 					If Rumble_Mode = 1
 						XInput_SetState(JoystickNumber-1, 0, RumbleR)
 					Else If Rumble_Mode = 2
@@ -2473,9 +2477,6 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			Else If (Rumble_Mode <> 0 && radius_pre < dz * 1.25)
 			{
 				XInput_Init()
-				RumbleL := 512
-				RumbleR := 512
-				RumbleDur := 10
 				If Rumble_Mode = 1
 					XInput_SetState(JoystickNumber-1, 0, RumbleR)
 				Else If Rumble_Mode = 2

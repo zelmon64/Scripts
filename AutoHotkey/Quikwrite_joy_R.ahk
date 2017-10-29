@@ -1,6 +1,7 @@
 ; Quikwriting modeled input with a joystick
 ;	v0.12
 ;
+JoystickNumber = 0
 #Include Quikwrite.ahk
 Menu, tray, Icon, %A_ScriptDir%\wheel_red.ico, ,1
 

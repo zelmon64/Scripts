@@ -1,6 +1,7 @@
 ; Quikwriting modeled input with a joystick
 ;	v0.12
 ;
+JoystickNumber = 0
 #Include Quikwrite.ahk
 Rumble_Mode := 2 ; 0 ;
 
