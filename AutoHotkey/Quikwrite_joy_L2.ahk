@@ -1,63 +1,48 @@
 ; Quikwriting modeled input with a joystick
 ;	v0.12
 ;
-JoystickNumber = 0
+JoystickNumber = -1
 #Include Quikwrite.ahk
 If !Joystick_Connect(JoystickNumber, joy_buttons, joy_name, joy_info)
 	Reload
-Menu, tray, Icon, %A_ScriptDir%\wheel_red.ico, ,1
+Rumble_Mode := 2 ; 0 ;
+Menu, tray, Icon, %A_ScriptDir%\wheel_purple.ico, ,1
 
 Loop
 {
 	{ ; Controller input manipulations
 		{ ; Joystick polling
 			buttons_down =
-			Loop, %joy_buttons%
 			{
-				GetKeyState, joy%a_index%, %JoystickNumber%joy%a_index%
-				if joy%a_index% = D
-					buttons_down = %buttons_down%%a_space%%a_index%
+				joy1 := "U"
+				joy5 := "U"
+				joy2 := "U"
 			}
 			{
-				If (joy1 = "D" && joy3 = "D")
-					joyp := 22500
-				Else If (joy1 = "D" && joy2 = "D")
-					joyp := 13500
-				Else If (joy4 = "D" && joy3 = "D")
-					joyp := 31500
-				Else If (joy4 = "D" && joy2 = "D")
-					joyp := 4500
-				Else If (joy1 = "D")
-					joyp := 18000
-				Else If (joy2 = "D")
-					joyp := 9000
-				Else If (joy3 = "D")
-					joyp := 27000
-				Else If (joy4 = "D")
-					joyp := 00000
-				Else
-					joyp := -1
-				{
-					joy1 := "U"
-					joy2 := "U"
-					joy3 := "U"
-					joy4 := "U"
-					joy5 := joy6
-					joy9 := joy10
-				}
+				GetKeyState, joy5, %JoystickNumber%joy5
+				if joy5 = D
+					buttons_down = %buttons_down%%a_space%5
 			}
-			GetKeyState, joyx, %JoystickNumber%JoyU
+			{
+				GetKeyState, joy9, %JoystickNumber%joy9
+				if joy9 = D
+					buttons_down = %buttons_down%%a_space%9
+			}
+			GetKeyState, joyx, %JoystickNumber%JoyX
 			axis_info = X%joyx%
-			GetKeyState, joyy, %JoystickNumber%JoyR
+			GetKeyState, joyy, %JoystickNumber%JoyY
 			axis_info = %axis_info%%a_space%%a_space%Y%joyy%
 			IfInString, joy_info, Z
 			{
 				GetKeyState, joyz, %JoystickNumber%JoyZ
 				axis_info = %axis_info%%a_space%%a_space%Z%joyz%
 				If joyz < 50
-					joyz := 100 - joyz
-				Else
 					joyz := 50
+			}
+			IfInString, joy_info, P
+			{
+				GetKeyState, joyp, %JoystickNumber%JoyPOV
+				axis_info = %axis_info%%a_space%%a_space%POV%joyp%
 			}
 		}
 

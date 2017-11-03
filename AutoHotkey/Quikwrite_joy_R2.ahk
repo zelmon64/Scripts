@@ -1,11 +1,11 @@
 ; Quikwriting modeled input with a joystick
 ;	v0.12
 ;
-JoystickNumber = 0
+JoystickNumber = -1
 #Include Quikwrite.ahk
 If !Joystick_Connect(JoystickNumber, joy_buttons, joy_name, joy_info)
 	Reload
-Menu, tray, Icon, %A_ScriptDir%\wheel_red.ico, ,1
+Menu, tray, Icon, %A_ScriptDir%\wheel_yellow.ico, ,1
 
 Loop
 {

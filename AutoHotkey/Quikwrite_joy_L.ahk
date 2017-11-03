@@ -3,7 +3,10 @@
 ;
 JoystickNumber = 0
 #Include Quikwrite.ahk
+If !Joystick_Connect(JoystickNumber, joy_buttons, joy_name, joy_info)
+	Reload
 Rumble_Mode := 2 ; 0 ;
+Menu, tray, Icon, %A_ScriptDir%\wheel_blue.ico, ,1
 
 Loop
 {
