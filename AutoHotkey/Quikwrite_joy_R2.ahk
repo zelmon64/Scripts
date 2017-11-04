@@ -1,16 +1,22 @@
 ; Quikwriting modeled input with a joystick
-;	v0.12
+;	v1.1
 ;
-JoystickNumber = -1
+JoystickNumber := 2
 #Include Quikwrite.ahk
-If !Joystick_Connect(JoystickNumber, joy_buttons, joy_name, joy_info)
+/*
+JoystickNumber := 0 ; 3 ; 4 ;
+If (!Joystick_Connect(JoystickNumber, joy_buttons, joy_name, joy_info))
+{
 	Reload
-Menu, tray, Icon, %A_ScriptDir%\wheel_yellow.ico, ,1
+}
+*/
+Menu, tray, Icon, %A_ScriptDir%\wheel_purple.ico, ,1
 
 Loop
 {
 	{ ; Controller input manipulations
 		{ ; Joystick polling
+			/*
 			buttons_down =
 			Loop, %joy_buttons%
 			{
@@ -58,6 +64,41 @@ Loop
 					joyz := 100 - joyz
 				Else
 					joyz := 50
+			}
+			*/
+			{
+				joy1 := "U"
+				joy5 := "U"
+				joy2 := "U"
+				joy9 := "U"
+				joyp := -1
+			}
+			{
+			  State := XInput_GetState(JoystickNumber-1)
+			  joyz := 50 + State.bRightTrigger / 5.10
+			  joyx := 50 + State.sThumbRX / 655.34
+				joyy := 50 + State.sThumbRY / -655.34
+			  If State.wButtons & XINPUT_GAMEPAD_Y
+			    joyp := 0
+			  If State.wButtons & XINPUT_GAMEPAD_A
+			    joyp := 18000
+			  If State.wButtons & XINPUT_GAMEPAD_X
+			    joyp := 27000
+			  If State.wButtons & XINPUT_GAMEPAD_B
+			    joyp := 9000
+				If State.wButtons & XINPUT_GAMEPAD_Y && State.wButtons & XINPUT_GAMEPAD_B
+			    joyp := 4500
+				If State.wButtons & XINPUT_GAMEPAD_A && State.wButtons & XINPUT_GAMEPAD_X
+			    joyp := 18000 + 4500
+			  If State.wButtons & XINPUT_GAMEPAD_X && State.wButtons & XINPUT_GAMEPAD_Y
+			    joyp := 27000 + 4500
+			  If State.wButtons & XINPUT_GAMEPAD_B && State.wButtons & XINPUT_GAMEPAD_A
+			    joyp := 9000 + 4500
+			  If State.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB
+			    joy9 := "D"
+			  If State.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER
+			    joy5 := "D"
+
 			}
 		}
 

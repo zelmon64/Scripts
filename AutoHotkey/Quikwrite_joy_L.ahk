@@ -1,10 +1,15 @@
 ; Quikwriting modeled input with a joystick
-;	v0.12
+;	v1.1
 ;
-JoystickNumber = 0
+JoystickNumber := 1
 #Include Quikwrite.ahk
-If !Joystick_Connect(JoystickNumber, joy_buttons, joy_name, joy_info)
+/*
+JoystickNumber := 0 ; 3 ; 4 ;
+If (!Joystick_Connect(JoystickNumber, joy_buttons, joy_name, joy_info))
+{
 	Reload
+}
+*/
 Rumble_Mode := 2 ; 0 ;
 Menu, tray, Icon, %A_ScriptDir%\wheel_blue.ico, ,1
 
@@ -12,12 +17,15 @@ Loop
 {
 	{ ; Controller input manipulations
 		{ ; Joystick polling
-			buttons_down =
+			; buttons_down =
 			{
 				joy1 := "U"
 				joy5 := "U"
 				joy2 := "U"
+				joy9 := "U"
+				joyp := -1
 			}
+			/*
 			{
 				GetKeyState, joy5, %JoystickNumber%joy5
 				if joy5 = D
@@ -43,6 +51,33 @@ Loop
 			{
 				GetKeyState, joyp, %JoystickNumber%JoyPOV
 				axis_info = %axis_info%%a_space%%a_space%POV%joyp%
+			}
+			*/
+			{
+			  State := XInput_GetState(JoystickNumber-1)
+			  joyz := 50 + State.bLeftTrigger / 5.10
+			  joyx := 50 + State.sThumbLX / 655.34
+				joyy := 50 + State.sThumbLY / -655.34
+			  If State.wButtons & XINPUT_GAMEPAD_DPAD_UP
+			    joyp := 0
+			  If State.wButtons & XINPUT_GAMEPAD_DPAD_DOWN
+			    joyp := 18000
+			  If State.wButtons & XINPUT_GAMEPAD_DPAD_LEFT
+			    joyp := 27000
+			  If State.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT
+			    joyp := 9000
+				If State.wButtons & XINPUT_GAMEPAD_DPAD_UP && State.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT
+			    joyp := 4500
+				If State.wButtons & XINPUT_GAMEPAD_DPAD_DOWN && State.wButtons & XINPUT_GAMEPAD_DPAD_LEFT
+			    joyp := 18000 + 4500
+			  If State.wButtons & XINPUT_GAMEPAD_DPAD_LEFT && State.wButtons & XINPUT_GAMEPAD_DPAD_UP
+			    joyp := 27000 + 4500
+			  If State.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT && State.wButtons & XINPUT_GAMEPAD_DPAD_DOWN
+			    joyp := 9000 + 4500
+			  If State.wButtons & XINPUT_GAMEPAD_LEFT_THUMB
+			    joy9 := "D"
+			  If State.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER
+			    joy5 := "D"
 			}
 		}
 

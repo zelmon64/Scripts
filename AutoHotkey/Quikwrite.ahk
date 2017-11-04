@@ -1,7 +1,54 @@
 ; Quikwriting modeled input with a joystick
-;	v0.12
+;	v1.1
 ;
+#SingleInstance, force
+#Include XInput.ahk
+XInput_Init()
+Menu, tray, Icon, %A_ScriptDir%\wheel_green.ico, ,1
 ;JoystickNumber = 0
+If JoystickNumber <= 0
+{
+	Loop, 4
+	{
+		If State := XInput_GetState(A_Index-1)
+		{
+			If JoystickNumber = 0
+			{
+				JoystickNumber := %A_Index%
+				break
+			}
+			Else
+			{
+				JoystickNumber++
+			}
+		}
+	}
+	If JoystickNumber <= 0
+	{
+		Sleep, 1500
+		Reload
+	}
+	Else
+	{
+		SoundBeep, 500, 100
+		SoundBeep, 700, 100
+		SoundBeep, 900, 200
+	}
+}
+Else
+{
+	If !State := XInput_GetState(JoystickNumber-1)
+	{
+		Sleep, 15000
+		Reload
+	}
+	Else
+	{
+		SoundBeep, 500, 100
+		SoundBeep, 700, 100
+		SoundBeep, 900, 200
+	}
+}
 ;
 ;
 ;   0    2  3   1  0  3   1  2    0
@@ -128,34 +175,10 @@
 		StringSplit, all_characters_long%ArrayIndex5%, mode_5_characters_long, `,
 	}
 }
-;
-;
-; From "Joystick Test Script"
-; If you want to unconditionally use a specific joystick number, change
-; the following value from 0 to the number of the joystick (1-16).
-; A value of 0 causes the joystick number to be auto-detected:
-;JoystickNumber = 0
-
-; END OF CONFIG SECTION. Do not make changes below this point unless
-; you wish to alter the basic functionality of the script.
-
-;Menu, tray, Icon, %A_ScriptDir%\wheel.ico, ,1
-/*
-{
-	 If A_IsCompiled
-   {
-      Menu, tray, Icon, %A_ScriptFullPath%,1,1
-   } else
-   {
-      Menu, tray, Icon, %A_ScriptDir%\wheel.ico, ,1
-   }
- }
-*/
-Menu, tray, Icon, %A_ScriptDir%\wheel_green.ico, ,1
 
 { ; Variables
-	character_code = 0
-	character_code_pre = 0
+	character_code := 0
+	character_code_pre := 0
 	button_click_pre := 95 ;-1 ;
 	mouse_click_pre := 0
 	loop_count := 0
@@ -168,10 +191,10 @@ Menu, tray, Icon, %A_ScriptDir%\wheel_green.ico, ,1
 	HUD_loop_count_skip := 12 ;10 ;3
 	HUD_loop_count_delay := 80 ;30
 	HUD_loop_count := -HUD_loop_count_delay
-	this_code = 0
+	this_code := 0
 	stick_mode := 3 ;0 ; 1
 	stick_centre := 1
-	character_mode = 1
+	character_mode := 1
 	ch_mode := 1
 	amoffsetx := 0
 	amoffsety := 0
@@ -193,94 +216,9 @@ Menu, tray, Icon, %A_ScriptDir%\wheel_green.ico, ,1
 	Rumble_Mode := 1 ; 0 ;
 }
 
+SetFormat, float, 03.3  ; Omit decimal point from axis position percentages. (03)
 character_mode_lists = Lowercase,Capitals,Symbols,Numbers,Functions
 StringSplit, character_mode_list, character_mode_lists, `,
-
-#SingleInstance
-SetFormat, float, 03.3  ; Omit decimal point from axis position percentages. (03)
-#Include XInput.ahk
-
-Joystick_Connect(ByRef JoystickNumber, ByRef joy_buttons, ByRef joy_name, ByRef joy_info)
-{
-	; Auto-detect the joystick number if called for:
-	if JoystickNumber <= 0 ;|| JoystickNumber =
-	{
-		; Loop  ; Query each joystick number to find out which ones exist.
-		{
-			Loop 16  ; Query each joystick number to find out which ones exist.
-			{
-				GetKeyState, joy_name, %A_Index%JoyName
-				if joy_name <>
-				{
-					IfNotInString, joy_name, "vJoy"
-					{
-						GetKeyState, joy_info, %A_Index%JoyInfo
-						IfInString, joy_info, Z
-						{
-							IfInString, joy_info, U
-							{
-								IfInString, joy_info, R
-								{
-									if JoystickNumber = 0
-									{
-										JoystickNumber = %A_Index%
-										break
-									}
-									Else
-										JoystickNumber++
-								}
-							}
-						}
-					}
-				}
-			}
-			if JoystickNumber <= 0
-			{
-				; MsgBox The system does not appear to have any joysticks.
-				; ExitApp
-				Sleep, 15000
-				; Reload
-				Return false
-			}
-			Else
-			{
-				SoundBeep, 500, 100
-				SoundBeep, 700, 100
-				SoundBeep, 900, 200
-				GetKeyState, joy_buttons, %JoystickNumber%JoyButtons
-				; break
-				Return true
-			}
-		}
-	}
-	Else
-	{
-		; Loop  ; Query each joystick number to find out which ones exist.
-		{
-			GetKeyState, joy_name, %JoystickNumber%JoyName
-			if joy_name <>
-			{
-				GetKeyState, joy_info, %A_Index%JoyInfo
-				IfInString, joy_info, Z
-				{
-					SoundBeep, 500, 100
-					SoundBeep, 700, 100
-					SoundBeep, 900, 200
-					GetKeyState, joy_buttons, %JoystickNumber%JoyButtons
-					Return true
-					; break
-				}
-			}
-			Else
-			{
-				Sleep, 10000
-				; Reload
-				Return false
-			}
-		}
-	}
-	Return true
-}
 
 New_Code(character_code, this_code)
 {
@@ -301,6 +239,53 @@ New_Code(character_code, this_code)
     Return (character_code // 10) * 10 + this_code
   }
   Return character_code
+}
+
+TestJoystick(JoystickNumber)
+{
+  State := XInput_GetState(JoystickNumber-1)
+  LT := State.bLeftTrigger
+  RT := State.bRightTrigger
+  LX := State.sThumbLX
+  LY := State.sThumbLY
+  RX := State.sThumbRX
+  RY := State.sThumbRY
+  Butons := State.wButtons
+  buttonsdown =
+  ; Constants for gamepad buttons
+  If Butons & XINPUT_GAMEPAD_DPAD_UP
+    buttonsdown = %buttonsdown% UP
+  If Butons & XINPUT_GAMEPAD_DPAD_DOWN
+    buttonsdown = %buttonsdown% DOWN
+  If Butons & XINPUT_GAMEPAD_DPAD_LEFT
+    buttonsdown = %buttonsdown% LEFT
+  If Butons & XINPUT_GAMEPAD_DPAD_RIGHT
+    buttonsdown = %buttonsdown% RIGHT
+  If Butons & XINPUT_GAMEPAD_START
+    buttonsdown = %buttonsdown% START
+  If Butons & XINPUT_GAMEPAD_BACK
+    buttonsdown = %buttonsdown% BACK
+  If Butons & XINPUT_GAMEPAD_LEFT_THUMB
+    buttonsdown = %buttonsdown% LEFT_THUMB
+  If Butons & XINPUT_GAMEPAD_RIGHT_THUMB
+    buttonsdown = %buttonsdown% RIGHT_THUMB
+  If Butons & XINPUT_GAMEPAD_LEFT_SHOULDER
+    buttonsdown = %buttonsdown% LEFT_SHOULDER
+  If Butons & XINPUT_GAMEPAD_RIGHT_SHOULDER
+    buttonsdown = %buttonsdown% RIGHT_SHOULDER
+  If Butons & XINPUT_GAMEPAD_GUIDE
+    buttonsdown = %buttonsdown% GUIDE
+  If Butons & XINPUT_GAMEPAD_A
+    buttonsdown = %buttonsdown% A
+  If Butons & XINPUT_GAMEPAD_B
+    buttonsdown = %buttonsdown% B
+  If Butons & XINPUT_GAMEPAD_X
+    buttonsdown = %buttonsdown% X
+  If Butons & XINPUT_GAMEPAD_Y
+    buttonsdown = %buttonsdown% Y
+  ToolTip, RX: %RX% RY: %RY% `nLX: %LX% LY: %LY% `nRT: %RT% LT: %LT% `nbuttonsdown: %buttonsdown%
+  ;Sleep, 100
+	Return
 }
 
 MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2, ByRef joy5, ByRef joy9
@@ -327,7 +312,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 		RumbleL := 512
 		RumbleR := 512
 		RumbleDur := 10
-		RumbleOffset := 2
+		RumbleOffset := 1 ; 2
 	}
 
 	{ ; Controller input manipulations
@@ -497,9 +482,9 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					|| (joy_mode < joy_mode_pre && (joy_mode_pre = 1 || (joy_mode_pre = 3 && joy_mode <> 0)) && joyp_pre > -1)
 					|| (joyp_pre <> joyp && (joy_mode = 1 || joy_mode = 3) && (joyp_pre > -1 || joyp > -1)))
 					{
-						If (Rumble_Mode <> 0)
+						If (Rumble_Mode <> 0 && button_click_pre <> 95)
 						{
-							XInput_Init()
+							;XInput_Init()
 							If Rumble_Mode = 1
 								XInput_SetState(JoystickNumber-RumbleOffset, 0, RumbleR)
 							Else If Rumble_Mode = 2
@@ -508,7 +493,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 								XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, RumbleR)
 							Sleep, RumbleDur
 							XInput_SetState(JoystickNumber-RumbleOffset, 0, 0)
-							XInput_Term()
+							;XInput_Term()
 						}
 					}
 				}
@@ -658,6 +643,8 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				{
 					button_click_pre := 9
 					stick_mode := 0 ;2
+					Progress, Off
+					loop_count := 0
 					;SendInput, !{Space}
 					;SendInput, #{Tab}
 				}
@@ -674,6 +661,8 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					Else If joy_mode = 3
 						button_click_pre := -1
+					Progress, Off
+					loop_count := 0
 				}
 				Else If (joyp = 000)
 				{
@@ -1993,7 +1982,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			{
 				If (Rumble_Mode <> 0)
 				{
-					XInput_Init()
+					;XInput_Init()
 					If Rumble_Mode = 1
 						XInput_SetState(JoystickNumber-RumbleOffset, 0, RumbleR)
 					Else If Rumble_Mode = 2
@@ -2002,7 +1991,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, RumbleR)
 					Sleep, RumbleDur
 					XInput_SetState(JoystickNumber-RumbleOffset, 0, 0)
-					XInput_Term()
+					;XInput_Term()
 				}
 			}
 		}
@@ -2500,7 +2489,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			}
 			Else If (Rumble_Mode <> 0 && radius_pre < dz * 1.25)
 			{
-				XInput_Init()
+				;XInput_Init()
 				If Rumble_Mode = 1
 					XInput_SetState(JoystickNumber-RumbleOffset, 0, RumbleR)
 				Else If Rumble_Mode = 2
@@ -2509,7 +2498,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, RumbleR)
 				Sleep, RumbleDur
 				XInput_SetState(JoystickNumber-RumbleOffset, 0, 0)
-				XInput_Term()
+				;XInput_Term()
 			}
       ; SendInput, %character_code%
 			If (character_code = 20 || character_code = 22)
