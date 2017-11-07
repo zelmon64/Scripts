@@ -1,7 +1,7 @@
 ; Quikwriting modeled input with a joystick
 ;	v1.1
 ;
-JoystickNumber := 2
+JoystickNumber := -1 ; 4 ; 2
 #Include Quikwrite.ahk
 /*
 JoystickNumber := 0 ; 3 ; 4 ;

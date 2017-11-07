@@ -1,7 +1,7 @@
 ; Quikwriting modeled input with a joystick
 ;	v1.1
 ;
-JoystickNumber := 1
+JoystickNumber := 0 ; 3 ; 1
 #Include Quikwrite.ahk
 /*
 JoystickNumber := 0 ; 3 ; 4 ;
@@ -25,34 +25,6 @@ Loop
 				joy9 := "U"
 				joyp := -1
 			}
-			/*
-			{
-				GetKeyState, joy5, %JoystickNumber%joy5
-				if joy5 = D
-					buttons_down = %buttons_down%%a_space%5
-			}
-			{
-				GetKeyState, joy9, %JoystickNumber%joy9
-				if joy9 = D
-					buttons_down = %buttons_down%%a_space%9
-			}
-			GetKeyState, joyx, %JoystickNumber%JoyX
-			axis_info = X%joyx%
-			GetKeyState, joyy, %JoystickNumber%JoyY
-			axis_info = %axis_info%%a_space%%a_space%Y%joyy%
-			IfInString, joy_info, Z
-			{
-				GetKeyState, joyz, %JoystickNumber%JoyZ
-				axis_info = %axis_info%%a_space%%a_space%Z%joyz%
-				If joyz < 50
-					joyz := 50
-			}
-			IfInString, joy_info, P
-			{
-				GetKeyState, joyp, %JoystickNumber%JoyPOV
-				axis_info = %axis_info%%a_space%%a_space%POV%joyp%
-			}
-			*/
 			{
 			  State := XInput_GetState(JoystickNumber-1)
 			  joyz := 50 + State.bLeftTrigger / 5.10

@@ -6,15 +6,15 @@
 XInput_Init()
 Menu, tray, Icon, %A_ScriptDir%\wheel_green.ico, ,1
 ;JoystickNumber = 0
-If JoystickNumber <= 0
+If (JoystickNumber <= 0)
 {
 	Loop, 4
 	{
-		If State := XInput_GetState(A_Index-1)
+		If (State := XInput_GetState(A_Index-1))
 		{
-			If JoystickNumber = 0
+			If (JoystickNumber = 0)
 			{
-				JoystickNumber := %A_Index%
+				JoystickNumber := A_Index
 				break
 			}
 			Else
@@ -23,10 +23,11 @@ If JoystickNumber <= 0
 			}
 		}
 	}
-	If JoystickNumber <= 0
+	If (JoystickNumber <= 0)
 	{
-		Sleep, 1500
+		Sleep, 15000
 		Reload
+		Return
 	}
 	Else
 	{
@@ -37,16 +38,17 @@ If JoystickNumber <= 0
 }
 Else
 {
-	If !State := XInput_GetState(JoystickNumber-1)
-	{
-		Sleep, 15000
-		Reload
-	}
-	Else
+	If (State := XInput_GetState(JoystickNumber-1))
 	{
 		SoundBeep, 500, 100
 		SoundBeep, 700, 100
 		SoundBeep, 900, 200
+	}
+	Else
+	{
+		Sleep, 15000
+		Reload
+		Return
 	}
 }
 ;
