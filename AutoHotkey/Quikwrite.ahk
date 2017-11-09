@@ -422,7 +422,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 
 				{ ; Joystick position
 					tolp := 11 * pi / 180
-					If ((theta < region / 2 - tolp || theta > 2 * pi - region / 2 + tolp) && joy_mode > 0)
+					If (((theta < region / 2 - tolp && theta > -1) || theta > 2 * pi - region / 2 + tolp) && joy_mode > 0)
 					{
 						joyp := 9000
 					}

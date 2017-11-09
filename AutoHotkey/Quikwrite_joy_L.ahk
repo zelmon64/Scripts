@@ -3,13 +3,6 @@
 ;
 JoystickNumber := 0 ; 3 ; 1
 #Include Quikwrite.ahk
-/*
-JoystickNumber := 0 ; 3 ; 4 ;
-If (!Joystick_Connect(JoystickNumber, joy_buttons, joy_name, joy_info))
-{
-	Reload
-}
-*/
 Rumble_Mode := 2 ; 0 ;
 Menu, tray, Icon, %A_ScriptDir%\wheel_blue.ico, ,1
 
@@ -17,8 +10,8 @@ Loop
 {
 	{ ; Controller input manipulations
 		{ ; Joystick polling
-			; buttons_down =
 			{
+				; TestJoystick(JoystickNumber)
 				joy1 := "U"
 				joy5 := "U"
 				joy2 := "U"

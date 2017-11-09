@@ -3,13 +3,6 @@
 ;
 JoystickNumber := -1 ; 4 ; 2
 #Include Quikwrite.ahk
-/*
-JoystickNumber := 0 ; 3 ; 4 ;
-If (!Joystick_Connect(JoystickNumber, joy_buttons, joy_name, joy_info))
-{
-	Reload
-}
-*/
 Rumble_Mode := 2 ; 0 ;
 Menu, tray, Icon, %A_ScriptDir%\wheel_yellow.ico, ,1
 
@@ -17,42 +10,14 @@ Loop
 {
 	{ ; Controller input manipulations
 		{ ; Joystick polling
-			; buttons_down =
 			{
+				; TestJoystick(JoystickNumber)
 				joy1 := "U"
 				joy5 := "U"
 				joy2 := "U"
 				joy9 := "U"
 				joyp := -1
 			}
-			/*
-			{
-				GetKeyState, joy5, %JoystickNumber%joy5
-				if joy5 = D
-					buttons_down = %buttons_down%%a_space%5
-			}
-			{
-				GetKeyState, joy9, %JoystickNumber%joy9
-				if joy9 = D
-					buttons_down = %buttons_down%%a_space%9
-			}
-			GetKeyState, joyx, %JoystickNumber%JoyX
-			axis_info = X%joyx%
-			GetKeyState, joyy, %JoystickNumber%JoyY
-			axis_info = %axis_info%%a_space%%a_space%Y%joyy%
-			IfInString, joy_info, Z
-			{
-				GetKeyState, joyz, %JoystickNumber%JoyZ
-				axis_info = %axis_info%%a_space%%a_space%Z%joyz%
-				If joyz < 50
-					joyz := 50
-			}
-			IfInString, joy_info, P
-			{
-				GetKeyState, joyp, %JoystickNumber%JoyPOV
-				axis_info = %axis_info%%a_space%%a_space%POV%joyp%
-			}
-			*/
 			{
 			  State := XInput_GetState(JoystickNumber-1)
 			  joyz := 50 + State.bLeftTrigger / 5.10
