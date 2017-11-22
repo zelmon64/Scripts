@@ -6,6 +6,8 @@
 XInput_Init()
 Menu, tray, Icon, %A_ScriptDir%\wheel_green.ico, ,1
 ;JoystickNumber = 0
+Loop
+{
 If (JoystickNumber <= 0)
 {
 	Loop, 4
@@ -26,14 +28,15 @@ If (JoystickNumber <= 0)
 	If (JoystickNumber <= 0)
 	{
 		Sleep, 15000
-		Reload
-		Return
+		;Reload
+		;Return
 	}
 	Else
 	{
 		SoundBeep, 500, 100
 		SoundBeep, 700, 100
 		SoundBeep, 900, 200
+		break
 	}
 }
 Else
@@ -43,13 +46,15 @@ Else
 		SoundBeep, 500, 100
 		SoundBeep, 700, 100
 		SoundBeep, 900, 200
+		break
 	}
 	Else
 	{
 		Sleep, 15000
-		Reload
-		Return
+		;Reload
+		;Return
 	}
+}
 }
 ;
 ;
@@ -570,10 +575,22 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					character_mode := 5
 				}
 			}
-			Else If (joyp = 18000)
+			Else If (joyp = 18000 && (joy_mode = 0 || joy_mode = 3))
 			{
 				If (button_click_pre <> 95)
 				{
+					If (Rumble_Mode <> 0)
+					{
+						If Rumble_Mode = 1
+							XInput_SetState(JoystickNumber-RumbleOffset, 0, RumbleR)
+						Else If Rumble_Mode = 2
+							XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, 0)
+						Else
+							XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, RumbleR)
+						RumbleDur *= 10
+						Sleep, RumbleDur
+						XInput_SetState(JoystickNumber-RumbleOffset, 0, 0)
+					}
 					button_click_pre := 95
 					stick_mode := 3
 				}
@@ -639,9 +656,23 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 		{
 			If (joy9 = "D" || joy11 = "D")
 			{
-				If (button_click_pre = 95)
+				If (button_click_pre = 95 && mod(joyp, 9000) = 4500 && joy_mode = 0)
+				{
+					If (Rumble_Mode <> 0)
+					{
+						If Rumble_Mode = 1
+							XInput_SetState(JoystickNumber-RumbleOffset, 0, RumbleR)
+						Else If Rumble_Mode = 2
+							XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, 0)
+						Else
+							XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, RumbleR)
+						RumbleDur *= 10
+						Sleep, RumbleDur
+						XInput_SetState(JoystickNumber-RumbleOffset, 0, 0)
+					}
 					button_click_pre := 9
-				Else If (button_click_pre <> 9)
+				}
+				Else If (button_click_pre <> 9 && button_click_pre <> 95)
 				{
 					button_click_pre := 9
 					stick_mode := 0 ;2
@@ -661,8 +692,6 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					{
 						button_click_pre := 95
 					}
-					Else If joy_mode = 3
-						button_click_pre := -1
 					Progress, Off
 					loop_count := 0
 				}
@@ -672,8 +701,6 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					{
 						button_click_pre := 95
 					}
-					Else If joy_mode = 3
-						button_click_pre := -1
 				}
 				Else If (joyp = 9000)
 				{
@@ -1037,7 +1064,11 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			Else
 			{
 				loop_count_repeat := 2 * loop_count_repeat_base
-				loop_count_skip := 4 * loop_count_skip_base
+				loop_count_skip := 2 * loop_count_skip_base
+		    If (loop_count > loop_count_repeat * 5)
+		    {
+		      loop_count_skip := loop_count_skip_base / 2
+		    }
 				If (joyp = 0)
 				{
 					button_click_id := 2000
@@ -1587,11 +1618,19 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				button_click_pre := -1
 			Else
 			{
-				loop_count_repeat := 1 * loop_count_repeat_base
-				loop_count_skip := 1 * loop_count_skip_base
-		    If (loop_count > loop_count_repeat * 5)
+				loop_count_repeat := 0.1 * loop_count_repeat_base
+				loop_count_skip := 5 * loop_count_skip_base
+		    If (loop_count > loop_count_repeat * 200)
 		    {
-		      loop_count_skip := loop_count_skip_base / 2
+		      loop_count_skip := loop_count_skip / 20
+		    }
+		    Else If (loop_count > loop_count_repeat * 150)
+		    {
+		      loop_count_skip := loop_count_skip / 10
+		    }
+		    Else If (loop_count > loop_count_repeat * 50)
+		    {
+		      loop_count_skip := loop_count_skip / 5
 		    }
 				If (joyp = 0 && joy_mode <> 2 && button_click_pre <> 03)
 				{
