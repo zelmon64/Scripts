@@ -246,6 +246,11 @@ ManageInput( inputChar ) {
 
   If( Not Word )
     PrintWord( InputChar, false )
+  Else If( Word = "2" )
+  {
+    Send {Backspace}
+    PrintWord( WordToCode( Word ) . inputChar, false )
+  }
   Else
     PrintWord( WordToCode( Word ) . inputChar )
   GlobalWordIndexPre := GlobalWordIndex
@@ -257,14 +262,19 @@ GetWordBeforeCursor() {
   Clipboard =
   Send ^+{Left}^c
   ClipWait 0.3
-  Send ^+{Right}
+  ; Send ^+{Right}
   Word := Clipboard
+  Send ^v
+  ; WordLength := StrLen(Word)
+  ; Send {Right %WordLength%}
 
-  If( RegExMatch( Word, "\s$" ) or InStr( Word, "`n" ) )
+  If( RegExMatch( Word, "\s$" ) or InStr( Word, "`n" )  or InStr( Word, "\R" ) )
     Word := ""
 
   If( RegExMatch( Word, "(\W+)$", Token ) )
     Word := RegExReplace( Token, "\W", "2" )
+  Else If( RegExMatch( Word, "[^a-zA-Z0-9]$" ) )
+    Word := "2"
   Else
     Word := RegExReplace( Word, "[\W]", "" )
 
@@ -430,29 +440,6 @@ Return
 ^ESC::
   ExitApp
 Return
-/*
-Numpad1 & Numpad2::
-Send {v}
-Return
-Numpad1 & Numpad3::
-Send {}
-Return
-Numpad1 & Numpad4::
-Send {}
-Return
-Numpad1 & Numpad6::
-Send {}
-Return
-Numpad1 & Numpad7::
-Send {}
-Return
-Numpad1 & Numpad8::
-Send {}
-Return
-Numpad1 & Numpad9::
-Send {}
-Return
-*/
 
 ; Numpad5::
 Numpad1::
@@ -469,7 +456,7 @@ Numpad9::
   If( A_ThisHotkey = "Numpad7" ) and ( GlobalWordIndex <> 1 )
     Gosub HandlePriorityWords
   */
-	KeyWait, %A_ThisHotkey%, T1    ; T is the timeout in seconds. If it times out, the var ErrorLevel is set to 1.
+	KeyWait, %A_ThisHotkey%, T0.2    ; T is the timeout in seconds. If it times out, the var ErrorLevel is set to 1.
 	If (ErrorLevel = 1)
 	{
     If (A_ThisHotkey = "Numpad1")
@@ -546,6 +533,7 @@ Numpad9::
     If( GlobalWordIndex <> 1 )
       Gosub HandlePriorityWords
     ;Word := GetWordBeforeCursor()
+    /*
     Clipboard =
     Send ^+{Left}^c
     ClipWait 0.3
@@ -557,6 +545,7 @@ Numpad9::
         Send {Backspace 2}
         SendRaw %Word%
       }
+    */
     Send {Space}
     GlobalWordIndex := 1
     If( GlobalCapsMode = 2 )
