@@ -42,7 +42,7 @@
 SetWorkingDir %A_ScriptDir%
 SendMode Input
 
-ENABLE_DEBUG := false   ; Enable to show detailed debug info
+ENABLE_DEBUG := true   ; Enable to show detailed debug info
 SHOW_INPUT   := false   ; (or) Enable to show the input as a tooltip
 
 
@@ -91,8 +91,8 @@ Init:
     Char_%ThisChr% := Num%A_Index%
   }
   JTChars := "BZR1ADFX2THKP3EGM45ISVY76QUNW98CLOJ0"
-  JTNumsd := "888889999966666333331111144444477777"
-  JTNumsu := "791367913679136791437913879138479138"
+  JTNumsd := "888899999666663333311111144444477777"
+  JTNumsu := "791879138791367918679138479138479138"
   StringSplit JTChr, JTChars
   StringSplit JTNumd, JTNumsd
   StringSplit JTNumu, JTNumsu
@@ -204,7 +204,7 @@ WordToCode( word ) {
     ThisChar := Char%A_Index%
     If GlobalWordIndexPre <> 0
       Result .= ( RegExMatch( ThisChar, "\d" ) ? ThisChar : Char_%ThisChar% )
-    Else
+    Else ;If RegExMatch( ThisChar, "[\:'/`;\?!-\\\.\,\(\)]" )
       Result .= ( RegExMatch( ThisChar, "\d" ) ? ThisChar : JTChar_%ThisChar% )
   }
   ;Debug( "WordToCode:`tIN [" . word . "] OUT [" . Result . "]" )
@@ -231,7 +231,6 @@ ManageInput( inputChar ) {
   ; Called whenever 1-9 is pressed and prints the new word to the screen
 
   Global GlobalWordIndex
-  Global GlobalWordIndexPre
 
   Word := GetWordBeforeCursor()
   StringRight LastChar, Word, 1
@@ -253,7 +252,6 @@ ManageInput( inputChar ) {
   }
   Else
     PrintWord( WordToCode( Word ) . inputChar )
-  GlobalWordIndexPre := GlobalWordIndex
 }
 
 GetWordBeforeCursor() {
@@ -288,9 +286,15 @@ PrintWord( code, cleanBefore=true ) {
   ; If cleanBefore is true, it will erase the word before the carret
 
   Global
+  If (GlobalWordIndexPre = 0 && GlobalWordIndex = 2)
+    GlobalWordIndex := 1
+  GlobalWordIndexPre := GlobalWordIndex
 
   If( GlobalWordIndex = 0 )
+  {
     WordToPrint := CodeToJTChars( code )
+    GlobalWordIndex := 1
+  }
   Else If( Word_%code% = "" )
     WordToPrint := CodeToChars( code )
   Else {
