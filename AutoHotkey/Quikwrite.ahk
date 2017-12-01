@@ -3,6 +3,7 @@
 ;
 #SingleInstance, force
 #Include XInput.ahk
+SendLevel, 100
 ;	#Include Numpad9JT.ahk
 XInput_Init()
 Menu, tray, Icon, %A_ScriptDir%\wheel_green.ico, ,1
@@ -1167,12 +1168,12 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 							button_click_pre := button_click_id
 						Else
 							button_click_pre += button_click_id
-						SendInput, {Up}
+						Send, {Up}
 						loop_count := 1
 					}
 					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 					{
-						SendInput, {Up}
+						Send, {Up}
 					}
 					loop_count++
 				}
@@ -1197,12 +1198,12 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 							button_click_pre := joyp
 						Else
 							button_click_pre := joyp + mod(button_click_pre, 1000)
-						SendInput, {Right}
+						Send, {Right}
 						loop_count := 1
 					}
 					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 					{
-						SendInput, {Right}
+						Send, {Right}
 					}
 					loop_count++
 				}
@@ -1215,12 +1216,12 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 							button_click_pre := joyp
 						Else
 							button_click_pre += joyp
-						SendInput, {Down}
+						Send, {Down}
 						loop_count := 1
 					}
 					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 					{
-						SendInput, {Down}
+						Send, {Down}
 					}
 					loop_count++
 				}
@@ -1245,12 +1246,12 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 							button_click_pre := joyp
 						Else
 							button_click_pre += joyp
-						SendInput, {Left}
+						Send, {Left}
 						loop_count := 1
 					}
 					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
 					{
-						SendInput, {Left}
+						Send, {Left}
 					}
 					loop_count++
 				}
@@ -1319,12 +1320,12 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					Else If (button_click_pre <> 103 && joy_mode = 3)
 					{
 						button_click_pre := 103
-						SendInput, {BackSpace}
+						Send, {Backspace}
 						loop_count := 1
 					}
 					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0 && joy_mode = 3)
 					{
-						SendInput, {BackSpace}
+						Send, {Backspace}
 					}
 					loop_count++
 				}
@@ -2273,7 +2274,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			}
 		}
 	}
-	Else If (stick_mode = 7) ; Relative mouse positioning
+	Else If (stick_mode = 7 && radius > dz && mod(character_code, 10) = 0) ; JustType input
 	{
 		character_code_pre := character_code
 		If (radius > dz * 2)
@@ -2282,6 +2283,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			{
 				loop_count := 0
 			}
+			/*
 			{ ; Joystick position
 				If (theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol)
 				{
@@ -2316,110 +2318,149 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					character_code := 3
 				}
 			}
+			*/
+			{ ; Joystick position
+				If (theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol)
+				{
+					character_code := New_Code(character_code, 6)
+				}
+			  Else If (theta < region * 3 / 2 - tol && theta > region / 2 + tol)
+				{
+					character_code := New_Code(character_code, 3)
+				}
+			  Else If (theta < region * 5 / 2 - tol && theta > region * 3 / 2 + tol)
+				{
+					character_code := New_Code(character_code, 2)
+				}
+			  Else If (theta < region * 7 / 2 - tol && theta > region * 5 / 2 + tol)
+				{
+					character_code := New_Code(character_code, 1)
+				}
+			  Else If (theta < region * 9 / 2 - tol && theta > region * 7 / 2 + tol)
+				{
+					character_code := New_Code(character_code, 4)
+				}
+			  Else If (theta < region * 11 / 2 - tol && theta > region * 9 / 2 + tol)
+				{
+					character_code := New_Code(character_code, 7)
+				}
+			  Else If (theta < region * 13 / 2 - tol && theta > region * 11 / 2 + tol)
+				{
+					character_code := New_Code(character_code, 8)
+				}
+			  Else If (theta < region * 15 / 2 - tol && theta > region * 13 / 2 + tol)
+				{
+					character_code := New_Code(character_code, 9)
+				}
+			}
 
 			If (character_code <> character_code_pre && character_code_pre <> 0)
 				loop_count := 0
 
-			If (character_code <> character_code_pre && audio_feedback <> 2)
+			;If (character_code <> 0 && mod(character_code, 10) = 0)
 			{
-				;/*
-				var = "
-				JTChr := Array(A_Space,,,,,,,,,
-									,"v",,"y","6 "," "," `;","i","7","s",
-									," ",," ","","Space",""," "," "," ",
-									,"m",,"'","! "," "," 5","e","4","g",
-									,"n",,"w","8 "," "," /","q","9","u",
-									,,,,,,,,,,
-									,"k",,"p","? "," "," 3","t","@","h",
-									,"o",,"j",var," ",":","c","0","l",
-									,"z",,".","- "," "," ,","b","1","r",
-									,"f",,"x","( "," "," )","a","2","d")
-				;*/
-				JTBtn := Array("+Shift/Caps-+"
-										 , "+---Next----+"
-										 , "+--Symbols--+"
-										 , "+---Spell---+",
-										 , "+---Enter---+"
-										 , "+----Tab----+"
-										 , "+---Prior---+"
-										 , "+-Backspace-+")
-				ThisCode := character_code
-				ThisCode10 := ThisCode * 10
-				Progress, 4:b zh0 fm32 fs24 wm400 w300 ct00FF00 cwBlack
-					, % " -----------`n " JTBtn[ThisCode]"`n |  " JTChr[ThisCode10 + 7] "  " JTChr[ThisCode10 + 8] "  " JTChr[ThisCode10 + 9] "  |`n |  " JTChr[ThisCode10 + 4] " " JTChr[ThisCode10 + 5] " " JTChr[ThisCode10 + 6] "  |`n |  " JTChr[ThisCode10 + 1] "     " JTChr[ThisCode10 + 3] "  |`n +-----------+"
-					, ; JustType
-					, , Courier New
-			}
-
-			if ((character_code <> character_code_pre || loop_count = 25) && audio_feedback <> 0)
-			{ ; Joystick position audio feedback
-				; If (character_code > 9)
+				If (character_code <> 0 && mod(character_code, 10) = 0)
 				{
-					BeepDur := 100
-					character_code_audio := character_code
+					ThisCode := Round(character_code / 10)
+					If (ThisCode < 4)
 					{
-						If (Mod(character_code_audio, 10) = 2)
-							SoundBeep, 440.000, BeepDur
-						Else If (Mod(character_code_audio, 10) = 1)
-							SoundBeep, 493.883, BeepDur
-						Else If (Mod(character_code_audio, 10) = 3)
-							SoundBeep, 523.251, BeepDur
-						Else If (Mod(character_code_audio, 10) = 4)
-							SoundBeep, 587.330, BeepDur
-						Else If (Mod(character_code_audio, 10) = 6)
-							SoundBeep, 659.255, BeepDur
-						Else If (Mod(character_code_audio, 10) = 7)
-							SoundBeep, 698.456, BeepDur
-						Else If (Mod(character_code_audio, 10) = 9)
-							SoundBeep, 783.991, BeepDur
-						Else If (Mod(character_code_audio, 10) = 8)
-							SoundBeep, 880.000, BeepDur
+						ThisCode += 6
+					}
+					Else If (ThisCode > 6)
+					{
+						ThisCode -= 6
+					}
+					loop_count++
+					; ToolTip, ThisCode: %ThisCode%
+				}
+				Else
+				{
+					loop_count := -2
+					Progress, 3:off
+					Progress, 4:off
+				}
+				If (character_code <> character_code_pre && mod(character_code, 10) = 0 && audio_feedback <> 2)
+				{ ; Joystick position visual feedback
+					var = "
+					JTChr := Array(A_Space,,,,,,,,,
+										,"v",,"y","6 "," "," `;","i","7","s",
+										," ",," ","","Space",""," "," "," ",
+										,"m",,"'","! "," "," 5","e","4","g",
+										,"n",,"w","8 "," "," /","q","9","u",
+										,,,,,,,,,,
+										,"k",,"p","? "," "," 3","t","@","h",
+										,"o",,"j",var,"   ",":","c","0","l",
+										,"z",,".","- "," "," ,","b","1","r",
+										,"f",,"x","( "," "," )","a","2","d")
+					JTBtn := Array("+Shift/Caps-+"
+											 , "+---Next----+"
+											 , "+--Symbols--+"
+											 , "+---Spell---+",
+											 , "+---Enter---+"
+											 , "+----Tab----+"
+											 , "+---Prior---+"
+											 , "+-Backspace-+")
+					ThisCode10 := ThisCode * 10
+					Progress, 4:b zh0 fm32 fs24 wm400 w300 ct00FF00 cwBlack
+						, % " -----------`n " JTBtn[ThisCode]"`n |  " JTChr[ThisCode10 + 7] "  " JTChr[ThisCode10 + 8] "  " JTChr[ThisCode10 + 9] "  |`n |  " JTChr[ThisCode10 + 4] " " JTChr[ThisCode10 + 5] " " JTChr[ThisCode10 + 6] "  |`n |  " JTChr[ThisCode10 + 1] "     " JTChr[ThisCode10 + 3] "  |`n +-----------+"
+						, , , Courier New
+				}
+
+				if ((character_code <> character_code_pre || (loop_count = 25 && mod(character_code, 10) = 0)) && audio_feedback <> 0)
+				{ ; Joystick position audio feedback
+					; If (character_code > 9)
+					{
+						BeepDur := 100
+						character_code_audio := character_code
+						If (Mod(character_code, 10) = 0)
+							character_code_audio /= 10
+						{
+							If (Mod(character_code_audio, 10) = 2)
+								SoundBeep, 440.000, BeepDur
+							Else If (Mod(character_code_audio, 10) = 1)
+								SoundBeep, 493.883, BeepDur
+							Else If (Mod(character_code_audio, 10) = 3)
+								SoundBeep, 523.251, BeepDur
+							Else If (Mod(character_code_audio, 10) = 4)
+								SoundBeep, 587.330, BeepDur
+							Else If (Mod(character_code_audio, 10) = 6)
+								SoundBeep, 659.255, BeepDur
+							Else If (Mod(character_code_audio, 10) = 7)
+								SoundBeep, 698.456, BeepDur
+							Else If (Mod(character_code_audio, 10) = 9)
+								SoundBeep, 783.991, BeepDur
+							Else If (Mod(character_code_audio, 10) = 8)
+								SoundBeep, 880.000, BeepDur
+						}
+					}
+				}
+
+				if ((character_code <> character_code_pre || (loop_count = 25 && mod(character_code, 10) = 0)) && audio_feedback = 0)
+				{ ; Joystick position haptic feedback
+					; If (character_code > 9)
+					{
+						If (Rumble_Mode <> 0)
+						{
+							;XInput_Init()
+							If Rumble_Mode = 1
+								XInput_SetState(JoystickNumber-RumbleOffset, 0, RumbleR)
+							Else If Rumble_Mode = 2
+								XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, 0)
+							Else
+								XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, RumbleR)
+							Sleep, RumbleDur
+							XInput_SetState(JoystickNumber-RumbleOffset, 0, 0)
+							;XInput_Term()
+						}
 					}
 				}
 			}
-
-			if ((character_code <> character_code_pre || loop_count = 25) && audio_feedback = 0)
-			{ ; Joystick position haptic feedback
-				; If (character_code > 9)
-				{
-					If (Rumble_Mode <> 0)
-					{
-						;XInput_Init()
-						If Rumble_Mode = 1
-							XInput_SetState(JoystickNumber-RumbleOffset, 0, RumbleR)
-						Else If Rumble_Mode = 2
-							XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, 0)
-						Else
-							XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, RumbleR)
-						Sleep, RumbleDur
-						XInput_SetState(JoystickNumber-RumbleOffset, 0, 0)
-						;XInput_Term()
-					}
-				}
-			}
-			loop_count++
 		}
 		Else If (radius > dz)
 		{
-			;/*
 			If loop_count <> -2
 			{
 				loop_count := -2
-				/*
-				SubText = %A_Space%+----Tab----+---Prior---+-Backspace-+`n
-													 |  C  0  L  |  B  1  R  |  A  2  D  |`n
-													 |  "     :  |  -     ,  |  (     )  |`n
-													 |  O     J  |  Z     .  |  F     X  |`n
-													 +---Spell---+-----------+---Enter---|`n
-													 |  Q  9  U  |           |  T  @  H  |`n
-													 |  8     /  |           |  ?     3  |`n
-													 |  N     W  |           |  K     P  |`n
-													 +Shift/Caps-+---Next----+--Symbols--+`n
-													 |  I  7  S  |           |  e  4  g  |`n
-													 |  6     `;  |   Space   |  !     5  |`n
-													 |  V     Y  |           |  m     '  |`n
-													 +-----------+-----------+-----------|`n
-				*/
 				SubText = %A_Space%|-------------JustType--------------|`n
 		                       |----Tab----|---Prior---|-Backspace-|`n
 		                       |  C  0  L  |  B  1  R  |  A  2  D  |`n
@@ -2437,35 +2478,21 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 		                       |  V     Y  |           |  m     '  |`n
 		                       |-----------------------------------|
 				Progress, 3:b zh0 fm32 fs24 wm400 w800 ct00FF00 cwBlack
-					, %A_Space%%SubText%
-					, ;JustType
-					, , Courier New
+					, %A_Space%%SubText%, , , Courier New
 			}
-			;*/
 		}
-		Else
+	}
+	Else If ((stick_mode = 1 || (stick_mode = 7 && mod(character_code, 10) <> 0)) && radius > dz) ; Quikwrite input
+	{
+		If (stick_mode = 7 && loop_count <> -3)
 		{
-			character_code := 0
+			loop_count := -3
+			character_code_pre := 0
 			Progress, 3:off
 			Progress, 4:off
 		}
-
-		If (character_code <> character_code_pre && character_code = 0)
-		{
-		  If (loop_count > 25)
-			{
-				Send, {Numpad5}{Numpad%character_code_pre%}
-		  }
-			Else
-			{
-				Send, {Numpad%character_code_pre%}
-		  }
-			loop_count := 0
-		}
-	}
-	Else If (stick_mode = 1 && radius > dz)
-	{
-		character_code_pre := character_code
+		Else
+			character_code_pre := character_code
 		{ ; Joystick position
 			If (theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol)
 			{
@@ -3025,10 +3052,10 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				}
 		  }
 		}
-	}
+  }
   Else
   {
-		If (character_code <> 0)
+		If ((stick_mode = 1 && character_code <> 0) || (stick_mode = 7 && character_code > 9 && mod(character_code, 10) <> 0))
 		{
 			If (audio_feedback <> 0)
 			{
@@ -3077,7 +3104,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
       ; SendInput, %character_code%
 			If (character_code = 20 || character_code = 22)
       {
-        SendInput, {Backspace}
+        SendInput, {BackSpace}
       }
       Else If (character_code = 21) ; || character_code = 24)
       {
@@ -3126,14 +3153,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
       }
       Else If (character_code = 87) ; || character_code = 84)
       {
-				If (false) ;(mod(character_mode, 10) = 5)
-				{
-        	SendInput, !{Enter}
-					If (character_mode > 20)
-						character_mode := 1
-				}
-				Else
-        	SendInput, {Enter}
+				SendInput, {Enter}
       }
       Else If (character_code = 81)
       {
@@ -3299,7 +3319,8 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				}
 			}
 
-	    character_code = 0
+	    character_code := 0
+			character_code_pre := 0
 			;HUD_loop_count = 0
 			HUD_loop_count := -HUD_loop_count_delay
 	    Progress, 1:Off
@@ -3313,6 +3334,42 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			Progress, 9:Off
 			Progress, 10:Off
     }
+		Else If (stick_mode = 7)
+		{
+			If (character_code <> 0)
+			{
+				character_code /= 10
+				If character_code < 4
+				{
+					character_code += 6
+				}
+				Else If character_code > 6
+				{
+					character_code -= 6
+				}
+
+			  If (loop_count > 25)
+				{
+					Send, {Numpad5}{Numpad%character_code%}
+			  }
+				Else
+				{
+					Send, {Numpad%character_code%}
+			  }
+				{
+					character_code := 0
+					Progress, 3:off
+					Progress, 4:off
+					loop_count := 0
+					character_code_pre := character_code
+				}
+			}
+			If loop_count = -2
+			{
+				loop_count := 0
+				Progress, 3:off
+			}
+		}
   }
 	;ToolTip, %joy_name% (#%JoystickNumber%):`n%axis_info%`nButtons Down: %buttons_down%
 	;`n`n(right-click the tray icon to exit)`ncharacter_code: %character_code%%A_Space%theta: %theta%%A_Space%loop_count: %loop_count%
