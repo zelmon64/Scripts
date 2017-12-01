@@ -89,6 +89,8 @@ SendMode Input
 ENABLE_DEBUG := false   ; Enable to show detailed debug info
 SHOW_INPUT   := false   ; (or) Enable to show the input as a tooltip
 
+DETECT_PRECEDING  := false   ; Enable to detect the preceding word by copying it
+
 
 Gosub Init
 SoundPlay *64
@@ -117,6 +119,7 @@ Init:
 
   StringSplit Word, Words, `n, `r
   GlobalWordIndex := 1
+  GlobalCurrentWord :=
   GlobalWordIndexPre := GlobalWordIndex
   GlobalCapsMode  := 1      ; 123 = abc, Abc, ABC, 123
 
@@ -260,12 +263,27 @@ ManageInput( inputChar ) {
 GetWordBeforeCursor() {
   ; Returns the word that is currently shown before the carret
   Global GlobalWordIndexPre
+  Global GlobalCurrentWord
+  Global DETECT_PRECEDING
 
-  Clipboard =
-  Send ^+{Left}^c
-  ClipWait 0.3
-  Word := Clipboard
-  Send ^v
+  If GlobalCurrentWord =
+  {
+    If DETECT_PRECEDING
+    {
+      Clipboard =
+      Send ^+{Left}^c
+      ClipWait 0.3
+      Word := Clipboard
+      Send ^v
+    }
+    Else
+      Word :=
+    GlobalCurrentWord := Word
+  }
+  Else
+  {
+    Word := GlobalCurrentWord
+  }
 
   If( RegExMatch( Word, "\s$" ) or InStr( Word, "`n" )  or InStr( Word, "\R" ) )
     Word := ""
@@ -315,9 +333,14 @@ PrintWord( code, cleanBefore=true ) {
     WordToPrint := WordToCode( WordToPrint )
 
   If( cleanBefore )
-    Send ^+{Left}
+  {
+    ;Send ^+{Left}
+    WordLength := StrLen(GlobalCurrentWord)
+    Send {BackSpace %WordLength%}
+  }
 
   SendRaw %WordToPrint%
+  GlobalCurrentWord := WordToPrint
 
   Debug( "PrintWord:`tIN [" . code . "] DO [" . WordToPrint . "]" )
 }
@@ -445,7 +468,6 @@ Debug( text ) {
   DebugMessage .= text . "`n"
   Tooltip %DebugMessage%
   SetTimer CleanDebugMessage, -300
-
 }
 
 CleanDebugMessage:
@@ -533,8 +555,7 @@ Numpad7::
 Numpad8::
 Numpad9::
   Debug( "---INPUT:`t" . A_ThisHotkey )
-
-  Global GlobalCapsMode
+  ThisCurrentKey := A_ThisHotkey
   If GlobalCapsMode <> 1
   {
     JTChr := Array(A_Space,,,,,,,,,
@@ -558,23 +579,10 @@ Numpad9::
               ,"n",,"w","8 "," "," /","q","9","u",
               ,,,,,,,,,,
               ,"k",,"p","? "," "," 3","t","@","h",
-              ,"o",,"j",var," ",":","c","0","l",
+              ,"o",,"j",var,"   ",":","c","0","l",
               ,"z",,".","- "," "," ,","b","1","r",
               ,"f",,"x","( "," "," )","a","2","d")
   }
-  /*
-  var = "
-  JTChr := Array(A_Space,,,,,,,,,
-            ,"v",,"y","6 "," "," `;","i","7","s",
-            ," ",," ","","Space",""," "," "," ",
-            ,"m",,"'","! "," "," 5","e","4","g",
-            ,"n",,"w","8 "," "," /","q","9","u",
-            ,,,,,,,,,,
-            ,"k",,"p","? "," "," 3","t","@","h",
-            ,"o",,"j",var," ",":","c","0","l",
-            ,"z",,".","- "," "," ,","b","1","r",
-            ,"f",,"x","( "," "," )","a","2","d")
-  */
   JTBtn := Array("+Shift/Caps-+"
                , "+---Next----+"
                , "+--Symbols--+"
@@ -583,92 +591,107 @@ Numpad9::
                , "+----Tab----+"
                , "+---Prior---+"
                , "+-Backspace-+")
-  ThisCode := SubStr( A_ThisHotkey, 7,1 )
+  ThisCode := SubStr( ThisCurrentKey, 7,1 )
   ThisCode10 := ThisCode * 10
   Progress, 2:b zh0 fm32 fs24 wm400 w300 ct00FF00 cwBlack
     , % " -----------`n " JTBtn[ThisCode]"`n |  " JTChr[ThisCode10 + 7] "  " JTChr[ThisCode10 + 8] "  " JTChr[ThisCode10 + 9] "  |`n |  " JTChr[ThisCode10 + 4] " " JTChr[ThisCode10 + 5] " " JTChr[ThisCode10 + 6] "  |`n |  " JTChr[ThisCode10 + 1] "     " JTChr[ThisCode10 + 3] "  |`n +-----------+"
     , ; JustType
     , , Courier New
-	KeyWait, %A_ThisHotkey%, T0.2    ; T is the timeout in seconds. If it times out, the var ErrorLevel is set to 1.
+	KeyWait, %ThisCurrentKey%, T0.2    ; T is the timeout in seconds. If it times out, the var ErrorLevel is set to 1.
 	If (ErrorLevel = 1 || GetKeyState("Numpad5") || (A_PriorHotkey = "Numpad5" && A_TimeSincePriorHotkey < 500))
-	{
-    If (A_ThisHotkey = "Numpad1")
+  {
+    ;While (GetKeyState(ThisCurrentKey))
+    Loop
     {
-      GlobalCapsMode++
-      If( GlobalCapsMode > 3 ) ; Don't use GlobalCapsMode = 4 because not all number keys are used.
-        GlobalCapsMode := 1
-      If( SHOW_INPUT )
-        Tooltip % "[.] - " . CapsModeString%GlobalCapsMode%
-    }
-    Else If (A_ThisHotkey = "Numpad2")
-    {
-      GlobalWordIndex++
-      If( SHOW_INPUT )
-        Tooltip [*] - Next
-      ManageInput("")
-    }
-    Else If (A_ThisHotkey = "Numpad3")
-  	{
-      If (GlobalWordIndex <> 1)
-        Gosub HandlePriorityWords
+      {
+        If (ThisCurrentKey = "Numpad1")
+        {
+          GlobalCapsMode++
+          If( GlobalCapsMode > 3 ) ; Don't use GlobalCapsMode = 4 because not all number keys are used.
+            GlobalCapsMode := 1
+          If( SHOW_INPUT )
+            Tooltip % "[.] - " . CapsModeString%GlobalCapsMode%
+        }
+        Else If (ThisCurrentKey = "Numpad2")
+        {
+          GlobalWordIndex++
+          If( SHOW_INPUT )
+            Tooltip [*] - Next
+          ManageInput("")
+        }
+        Else If (ThisCurrentKey = "Numpad3")
+      	{
+          If (GlobalWordIndex <> 1)
+            Gosub HandlePriorityWords
 
-      ThisCode := SubStr( "Numpad2", 7,1 )
-      If( SHOW_INPUT )
-        Tooltip [%ThisCode%]
-      ManageInput( ThisCode )
-    }
-    Else If (A_ThisHotkey = "Numpad4")
-    {
-      Progress, 1:off
-      Progress, 2:Off
-      If( SHOW_INPUT )
-        Tooltip [+] - Spell
+          ThisCode := SubStr( "Numpad2", 7,1 )
+          If( SHOW_INPUT )
+            Tooltip [%ThisCode%]
+          ManageInput( ThisCode )
+        }
+        Else If (ThisCurrentKey = "Numpad4")
+        {
+          Progress, 1:off
+          Progress, 2:Off
+          GlobalCurrentWord :=
+          If( SHOW_INPUT )
+            Tooltip [+] - Spell
 
-      Word := Spell()
-      If( Word <> "" ) {
-        AddWord( Word )
-        Send %Word%
+          Word := Spell()
+          If( Word <> "" ) {
+            AddWord( Word )
+            Send %Word%
+          }
+        }
+        Else If (ThisCurrentKey = "Numpad6")
+        {
+          If( GlobalWordIndex <> 1 )
+            Gosub HandlePriorityWords
+          GlobalWordIndex := 1
+          GlobalCurrentWord := " "
+          Send {Enter}
+        }
+        Else If (ThisCurrentKey = "Numpad7")
+        {
+          If( GlobalWordIndex <> 1 )
+            Gosub HandlePriorityWords
+          GlobalWordIndex := 1
+          GlobalCurrentWord := " "
+          Send {Tab}
+        }
+        Else If (ThisCurrentKey = "Numpad8")
+        {
+          GlobalWordIndex--
+          If( SHOW_INPUT )
+            Tooltip [/] - Prev
+          ManageInput("")
+        }
+        Else If (ThisCurrentKey = "Numpad9")
+        {
+          Send {BackSpace}
+          GlobalWordIndex := 1
+          If StrLen(GlobalCurrentWord) > 1
+            StringTrimRight, GlobalCurrentWord, GlobalCurrentWord, 1
+          Else
+            GlobalCurrentWord :=
+          If( SHOW_INPUT )
+            Tooltip [-] - Del
+          ManageInput("")
+        }
       }
-    }
-    Else If (A_ThisHotkey = "Numpad5")
-    {
-    }
-    Else If (A_ThisHotkey = "Numpad6")
-    {
-      If( GlobalWordIndex <> 1 )
-        Gosub HandlePriorityWords
-      GlobalWordIndex := 1
-      Send {Enter}
-    }
-    Else If (A_ThisHotkey = "Numpad7")
-    {
-      If( GlobalWordIndex <> 1 )
-        Gosub HandlePriorityWords
-      GlobalWordIndex := 1
-      Send {Tab}
-    }
-    Else If (A_ThisHotkey = "Numpad8")
-    {
-      GlobalWordIndex--
-      If( SHOW_INPUT )
-        Tooltip [/] - Prev
-      ManageInput("")
-    }
-    Else If (A_ThisHotkey = "Numpad9")
-    {
-      Send {Backspace}
-      GlobalWordIndex := 1
-      If( SHOW_INPUT )
-        Tooltip [-] - Del
-      ManageInput("")
+      If (GetKeyState(ThisCurrentKey))
+        Sleep, 300
+      If (!GetKeyState(ThisCurrentKey))
+        break
     }
   }
-  Else If (A_ThisHotkey = "Numpad2")
+  Else If (ThisCurrentKey = "Numpad2")
   {
     If( GlobalWordIndex <> 1 )
       Gosub HandlePriorityWords
 
     Send {Space}
+    GlobalCurrentWord := " "
     GlobalWordIndex := 1
     If( GlobalCapsMode = 2 )
       GlobalCapsMode := 1
@@ -681,9 +704,62 @@ Numpad9::
       Tooltip [%ThisCode%]
     ManageInput( ThisCode )
   }
-	KeyWait, %A_ThisHotkey%
+	;KeyWait, %A_ThisHotkey%, T0.2
   Progress, 2:Off
 Return
+
+~Up::
+~Down::
+~Left::
+~Right::
+~PgUp::
+~PgDn::
+~Home::
+~End::
+~NumpadUp::
+~NumpadDown::
+~NumpadLeft::
+~NumpadRight::
+~NumpadPgUp::
+~NumpadPgDn::
+~NumpadHome::
+~NumpadEnd::
+~LButton::
+~RButton::
+~BackSpace::
+  GlobalCurrentWord :=
+Return
+
+~a::
+~b::
+~c::
+~d::
+~e::
+~f::
+~g::
+~h::
+~i::
+~j::
+~k::
+~l::
+~m::
+~n::
+~o::
+~p::
+~q::
+~r::
+~s::
+~t::
+~u::
+~v::
+~w::
+~x::
+~y::
+~z::
+  StringRight, key, A_ThisHotkey, 1
+  GlobalCurrentWord = %GlobalCurrentWord%%key%
+Return
+
 
 Numpad0::
   If( GlobalWordIndex <> 1 )
@@ -747,6 +823,16 @@ Return
 /*------------------------------------------------------------------------------
 /* REVISION HISTORY
 /*------------------------------------------------------------------------------
+
+  1.1   2017 12 1
+    Changed: Holding down the keys will repeat the secondary action.
+             `cleanBefore` is now done by repeating BackSpace.
+    Added  : The pasted word is now stored so that it does not need to be copied
+             every time. It is cleared If a directional key etc is pressed.
+             If an alpha key is pressed it is added onto the stored word.
+             If `DETECT_PRECEDING` is false the non-stored preceding word is
+             never copied to improve program compatibility.
+    Fixed  : The visual feedback for the `tab` key was missing a couple of spaces.
 
   1.0   2017 11 30
     Added  : Disambiguous JustType character string accessed by pressing the
