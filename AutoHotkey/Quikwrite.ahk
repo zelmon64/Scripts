@@ -29,7 +29,7 @@ Loop
 		}
 		If (JoystickNumber <= 0)
 		{
-			Sleep, 5000
+			Sleep, 2000
 			;Reload
 			;Return
 		}
@@ -52,7 +52,7 @@ Loop
 		}
 		Else
 		{
-			Sleep, 15000
+			Sleep, 2000
 			;Reload
 			;Return
 		}
@@ -170,7 +170,7 @@ Loop
 		StringReplace, mode_5_characters_long, mode_5_characters_long, Ed , {End} , All
 		StringReplace, mode_5_characters_long, mode_5_characters_long, PU , {PgUp} , All
 		StringReplace, mode_5_characters_long, mode_5_characters_long, PD , {PgDn} , All
-		StringReplace, mode_5_characters_long, mode_5_characters_long, PS , {PrintScreen} , All
+		StringReplace, mode_5_characters_long, mode_5_characters_long, PS , !{PrintScreen} , All
 		StringReplace, mode_5_characters_long, mode_5_characters_long, VM , {Volume_Mute} , All
 		StringReplace, mode_5_characters_long, mode_5_characters_long, V+ , {Volume_Up 5} , All
 		StringReplace, mode_5_characters_long, mode_5_characters_long, V- , {Volume_Down 5} , All
@@ -449,7 +449,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				  Else If (theta < region * 3 / 2 - tolp && theta > region / 2 + tolp && joy_mode > 0)
 					{
 						If (joy_mode <> 3)
-							joyp := -2
+							joyp := -4500
 						Else
 							joyp := 4500
 					}
@@ -460,7 +460,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				  Else If (theta < region * 7 / 2 - tolp && theta > region * 5 / 2 + tolp && joy_mode > 0)
 					{
 						If (joy_mode <> 3)
-							joyp := -2
+							joyp := -31500
 						Else
 							joyp := 31500
 					}
@@ -471,7 +471,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				  Else If (theta < region * 11 / 2 - tolp && theta > region * 9 / 2 + tolp && joy_mode > 0)
 					{
 						If (joy_mode <> 3)
-							joyp := -2
+							joyp := -22500
 						Else
 							joyp := 22500
 					}
@@ -482,7 +482,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				  Else If (theta < region * 15 / 2 - tolp && theta > region * 13 / 2 + tolp && joy_mode > 0)
 					{
 						If (joy_mode <> 3)
-							joyp := -2
+							joyp := -13500
 						Else
 							joyp := 13500
 					}
@@ -504,7 +504,9 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					|| (joy_mode < joy_mode_pre && (joy_mode_pre = 1 || (joy_mode_pre = 3 && joy_mode <> 0)) && joyp_pre > -1)
 					|| (joyp_pre <> joyp && (joy_mode = 1 || joy_mode = 3) && (joyp_pre > -1 || joyp > -1)))
 					{
-						If (Rumble_Mode <> 0 && button_click_pre <> 95)
+						If ((Rumble_Mode <> 0 || stick_mode = 0
+							|| (Rumble_Mode = 0 && stick_mode <> 0 && abs(mod(joyp, 9000)) = 4500) && rotate)
+							&& button_click_pre <> 95)
 						{
 							;XInput_Init()
 							If Rumble_Mode = 1
@@ -550,6 +552,8 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				{
 					button_click_pre := 9
 					mouse_click_pre := 1
+					stick_mode := 2
+					/*
 					stick_mode := 6
 					;dasher_mode := 0
 					;If (joyp = 9000)
@@ -578,6 +582,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 							Run, "C:\Program Files (x86)\Dasher\Dasher 5.00\Dasher.exe" /config direct_joy
 						}
 					}
+					*/
 				}
 				Else
 				{
@@ -614,11 +619,11 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					character_mode := 5
 				}
 			}
-			Else If (joyp = 18000 && (joy_mode = 0 || joy_mode = 3))
+			Else If (joyp = 18000 && (joy_mode = 0)) ; || joy_mode = 3))
 			{
 				If (button_click_pre <> 95)
 				{
-					If (Rumble_Mode <> 0)
+					;If (Rumble_Mode <> 0)
 					{
 						If Rumble_Mode = 1
 							XInput_SetState(JoystickNumber-RumbleOffset, 0, RumbleR)
@@ -656,7 +661,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			{
 				If (button_click_pre <> 5)
 				{
-					If (Rumble_Mode <> 0 && joy_mode = 3)
+					If (joy_mode = 3) ; Rumble_Mode <> 0 &&
 					{
 						RumbleDur *= 10
 						Sleep, RumbleDur
@@ -693,7 +698,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			{
 				If (button_click_pre <> 1)
 				{
-					If (Rumble_Mode <> 0)
+					;If (Rumble_Mode <> 0)
 					{
 						RumbleDur *= 10
 						Sleep, RumbleDur
@@ -718,7 +723,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			{
 				If (button_click_pre <> 3)
 				{
-					If (Rumble_Mode <> 0)
+					;If (Rumble_Mode <> 0)
 					{
 						RumbleDur *= 10
 						Sleep, RumbleDur
@@ -748,7 +753,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			{
 				If (button_click_pre = 95 && mod(joyp, 9000) = 4500 && joy_mode = 0)
 				{
-					If (Rumble_Mode <> 0)
+					;If (Rumble_Mode <> 0)
 					{
 						If Rumble_Mode = 1
 							XInput_SetState(JoystickNumber-RumbleOffset, 0, RumbleR)
@@ -831,30 +836,93 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					    loop_count := 0
 						;loop_count += 1
 						If (loop_count = 0)
-							Progress, fs48 , -%loop_count%-, Count, Exercise, Courier New
+							Progress, fs60 , -%loop_count%-, Count, Exercise, Courier New
 						Else
 							Progress,, -%loop_count%-
 						loop_count_progress := (loop_count + 1) * 100 / loop_count_max
+						RumbleDur *= 10
 						If (hold_pose = 1)
-							SoundBeep,900,100
+						{
+							;SoundBeep,500,100
+							If (Rumble_Mode <> 0)
+							{
+								If Rumble_Mode = 1
+									XInput_SetState(JoystickNumber-RumbleOffset, 0, RumbleR)
+								Else If Rumble_Mode = 2
+									XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, 0)
+								Else
+									XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, RumbleR)
+								;Sleep, RumbleDur
+								;XInput_SetState(JoystickNumber-RumbleOffset, 0, 0)
+							}
+							SoundBeep,900,%RumbleDur%
+							If (Rumble_Mode <> 0)
+							{
+								XInput_SetState(JoystickNumber-RumbleOffset, 0, 0)
+							}
+							;SoundBeep,900,100
+						}
 						Progress, %loop_count_progress%
 						;Progress, loop_count * 100 / 15
 						If (hold_pose = 1)
 							Sleep, 5000
 					  ;Sleep, 100
-						If (hold_pose = 1)
-							SoundBeep,500,100
-						v := ComObjCreate("SAPI.SpVoice")
-						v.Voice := v.GetVoices().Item(1)
+						;If (hold_pose = 1)
+						{
+							;SoundBeep,500,100
+							If (Rumble_Mode <> 0)
+							{
+								If Rumble_Mode = 1
+									XInput_SetState(JoystickNumber-RumbleOffset, 0, RumbleR)
+								Else If Rumble_Mode = 2
+									XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, 0)
+								Else
+									XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, RumbleR)
+								;Sleep, RumbleDur
+								;XInput_SetState(JoystickNumber-RumbleOffset, 0, 0)
+							}
+							SoundBeep,500,%RumbleDur%
+							If (Rumble_Mode <> 0)
+							{
+								XInput_SetState(JoystickNumber-RumbleOffset, 0, 0)
+							}
+							Else
+							{
+								v := ComObjCreate("SAPI.SpVoice")
+								v.Voice := v.GetVoices().Item(1)
+								v.Speak(loop_count)
+							}
+						}
+
 						;Progress, %loop_count_progress%
 						;SplashTextOn,,, %loop_count%
 						loop_count += 1
 						Progress,, %loop_count%
-						v.Speak(loop_count)
 						;Progress, %loop_count_progress%
 						;SplashTextOff
 						If (loop_count >= loop_count_max)
+						{
+							Loop, 2
+							{
+								Sleep, RumbleDur / 2
+								If (Rumble_Mode <> 0)
+								{
+									If Rumble_Mode = 1
+										XInput_SetState(JoystickNumber-RumbleOffset, 0, RumbleR)
+									Else If Rumble_Mode = 2
+										XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, 0)
+									Else
+										XInput_SetState(JoystickNumber-RumbleOffset, RumbleL, RumbleR)
+								}
+								;Sleep, RumbleDur
+								SoundBeep,500,RumbleDur
+								If (Rumble_Mode <> 0)
+								{
+									XInput_SetState(JoystickNumber-RumbleOffset, 0, 0)
+								}
+							}
 							Progress, Off
+						}
 						button_click_pre := 2
 						;Send, {F12}
 					}
@@ -1027,7 +1095,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 							button_click_pre := 5
 						Else
 							button_click_pre += 5
-						SendInput, {Control down}
+						SendEvent, {Control down}
 					}
 					Else If (button_click_pre <> 53 && joy_mode = 3)
 					{
@@ -1062,7 +1130,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 							button_click_pre += 2
 						Else ;If (button_click_pre = -1)
 							button_click_pre := 2
-						SendInput, {Shift down}
+						SendEvent, {Shift down}
 					}
 					Else If (button_click_pre <> 103 && joy_mode = 3)
 					{
@@ -1076,14 +1144,14 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					loop_count++
 				}
-				If (joy1 = "D" && mod(button_click_pre, 1000) <> 1 && mod(button_click_pre, 1000) <> 100)
+				If (joy1 = "D" && mod(button_click_pre, 1000) <> 1)
 				{
 					If (joy_mode < 3)
 					{
 						button_click_pre := 1
 						SendInput, {LWin down}
 					}
-					Else
+					Else If (mod(button_click_pre, 1000) <> 100 && joy_mode = 3)
 					{
 						If (mod(button_click_pre, 1000) = 2)
 							button_click_pre += 98
@@ -1092,22 +1160,28 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						Else If (mod(button_click_pre, 1000) = 10)
 							button_click_pre += 90
 						Else
-							button_click_pre := 1
+							button_click_pre := 100
+						SendInput, {PgUp}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0 && joy_mode = 3)
+					{
 						SendInput, {PgUp}
 					}
+					loop_count++
 				}
 				Else If (joy1 <> "D" &&  mod(button_click_pre, 1000) = 100 && joy_mode <> 3)
 				{
 					button_click_pre -= 90
 				}
-				If (joy2 = "D" && button_click_pre <> 3 && mod(button_click_pre, 1000) <> 100)
+				If (joy2 = "D" && button_click_pre <> 3)
 				{
 					If (joy_mode < 3)
 					{
 						button_click_pre := 3
 						SendInput, {Alt down}
 					}
-					Else
+					Else If (mod(button_click_pre, 1000) <> 100 && joy_mode = 3)
 					{
 						If (mod(button_click_pre, 1000) = 2)
 							button_click_pre += 98
@@ -1116,9 +1190,15 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						Else If (mod(button_click_pre, 1000) = 10)
 							button_click_pre += 90
 						Else
-							button_click_pre := 3
+							button_click_pre := 100
+						SendInput, {PgDn}
+						loop_count := 1
+					}
+					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0 && joy_mode = 3)
+					{
 						SendInput, {PgDn}
 					}
+					loop_count++
 				}
 				Else If (joy2 <> "D" &&  mod(button_click_pre, 1000) = 100 && joy_mode <> 3)
 				{
@@ -1523,6 +1603,11 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						button_click_pre := 2
 						SendInput, {Media_Prev}
 					}
+					Else If (joyz > 55 && loop_count = -1)
+					{
+						loop_count := -2
+						SendInput, {PgUp}
+					}
 				}
 				Else If (((theta_deg < 10 && theta_deg > -1) || theta_deg > 350) && radius > 30)
 				{
@@ -1530,6 +1615,11 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					{
 						button_click_pre := 2
 						SendInput, {Media_Next}
+					}
+					Else If (joyz > 55 && loop_count = -1)
+					{
+						loop_count := -2
+						SendInput, {PgDn}
 					}
 				}
 				Else If (theta_deg < 50 && theta_deg > 40 && radius > 30)
@@ -1540,11 +1630,19 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						SendInput, {F2}
 						loop_count := 1
 					}
-					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					Else If (joyz > 55 && loop_count = -1)
 					{
-						SendInput, {F2}
+						loop_count := -2
+						SendInput, {s}
 					}
-					loop_count++
+					Else If (loop_count > 0)
+					{
+						If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+						{
+							SendInput, {F2}
+						}
+						loop_count++
+					}
 				}
 				Else If (theta_deg < 320 && theta_deg > 310 && radius > 30)
 				{
@@ -1554,11 +1652,19 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						SendInput, {F1}
 						loop_count := 1
 					}
-					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					Else If (joyz > 55 && loop_count = -1)
 					{
-						SendInput, {F1}
+						loop_count := -2
+						SendInput, {s}
 					}
-					loop_count++
+					Else If (loop_count > 0)
+					{
+						If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+						{
+							SendInput, {F1}
+						}
+						loop_count++
+					}
 				}
 				Else If (theta_deg < 140 && theta_deg > 130 && radius > 30)
 				{
@@ -1568,11 +1674,19 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						SendInput, {NumpadAdd}
 						loop_count := 1
 					}
-					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					Else If (joyz > 55 && loop_count = -1)
 					{
-						SendInput, {NumpadAdd}
+						loop_count := -2
+						SendInput, {a}
 					}
-					loop_count++
+					Else If (loop_count > 0)
+					{
+						If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+						{
+							SendInput, {NumpadAdd}
+						}
+						loop_count++
+					}
 				}
 				Else If ((theta_deg < 230 && theta_deg > 220) && radius > 30)
 				{
@@ -1582,21 +1696,21 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						SendInput, {NumpadSub}
 						loop_count := 1
 					}
-					Else If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+					Else If (joyz > 55 && loop_count = -1)
 					{
-						SendInput, {NumpadSub}
+						loop_count := -2
+						SendInput, {a}
 					}
-					loop_count++
-				}
-				If (joy5 = "D")
-				{
-					If (button_click_pre <> 5)
+					Else If (loop_count > 0)
 					{
-						button_click_pre := 5
-						SendInput, {Media_Play_Pause}
+						If (loop_count > loop_count_repeat && mod(loop_count, loop_count_skip) = 0)
+						{
+							SendInput, {NumpadSub}
+						}
+						loop_count++
 					}
 				}
-				If (joyz > 55 && mod(button_click_pre, 1000) <> 2)
+				Else If (joyz > 55 && mod(button_click_pre, 1000) <> 2)
 				{
 					If (button_click_pre = -1)
 						button_click_pre := 2
@@ -1605,10 +1719,19 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					If (joy_mode < 3)
 					{
 						SendInput, {Shift down}
+						loop_count := -1
 					}
 					Else If (joy_mode = 3)
 					{
 						SendInput, {Media_Stop}
+					}
+				}
+				If (joy5 = "D" || joyp = -4500)
+				{
+					If (button_click_pre <> 5)
+					{
+						button_click_pre := 5
+						SendInput, {Media_Play_Pause}
 					}
 				}
 				If (joy1 = "D")
@@ -1755,7 +1878,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						SendInput, {Volume_Mute}
 					}
 				}
-				If (joy5 = "D")
+				If (joy5 = "D" || joyp = -4500)
 				{
 					If (button_click_pre <> 5)
 					{
@@ -1963,8 +2086,8 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 			{
 				loop_count_repeat := 0.1 * loop_count_repeat_base
 				loop_count_skip := 5 * loop_count_skip_base
-		    If (loop_count > loop_count_repeat * 200)
-		    {
+				If (loop_count > loop_count_repeat * 200)
+				{
 		      loop_count_skip := loop_count_skip / 20
 		    }
 		    Else If (loop_count > loop_count_repeat * 150)
@@ -1994,12 +2117,13 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					loop_count++
 				}
-				Else If (joyp = 9000 && button_click_pre <> 90003)
+				Else If (joyp = 9000 && mouse_click_pre <> 5) ;button_click_pre <> 90003)
 				{
 					If (joy_mode = 3)
 					{
-						button_click_pre := 90003
-						MouseClick, X2,,, 1, 0
+						mouse_click_pre := 5
+						;button_click_pre := 90003
+						;MouseClick, X2,,, 1, 0
 					}
 					Else If (button_click_pre <> 9000)
 					{
@@ -2034,12 +2158,13 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 					loop_count++
 				}
-				Else If (joyp = 27000 && button_click_pre <> 270003)
+				Else If (joyp = 27000 && mouse_click_pre <> 4) ;button_click_pre <> 270003)
 				{
 					If (joy_mode = 3)
 					{
-						button_click_pre := 270003
-						MouseClick, X1,,, 1, 0
+						mouse_click_pre := 4
+						;button_click_pre := 270003
+						;MouseClick, X1,,, 1, 0
 					}
 					Else If (button_click_pre <> 27000)
 					{
@@ -2126,7 +2251,7 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					}
 				}
 				{
-					If (joyz < 55 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && mouse_click_pre <> -1)
+					If (joyz < 55 && joyp = -1 && joy1 <> "D" && joy2 <> "D" && joy5 <> "D" && mouse_click_pre <> -1)
 					{
 						;  && joyu < 10 && joyv < 10
 						If (mouse_click_pre = 1)
@@ -2153,7 +2278,12 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 						{
 							MouseClick, X1,,, 1, 0
 						}  ; Press the mouse button.
+						Else If (mouse_click_pre = 5)
+						{
+							MouseClick, X2,,, 1, 0
+						}  ; Press the mouse button.
 						mouse_click_pre := -1
+						loop_count := 1
 					}
 				}
 				{
@@ -2318,6 +2448,40 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					character_code := 3
 				}
 			}
+			{ ; Joystick position rotated
+				If (theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol)
+				{
+					character_code := New_Code(character_code, 8)
+				}
+			  Else If (theta < region * 3 / 2 - tol && theta > region / 2 + tol)
+				{
+					character_code := New_Code(character_code, 9)
+				}
+			  Else If (theta < region * 5 / 2 - tol && theta > region * 3 / 2 + tol)
+				{
+					character_code := New_Code(character_code, 6)
+				}
+			  Else If (theta < region * 7 / 2 - tol && theta > region * 5 / 2 + tol)
+				{
+					character_code := New_Code(character_code, 3)
+				}
+			  Else If (theta < region * 9 / 2 - tol && theta > region * 7 / 2 + tol)
+				{
+					character_code := New_Code(character_code, 2)
+				}
+			  Else If (theta < region * 11 / 2 - tol && theta > region * 9 / 2 + tol)
+				{
+					character_code := New_Code(character_code, 1)
+				}
+			  Else If (theta < region * 13 / 2 - tol && theta > region * 11 / 2 + tol)
+				{
+					character_code := New_Code(character_code, 4)
+				}
+			  Else If (theta < region * 15 / 2 - tol && theta > region * 13 / 2 + tol)
+				{
+					character_code := New_Code(character_code, 7)
+				}
+			}
 			*/
 			{ ; Joystick position
 				If (theta < region / 2 - tol || theta > 2 * pi - region / 2 + tol)
@@ -2400,6 +2564,26 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 											 , "+----Tab----+"
 											 , "+---Prior---+"
 											 , "+-Backspace-+")
+					/*
+ 					JTChr := Array(A_Space,,,,,,,,,
+										,"m",,"'","! "," "," 5","e","4","g",
+										,"k",,"p","? "," "," 3","t","@","h",
+										,"f",,"x","( "," "," )","a","2","d",
+										," ",," ","","Space",""," "," "," ",
+										,,,,,,,,,,
+										,"z",,".","- "," "," ,","b","1","r",
+										,"v",,"y","6 "," "," `;","i","7","s",
+										,"n",,"w","8 "," "," /","q","9","u",
+										,"o",,"j",var,"   ",":","c","0","l")
+					JTBtn := Array("+Shift/Caps-+"
+											 , "+---Next----+"
+											 , "+--Symbols--+"
+											 , "+---Spell---+",
+											 , "+---Enter---+"
+											 , "+----Tab----+"
+											 , "+---Prior---+"
+											 , "+-Backspace-+")
+					*/
 					ThisCode10 := ThisCode * 10
 					Progress, 4:b zh0 fm32 fs24 wm400 w300 ct00FF00 cwBlack
 						, % " -----------`n " JTBtn[ThisCode]"`n |  " JTChr[ThisCode10 + 7] "  " JTChr[ThisCode10 + 8] "  " JTChr[ThisCode10 + 9] "  |`n |  " JTChr[ThisCode10 + 4] " " JTChr[ThisCode10 + 5] " " JTChr[ThisCode10 + 6] "  |`n |  " JTChr[ThisCode10 + 1] "     " JTChr[ThisCode10 + 3] "  |`n +-----------+"
@@ -2481,8 +2665,27 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					, %A_Space%%SubText%, , , Courier New
 			}
 		}
+		/*
+		Else
+		{
+			character_code = 0
+		}
+		*/
+		/*
+		If (character_code <> character_code_pre)
+		{
+			If (character_code <> 0)
+			{
+				Send, {Numpad%character_code% Down}
+			}
+			If (character_code_pre <> 0)
+			{
+				Send, {Numpad%character_code_pre% Up}
+			}
+		}
+		*/
 	}
-	Else If ((stick_mode = 1 || (stick_mode = 7 && mod(character_code, 10) <> 0)) && radius > dz) ; Quikwrite input
+	Else If ((stick_mode = 1 || (stick_mode = 7)) && radius > dz) ; Quikwrite input
 	{
 		If (stick_mode = 7 && loop_count <> -3)
 		{
@@ -2979,10 +3182,10 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					        , % mode_title, HUDforeground5, Courier New
 								WinSet, Transparent, 100, HUDforeground5
 								WinSet, TransColor, 000000, HUDforeground5
-								Progress, 9:b zh0 fm32 fs28 ws%weight_text% w800 ct%colour_text% cwBlack
+								Progress, 8:b zh0 fm32 fs28 ws%weight_text% w800 ct%colour_text% cwBlack
 					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
-					        , %A_Space%, HUDforeground2, Courier New
-								WinSet, TransColor, 000000, HUDforeground2
+					        , %A_Space%, HUDforeground, Courier New
+								WinSet, TransColor, 000000, HUDforeground
 							}
 						}
 						Else If (mod(bar_TransValue_step, 4) = 2)
@@ -2996,10 +3199,10 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					        , % mode_title, HUDforeground5, Courier New
 								WinSet, Transparent, 100, HUDforeground5
 								WinSet, TransColor, 000000, HUDforeground5
-								Progress, 7:b zh0 fm32 fs28 ws%weight_text% w800 ct%colour_text% cwBlack
+								Progress, 8:b zh0 fm32 fs28 ws%weight_text% w800 ct%colour_text% cwBlack
 					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
-					        , %A_Space%, HUDforeground3, Courier New
-								WinSet, TransColor, 000000, HUDforeground3
+					        , %A_Space%, HUDforeground, Courier New
+								WinSet, TransColor, 000000, HUDforeground
 							}
 						}
 						Else If (mod(bar_TransValue_step, 4) = 3)
@@ -3013,10 +3216,10 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 					        , % mode_title, HUDforeground5, Courier New
 								WinSet, Transparent, 100, HUDforeground5
 								WinSet, TransColor, 000000, HUDforeground5
-								Progress, 6:b zh0 fm32 fs28 ws%weight_text% w800 ct%colour_text% cwBlack
+								Progress, 8:b zh0 fm32 fs28 ws%weight_text% w800 ct%colour_text% cwBlack
 					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
-					        , %A_Space%, HUDforeground4, Courier New
-								WinSet, TransColor, 000000, HUDforeground4
+					        , %A_Space%, HUDforeground, Courier New
+								WinSet, TransColor, 000000, HUDforeground
 							}
 						}
 						Else
@@ -3032,21 +3235,27 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 								WinSet, TransColor, 000000, HUDforeground5
 								Progress, 8:b zh0 fm32 fs28 ws%weight_text% w800 ct%colour_text% cwBlack
 					      	, `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
-					        , %A_Space%, HUDforeground3, Courier New
-								WinSet, TransColor, 000000, HUDforeground3
+					        , %A_Space%, HUDforeground, Courier New
+								WinSet, TransColor, 000000, HUDforeground
 							}
 						}
 					}
 				}
+				Else If (HUD_loop_count = -ROUND(HUD_loop_count_delay * 9 / 10))
+				{
+					Progress, 10:b zh0 fm32 fs28 ws%weight_text% w130 h45 y560 ct%colour_text% cwBlack
+		        , , , HUDforeground0
+					;WinSet, Transparent, 200, HUDforeground0
+					Progress, 8:b zh0 fm32 fs28 ws%weight_text% w175 ct%colour_text% cwBlack
+		        , %character%
+		        , %A_Space%, HUDforeground, Courier New
+					WinSet, TransColor, 000000, HUDforeground
+				}
 
 				If (character_code <> character_code_pre)
 				{
-					Progress, 6:OFF
-					Progress, 7:OFF
-					Progress, 8:OFF
-					Progress, 9:OFF
-					Progress, 10:b zh0 fm32 fs28 ws%weight_text% w800 ct%colour_text% cwBlack
-		      , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
+					Progress, 8:b zh0 fm32 fs28 ws%weight_text% w175 ct%colour_text% cwBlack
+		        , %character% ; , `n`n`n`n`n`n%A_Space%              %character%               `n`n`n`n`n`n
 		        , %A_Space%, HUDforeground, Courier New
 					WinSet, TransColor, 000000, HUDforeground
 				}
@@ -3347,14 +3556,40 @@ MainLoop(ByRef joyx, ByRef joyy, ByRef joyz, ByRef joyp, ByRef joy1, ByRef joy2,
 				{
 					character_code -= 6
 				}
+			  If true ; Rotate
+			  {
+			    If (character_code = 1)
+			      character_code := 7
+			    Else If (character_code = 2)
+			      character_code := 4
+			    Else If (character_code = 3)
+			      character_code := 1
+			    Else If (character_code = 4)
+			      character_code := 8
+			    Else If (character_code = 6)
+			      character_code := 2
+			    Else If (character_code = 7)
+			      character_code := 9
+			    Else If (character_code = 8)
+			      character_code := 6
+			    Else If (character_code = 9)
+			      character_code := 3
+			  }
 
-			  If (loop_count > 25)
+			  If (loop_count >= 25)
 				{
-					Send, {Numpad5}{Numpad%character_code%}
+					SendInput, {Numpad5}{Numpad%character_code%}
+					/*
+					SendInput, {Numpad%character_code%}
+					SetKeyDelay, 100
+					Send {Blind}{F12 DownTemp}
+					Send {Blind}{F12 Up}
+					SetKeyDelay, -1
+					*/
 			  }
 				Else
 				{
-					Send, {Numpad%character_code%}
+					SendInput, {Numpad%character_code%}
 			  }
 				{
 					character_code := 0
