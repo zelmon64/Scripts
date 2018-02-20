@@ -3,6 +3,9 @@
 ;
 JoystickNumber := 0 ; 3 ; 1
 #Include Quikwrite.ahk
+Rumble_Mode := 0 ; 2 ;
+audio_feedback := 0 ; 1
+Angle_Offset := -3.14159 / 8 ; 15 ; 12 ; 6 ; 2 ;
 Menu, tray, Icon, %A_ScriptDir%\wheel_red.ico, ,1
 
 Loop
@@ -20,8 +23,8 @@ Loop
 			{
 			  State := XInput_GetState(JoystickNumber-1)
 			  joyz := 50 + State.bRightTrigger / 5.10
-			  joyx := 50 + State.sThumbRX / 655.34
-				joyy := 50 + State.sThumbRY / -655.34
+			  joyx := 50 + State.sThumbRX / 645
+				joyy := 50 + State.sThumbRY / -645
 			  If State.wButtons & XINPUT_GAMEPAD_Y
 			    joyp := 0
 			  If State.wButtons & XINPUT_GAMEPAD_A
@@ -72,7 +75,7 @@ Loop
 		, HUD_loop_count_delay, HUD_loop_count, this_code, stick_mode, stick_centre
 		, character_mode, ch_mode, amoffsetx, amoffsety, media_mode, dasher_mode
 		, double_tap, audio_feedback, hold_pose, loop_count_max, rmin, rmax
-		, joy_mode, rotate, recentre, daynight, Rumble_Mode)
+		, joy_mode, rotate, recentre, daynight, Rumble_Mode, Angle_Offset)
 
 }
 Return
