@@ -1,6 +1,6 @@
 ; Kee4 modeled input with a numpad
 ;	v1.0
-;﻿#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
@@ -35,34 +35,36 @@ Menu, tray, Icon, %A_ScriptDir%\Kee4_2.ico, ,1
 	}
 	{ ; Numbers
 		mode_3_characters =   %A_Space%,,,,,,,,,
-		mode_3_characters =  %mode_3_characters% = , = , 1 , 3 , 9 ,   , = , * , \ , - ,
-		mode_3_characters =  %mode_3_characters%Comma, 2 ,Comma, 5 , 7 ,   , + ,Comma,%A_Space%; , & ,
-		mode_3_characters =  %mode_3_characters% . , 4 , 6 , . , ^ ,   , / , : , . , # ,
-		mode_3_characters =  %mode_3_characters%MdS, 0 , 8 , @ ,MdS,   , `% , | , $ ,MdS,
+		mode_3_characters =  %mode_3_characters% . , . , 1 , 3 , 9 ,   , . , * , \ , - ,
+		mode_3_characters =  %mode_3_characters% = , 2 , = , 5 , 7 ,   , + , = , `` , & ,
+		mode_3_characters =  %mode_3_characters% @ , 4 , 6 , @ , ^ ,   , / , ~ , @ , # ,
+		mode_3_characters =  %mode_3_characters%MdS, 0 , 8 , _ ,MdS,   , `% , | , $ ,MdS,
 		StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
-		ArrayIndex := 20
+		/*
+		ArrayIndex := 28
 		all_characters%ArrayIndex3%%ArrayIndex% := " , "
 		ArrayIndex += 2
 		all_characters%ArrayIndex3%%ArrayIndex% := " , "
 		ArrayIndex += 5
 		all_characters%ArrayIndex3%%ArrayIndex% := " , "
+		*/
 	}
 	{ ; Symbols / Mode Select
 		mode_4_characters =   %A_Space%,,,,,,,,,
-		mode_4_characters =  %mode_4_characters%CaL,CaL,Tab,cRi,End,   ,CaL, : , ? ,UDo,
-		mode_4_characters =  %mode_4_characters%NuL,Ent,NuL,Del,cDe,   , %Space%; ,Nul, Comma,RDo,
-		mode_4_characters =  %mode_4_characters%MdS,cLe,BkS,MdS,cEd,   , ! , . ,MdS, ( ,
-		mode_4_characters =  %mode_4_characters%Nav,Hom,cBS,cHo,Nav,   , ' , " , ) ,Nav,
+		mode_4_characters =  %mode_4_characters%CaL,CaL,Tab, . , Comma,   ,CaL,sTb, : ,%A_Space%; ,
+		mode_4_characters =  %mode_4_characters%NuL,Ent,NuL,Del, [ ,   ,sEn,Nul,RDo, < ,
+		mode_4_characters =  %mode_4_characters%MdS, ? ,BkS,MdS, ( ,   , ! ,UDo,MdS, { ,
+		mode_4_characters =  %mode_4_characters%Nav, ' , ] , ) ,Nav,   , " , > , } ,Nav,
 		StringSplit, all_characters%ArrayIndex4%, mode_4_characters, `,
-		ArrayIndex := 28
+		ArrayIndex := 14
 		all_characters%ArrayIndex4%%ArrayIndex% := " , "
 	}
 	{ ; Navigation
 		mode_5_characters =  %A_Space%,,,,,,,,,
-		mode_5_characters =  %mode_5_characters%Lft,Lft,Tab,cRt,End,   ,Lft,PRE,   , < ,
-		mode_5_characters =  %mode_5_characters%Dwn,Ent,Dwn,Del,cDe,   ,Esc,Dwn, _ , [ ,
-		mode_5_characters =  %mode_5_characters% Up,cLt,BkS, Up,cEd,   ,   , ~ , Up, { ,
-		mode_5_characters =  %mode_5_characters%Rit,Hom,cBS,cHo,Rit,   , > , ] , } ,Rit,
+		mode_5_characters =  %mode_5_characters%Lft,Lft,MdS,cRi,End,   ,Lft,PRE,MdS,cEd,
+		mode_5_characters =  %mode_5_characters%Dwn,Ins,Dwn,Del,ChW,   ,Esc,Dwn,cDe,ClW,
+		mode_5_characters =  %mode_5_characters% Up,ChT,BkS, Up,VUp,   ,ClT,cBS, Up,Nxt,
+		mode_5_characters =  %mode_5_characters%Rit,Hom,cLf,VDn,Rit,   ,cHo,Pau,Prv,Rit,
 		StringSplit, all_characters%ArrayIndex5%, mode_5_characters, `,
 	}
 }
@@ -135,6 +137,12 @@ SENDCOMMAND(ThisCommand := "")
 			SendInput, ^{Delete}
 		} else if (ThisCommand = "Ent") {
 			SendInput, {Enter}
+		} else if (ThisCommand = "Tab") {
+			SendInput, {Tab}
+		} else if (ThisCommand = "sEn") {
+			SendInput, +{Enter}
+		} else if (ThisCommand = "cTb") {
+			SendInput, ^{Tab}
 		} else if (ThisCommand = "Rit") {
 			SendInput, {Right}
 		} else if (ThisCommand = "Lft") {
@@ -143,14 +151,18 @@ SENDCOMMAND(ThisCommand := "")
 			SendInput, {Up}
 		} else if (ThisCommand = "Dwn") {
 			SendInput, {Down}
-		} else if (ThisCommand = "cRt") {
+		} else if (ThisCommand = "cRi") {
 			SendInput, ^{Right}
-		} else if (ThisCommand = "cLt") {
+		} else if (ThisCommand = "cLf") {
 			SendInput, ^{Left}
 		} else if (ThisCommand = "cUp") {
 			SendInput, ^{Up}
 		} else if (ThisCommand = "cDn") {
 			SendInput, ^{Down}
+		} else if (ThisCommand = "csR") {
+			SendInput, ^+{Right}
+		} else if (ThisCommand = "csL") {
+			SendInput, ^+{Left}
 		} else if (ThisCommand = "Hom") {
 			SendInput, {Home}
 		} else if (ThisCommand = "End") {
@@ -161,10 +173,30 @@ SENDCOMMAND(ThisCommand := "")
 			SendInput, ^{End}
 		} else if (ThisCommand = "Esc") {
 			SendInput, {Escape}
+		} else if (ThisCommand = "Ins") {
+			SendInput, {Insert}
 		} else if (ThisCommand = "UDo") {
 			SendInput, ^{z}
 		} else if (ThisCommand = "RDo") {
 			SendInput, ^{y}
+		} else if (ThisCommand = "ChT") {
+			SendInput, {Control DownTemp}{Tab}
+		} else if (ThisCommand = "ChW") {
+			SendInput, {Alt DownTemp}{Tab}
+		} else if (ThisCommand = "ClT") {
+			SendInput, ^{w}
+		} else if (ThisCommand = "ClW") {
+			SendInput, !{F4}
+		} else if (ThisCommand = "Pau") {
+			SendInput, {Media_Play_Pause}
+		} else if (ThisCommand = "Prv") {
+			SendInput, {Media_Prev}
+		} else if (ThisCommand = "Nxt") {
+			SendInput, {Media_Next}
+		} else if (ThisCommand = "VUp") {
+			SendInput, {Volume_Up}
+		} else if (ThisCommand = "VDn") {
+			SendInput, {Volume_Down}
 		} else if (ThisCommand <> "") {
 			;SendRaw, % SubStr(all_characters%ch_mode%%character_code%, 2, 1)
 			;lastSent := SubStr(ThisCommand, 2, 1)
@@ -182,6 +214,28 @@ SENDCOMMAND(ThisCommand := "")
 HUD(ByRef SubTextT, ByRef SubTextB, index := 1, ch_mode := 1)
 {
 	global all_characters
+	global LeftHanded
+	if (LeftHanded)
+	{
+		option_index := (index) * 10
+		option_index++
+		option4 := % all_characters%ch_mode%%option_index%
+		option_index++
+		option3 := % all_characters%ch_mode%%option_index%
+		option_index++
+		option2 := % all_characters%ch_mode%%option_index%
+		option_index++
+		option1 := % all_characters%ch_mode%%option_index%
+		option_index += 2
+		option9 := % all_characters%ch_mode%%option_index%
+		option_index++
+		option8 := % all_characters%ch_mode%%option_index%
+		option_index++
+		option7 := % all_characters%ch_mode%%option_index%
+		option_index++
+		option6 := % all_characters%ch_mode%%option_index%
+	}
+	else
 	{
 		option_index := index * 10
 		option_index++
@@ -193,16 +247,16 @@ HUD(ByRef SubTextT, ByRef SubTextB, index := 1, ch_mode := 1)
 		option_index++
 		option4 := % all_characters%ch_mode%%option_index%
 		option_index += 2
-		option5 := % all_characters%ch_mode%%option_index%
-		option_index++
 		option6 := % all_characters%ch_mode%%option_index%
 		option_index++
 		option7 := % all_characters%ch_mode%%option_index%
 		option_index++
 		option8 := % all_characters%ch_mode%%option_index%
-		SubTextT = %SubTextT%| %option1% %option2% %option3% %option4% |
-		SubTextB = %SubTextB%| %option5% %option6% %option7% %option8% |
+		option_index++
+		option9 := % all_characters%ch_mode%%option_index%
 	}
+	SubTextT = %SubTextT%| %option1% %option2% %option3% %option4% |
+	SubTextB = %SubTextB%| %option6% %option7% %option8% %option9% |
 }
 
 { ; Variables
@@ -217,6 +271,7 @@ HUD(ByRef SubTextT, ByRef SubTextB, index := 1, ch_mode := 1)
 	lastSent :=
 	Horizontal := 1
 	daynight := 0
+	LeftHanded := 1
 }
 
 Numpad0::
@@ -234,24 +289,51 @@ NumpadEnter::
 	}
 	else if (keysWereActive = 0) {
 		{ ; Rebind
-		  if (A_ThisHotkey = "Numpad0") {
-		    B_ThisHotkey := "Numpad4"
-		  }
-		  else if (A_ThisHotkey = "Numpad1" && Horizontal) {
-		    B_ThisHotkey := "Numpad3"
-		  }
-		  else if (A_ThisHotkey = "Numpad4" && Horizontal) {
-		    B_ThisHotkey := "Numpad2"
-		  }
-		  else if (A_ThisHotkey = "Numpad7") {
-		    B_ThisHotkey := "Numpad1"
-		  }
-		  else if (A_ThisHotkey = "NumpadEnter") {
-		    B_ThisHotkey := "Numpad4"
-		  }
-		  else {
-		    B_ThisHotkey := A_ThisHotkey
-		  }
+			if (LeftHanded)
+			{
+				if (A_ThisHotkey = "Numpad0") {
+			    B_ThisHotkey := "Numpad1"
+			  }
+			  else if (A_ThisHotkey = "Numpad1" && Horizontal) {
+			    B_ThisHotkey := "Numpad2"
+			  }
+			  else if (A_ThisHotkey = "Numpad1") {
+			    B_ThisHotkey := "Numpad4"
+			  }
+			  else if (A_ThisHotkey = "Numpad4" && Horizontal) {
+			    B_ThisHotkey := "Numpad3"
+			  }
+			  else if (A_ThisHotkey = "Numpad7") {
+			    B_ThisHotkey := "Numpad4"
+			  }
+			  else if (A_ThisHotkey = "NumpadEnter") {
+			    B_ThisHotkey := "Numpad1"
+			  }
+			  else {
+			    B_ThisHotkey := A_ThisHotkey
+			  }
+			}
+			else
+			{
+				if (A_ThisHotkey = "Numpad0") {
+			    B_ThisHotkey := "Numpad4"
+			  }
+			  else if (A_ThisHotkey = "Numpad1" && Horizontal) {
+			    B_ThisHotkey := "Numpad3"
+			  }
+			  else if (A_ThisHotkey = "Numpad4" && Horizontal) {
+			    B_ThisHotkey := "Numpad2"
+			  }
+			  else if (A_ThisHotkey = "Numpad7") {
+			    B_ThisHotkey := "Numpad1"
+			  }
+			  else if (A_ThisHotkey = "NumpadEnter") {
+			    B_ThisHotkey := "Numpad4"
+			  }
+			  else {
+			    B_ThisHotkey := A_ThisHotkey
+			  }
+			}
 		}
 	  if (keysAreActive = 0) {
 	    firstKeyDown := B_ThisHotkey
@@ -295,7 +377,11 @@ NumpadEnter::
 				SubTextB := ""
 				Loop, 4
 				{
-					HUD(SubTextT, SubTextB, A_Index, ch_mode)
+					if (LeftHanded) {
+						HUD(SubTextT, SubTextB, 5-A_Index, ch_mode)
+					} else  {
+						HUD(SubTextT, SubTextB, A_Index, ch_mode)
+					}
 				}
 				SubText = %A_Space%
 										|+-----------------++-----------------++-----------------++-----------------+|`n
@@ -335,7 +421,11 @@ NumpadEnter::
 					SubTextB := ""
 					Loop, 4
 					{
-						HUD(SubTextT, SubTextB, A_Index, thisMode)
+						if (LeftHanded) {
+							HUD(SubTextT, SubTextB, 5-A_Index, thisMode)
+						} else  {
+							HUD(SubTextT, SubTextB, A_Index, thisMode)
+						}
 					}
 					mode_title := % character_mode_list%thisMode%
 					mode_title = %A_Space%%mode_title%`n
@@ -368,30 +458,57 @@ Numpad4 Up::
 Numpad7 Up::
 NumpadEnter Up::
 	{ ; Rebind
-		if (A_ThisHotkey = "Numpad0 Up")
+		if (LeftHanded)
 		{
-	    B_ThisHotkey := "Numpad4 Up"
-	  }
-	  else if (A_ThisHotkey = "Numpad1 Up" && Horizontal)
+			if (A_ThisHotkey = "Numpad0 Up") {
+				B_ThisHotkey := "Numpad1 Up"
+			}
+			else if (A_ThisHotkey = "Numpad1 Up" && Horizontal) {
+				B_ThisHotkey := "Numpad2 Up"
+			}
+			else if (A_ThisHotkey = "Numpad1 Up") {
+				B_ThisHotkey := "Numpad4 Up"
+			}
+			else if (A_ThisHotkey = "Numpad4 Up" && Horizontal) {
+				B_ThisHotkey := "Numpad3 Up"
+			}
+			else if (A_ThisHotkey = "Numpad7 Up") {
+				B_ThisHotkey := "Numpad4 Up"
+			}
+			else if (A_ThisHotkey = "NumpadEnter Up") {
+				B_ThisHotkey := "Numpad1 Up"
+			}
+			else {
+				B_ThisHotkey := A_ThisHotkey
+			}
+		}
+		else
 		{
-	    B_ThisHotkey := "Numpad3 Up"
-	  }
-	  else if (A_ThisHotkey = "Numpad4 Up" && Horizontal)
-		{
-	    B_ThisHotkey := "Numpad2 Up"
-	  }
-	  else if (A_ThisHotkey = "Numpad7 Up")
-		{
-	    B_ThisHotkey := "Numpad1 Up"
-	  }
-	  else if (A_ThisHotkey = "NumpadEnter Up")
-		{
-	    B_ThisHotkey := "Numpad4 Up"
-	  }
-	  else
-		{
-	    B_ThisHotkey := A_ThisHotkey
-	  }
+			if (A_ThisHotkey = "Numpad0 Up")
+			{
+		    B_ThisHotkey := "Numpad4 Up"
+		  }
+		  else if (A_ThisHotkey = "Numpad1 Up" && Horizontal)
+			{
+		    B_ThisHotkey := "Numpad3 Up"
+		  }
+		  else if (A_ThisHotkey = "Numpad4 Up" && Horizontal)
+			{
+		    B_ThisHotkey := "Numpad2 Up"
+		  }
+		  else if (A_ThisHotkey = "Numpad7 Up")
+			{
+		    B_ThisHotkey := "Numpad1 Up"
+		  }
+		  else if (A_ThisHotkey = "NumpadEnter Up")
+			{
+		    B_ThisHotkey := "Numpad4 Up"
+		  }
+		  else
+			{
+		    B_ThisHotkey := A_ThisHotkey
+		  }
+		}
 	}
   if (keysAreActive = 1)
   {
