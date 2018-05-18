@@ -9,63 +9,63 @@ Menu, tray, Icon, %A_ScriptDir%\Kee4_2.ico, ,1
 { ; Kee4 definitions
 	all_characters := Object()
 	all_characters_long := Object()
-	ArrayIndex1 := 1
-	ArrayIndex2 := 2
-	ArrayIndex3 := 3
-	ArrayIndex4 := 4
-	ArrayIndex5 := 5
-	character_mode_lists = Lowercase,Capitals,Numbers,Mode Select,Navigation
+	ArrayIndex := 1
+	character_mode_lists = Lowercase,Capitals,Numbers,Mode Select,Navigation,Functions
 	StringSplit, character_mode_list, character_mode_lists, `,
 
 	{ ; abc
-		mode_1_characters =  %A_Space%,,,,,,,,,
-		mode_1_characters =  %mode_1_characters%Spc,Spc, l , i , w ,   ,Spc, n , p , j ,
-		mode_1_characters =  %mode_1_characters% a , o , a , h , c ,   , m , a , f , g ,
-		mode_1_characters =  %mode_1_characters% e , y , t , e , v ,   , r , s , e , x ,
-		mode_1_characters =  %mode_1_characters%MdS, u , d , q ,MdS,   , b , k , z ,MdS,
-		StringSplit, all_characters%ArrayIndex1%, mode_1_characters, `,
+		mode_characters =  %A_Space%,,,,,,,,,
+		mode_characters =  %mode_characters%Spc,Spc, l , i , w ,   ,Spc, n , p , j ,
+		mode_characters =  %mode_characters% a , o , a , h , c ,   , m , a , f , g ,
+		mode_characters =  %mode_characters% e , y , t , e , v ,   , r , s , e , x ,
+		mode_characters =  %mode_characters%Mod, u , d , q ,Mod,   , b , k , z ,Mod,
+		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
 	}
 	{ ; ABC
-		mode_2_characters =   %A_Space%,,,,,,,,,
-		mode_2_characters =  %mode_2_characters%Spc,Spc, L , I , W ,   ,Spc, N , P , J ,
-		mode_2_characters =  %mode_2_characters% A , O , A , H , C ,   , M , A , F , G ,
-		mode_2_characters =  %mode_2_characters% E , Y , T , E , V ,   , R , S , E , X ,
-		mode_2_characters =  %mode_2_characters%MdS, U , D , Q ,MdS,   , B , K , Z ,MdS,
-		StringSplit, all_characters%ArrayIndex2%, mode_2_characters, `,
+		mode_characters =   %A_Space%,,,,,,,,,
+		mode_characters =  %mode_characters%Spc,Spc, L , I , W ,   ,Spc, N , P , J ,
+		mode_characters =  %mode_characters% A , O , A , H , C ,   , M , A , F , G ,
+		mode_characters =  %mode_characters% E , Y , T , E , V ,   , R , S , E , X ,
+		mode_characters =  %mode_characters%Mod, U , D , Q ,Mod,   , B , K , Z ,Mod,
+		ArrayIndex++
+		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
 	}
 	{ ; Numbers
-		mode_3_characters =   %A_Space%,,,,,,,,,
-		mode_3_characters =  %mode_3_characters% . , . , 1 , 3 , 9 ,   , . , * , \ , - ,
-		mode_3_characters =  %mode_3_characters% = , 2 , = , 5 , 7 ,   , + , = , `` , & ,
-		mode_3_characters =  %mode_3_characters% @ , 4 , 6 , @ , ^ ,   , / , ~ , @ , # ,
-		mode_3_characters =  %mode_3_characters%MdS, 0 , 8 , _ ,MdS,   , `% , | , $ ,MdS,
-		StringSplit, all_characters%ArrayIndex3%, mode_3_characters, `,
-		/*
-		ArrayIndex := 28
-		all_characters%ArrayIndex3%%ArrayIndex% := " , "
-		ArrayIndex += 2
-		all_characters%ArrayIndex3%%ArrayIndex% := " , "
-		ArrayIndex += 5
-		all_characters%ArrayIndex3%%ArrayIndex% := " , "
-		*/
+		mode_characters =   %A_Space%,,,,,,,,,
+		mode_characters =  %mode_characters% . , . , 1 , 3 , 9 ,   , . , * , \ , - ,
+		mode_characters =  %mode_characters% = , 2 , = , 5 , 7 ,   , + , = , `` , & ,
+		mode_characters =  %mode_characters% @ , 4 , 6 , @ , ^ ,   , / , ~ , @ , # ,
+		mode_characters =  %mode_characters%Mod, 0 , 8 , _ ,Mod,   , `% , | , $ ,Mod,
+		ArrayIndex++
+		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
 	}
 	{ ; Symbols / Mode Select
-		mode_4_characters =   %A_Space%,,,,,,,,,
-		mode_4_characters =  %mode_4_characters%CaL,CaL,Tab, . , Comma,   ,CaL,sTb, : ,%A_Space%; ,
-		mode_4_characters =  %mode_4_characters%NuL,Ent,NuL,Del, [ ,   ,sEn,Nul,RDo, < ,
-		mode_4_characters =  %mode_4_characters%MdS, ? ,BkS,MdS, ( ,   , ! ,UDo,MdS, { ,
-		mode_4_characters =  %mode_4_characters%Nav, ' , ] , ) ,Nav,   , " , > , } ,Nav,
-		StringSplit, all_characters%ArrayIndex4%, mode_4_characters, `,
-		ArrayIndex := 14
-		all_characters%ArrayIndex4%%ArrayIndex% := " , "
+		mode_characters =   %A_Space%,,,,,,,,,
+		mode_characters =  %mode_characters%Cap,Cap,Tab, . , Comma,   ,Cap,sTb, : ,%A_Space%; ,
+		mode_characters =  %mode_characters%Num,Ent,Num,Del, [ ,   ,sEn,Num,RDo, < ,
+		mode_characters =  %mode_characters%Fnc, ? ,BkS,Fnc, ( ,   , ! ,UDo,Fnc, { ,
+		mode_characters =  %mode_characters%Nav, ' , ] , ) ,Nav,   , " , > , } ,Nav,
+		ArrayIndex++
+		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
+		all_characters%ArrayIndex%14 := " , "
 	}
 	{ ; Navigation
-		mode_5_characters =  %A_Space%,,,,,,,,,
-		mode_5_characters =  %mode_5_characters%Lft,Lft,MdS,cRi,End,   ,Lft,PRE,MdS,cEd,
-		mode_5_characters =  %mode_5_characters%Dwn,Ins,Dwn,Del,ChW,   ,Esc,Dwn,cDe,ClW,
-		mode_5_characters =  %mode_5_characters% Up,ChT,BkS, Up,VUp,   ,ClT,cBS, Up,Nxt,
-		mode_5_characters =  %mode_5_characters%Rit,Hom,cLf,VDn,Rit,   ,cHo,Pau,Prv,Rit,
-		StringSplit, all_characters%ArrayIndex5%, mode_5_characters, `,
+		mode_characters =  %A_Space%,,,,,,,,,
+		mode_characters =  %mode_characters%Lft,Lft,Mod,cRi,End,   ,Lft,PRE,csR,cEd,
+		mode_characters =  %mode_characters%Dwn,Cpy,Dwn,Del,Cut,   ,sCp,Dwn,cDe,SAl,
+		mode_characters =  %mode_characters% Up,Pst,BkS, Up,UnD,   ,sPs,cBS, Up,ReD,
+		mode_characters =  %mode_characters%Rit,Hom,cLf,Ins,Rit,   ,cHo,csL,Esc,Rit,
+		ArrayIndex++
+		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
+	}
+	{ ; Functions
+		mode_characters =  %A_Space%,,,,,,,,,
+		mode_characters =  %mode_characters%Pau,Pau,Nxt,Fnd,Mnu,   ,Pau,Esc,Rpl,Sav,
+		mode_characters =  %mode_characters%VDn,Prv,VDn,ChW, Z+,   ,gFS,VDn,ClW,Mg+,
+		mode_characters =  %mode_characters%VUp, F3,ChT,VUp,ARe,   ,sF3,ClT,VUp,FuS,
+		mode_characters =  %mode_characters%Mod,PrS, Z-,Mg-,Mod,   ,aPS,SHa,Mg!,Mod,
+		ArrayIndex++
+		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
 	}
 }
 
@@ -74,17 +74,21 @@ SENDCOMMAND(ThisCommand := "")
 	global mode
 	global ch_mode
 	global modePRE
-	if (ThisCommand = "MdS") {
+	global LeftHanded
+	global lastKeyRepeat
+	if (ThisCommand = "Mod") {
 		if (mode = 4) {
+			mode := 1
 			mode := modePRE
 		}
 		else if (mode = 44) {
 			mode := 4
+			modePRE := mode
 		}
 		else {
 			mode := 44
 		}
-	} else if (ThisCommand = "CaL") {
+	} else if (ThisCommand = "Cap") {
 		if (mode = 2 || modePRE = 2) {
 			mode := 1
 			modePRE := mode
@@ -96,7 +100,7 @@ SENDCOMMAND(ThisCommand := "")
 		else {
 			mode := 22
 		}
-	} else if (ThisCommand = "NuL") {
+	} else if (ThisCommand = "Num") {
 		if (mode = 3 || modePRE = 3) {
 			mode := 1
 			modePRE := mode
@@ -109,24 +113,38 @@ SENDCOMMAND(ThisCommand := "")
 			mode := 33
 		}
 	} else if (ThisCommand = "Nav") {
-		if (mode = 5 || modePRE = 5) {
+		if (mode = 55 || modePRE = 5) {
 			mode := 1
 			modePRE := mode
 		}
-		else if (mode = 55) {
-			mode := 5
+		else if (mode = 5) {
+			mode := 55
 		}
 		else {
-			mode := 55
+			mode := 5
+		}
+	} else if (ThisCommand = "Fnc") {
+		if (mode = 6 || modePRE = 6) {
+			mode := 1
+			modePRE := mode
+		}
+		else if (mode = 66) {
+			mode := 6
+			modePRE := mode
+		}
+		else {
+			mode := 66
 		}
 	} else if (ThisCommand = "PRE") {
 		mode := modePRE
 	} else
 	{
-		if (ThisCommand = "Spc") {
+		if (ThisCommand = "SHa") {
+			LeftHanded := !LeftHanded
+		} else if (ThisCommand = "ARe") {
+			lastKeyRepeat := !lastKeyRepeat
+		} else if (ThisCommand = "Spc") {
 			SendInput, {Space}
-			;lastSent := "Space"
-			;Send, {%lastSent%}
 		} else if (ThisCommand = "BkS") {
 			SendInput, {BackSpace}
 		} else if (ThisCommand = "cBS") {
@@ -141,8 +159,8 @@ SENDCOMMAND(ThisCommand := "")
 			SendInput, {Tab}
 		} else if (ThisCommand = "sEn") {
 			SendInput, +{Enter}
-		} else if (ThisCommand = "cTb") {
-			SendInput, ^{Tab}
+		} else if (ThisCommand = "sTb") {
+			SendInput, +{Tab}
 		} else if (ThisCommand = "Rit") {
 			SendInput, {Right}
 		} else if (ThisCommand = "Lft") {
@@ -175,10 +193,46 @@ SENDCOMMAND(ThisCommand := "")
 			SendInput, {Escape}
 		} else if (ThisCommand = "Ins") {
 			SendInput, {Insert}
-		} else if (ThisCommand = "UDo") {
+		} else if (ThisCommand = "UnD") {
 			SendInput, ^{z}
-		} else if (ThisCommand = "RDo") {
+		} else if (ThisCommand = "sUD") {
+			SendInput, ^+{z}
+		} else if (ThisCommand = "ReD") {
 			SendInput, ^{y}
+		} else if (ThisCommand = "SAl") {
+			SendInput, ^{a}
+		} else if (ThisCommand = "Cpy") {
+			SendInput, ^{c}
+		} else if (ThisCommand = "Cut") {
+			SendInput, ^{x}
+		} else if (ThisCommand = "Pst") {
+			SendInput, ^{v}
+		} else if (ThisCommand = "sCp") {
+			SendInput, ^+{c}
+		} else if (ThisCommand = "sPs") {
+			SendInput, ^+{v}
+		} else if (ThisCommand = "Fnd") {
+			SendInput, ^{f}
+		} else if (ThisCommand = "Rpl") {
+			SendInput, ^{h}
+		} else if (ThisCommand = "F3") {
+			SendInput, {F3}
+		} else if (ThisCommand = "sF3") {
+			SendInput, +{F3}
+		} else if (ThisCommand = "Sav") {
+			SendInput, ^{s}
+		} else if (ThisCommand = "Mnu") {
+			SendInput, {AppsKey}
+		} else if (ThisCommand = "ZIn") {
+			SendInput, ^{=}
+		} else if (ThisCommand = "ZOu") {
+			SendInput, ^{-}
+		} else if (ThisCommand = "Mg+") {
+			SendInput, #{=}
+		} else if (ThisCommand = "Mg-") {
+			SendInput, #{-}
+		} else if (ThisCommand = "Mg!") {
+			SendInput, #{Escape}
 		} else if (ThisCommand = "ChT") {
 			SendInput, {Control DownTemp}{Tab}
 		} else if (ThisCommand = "ChW") {
@@ -187,6 +241,14 @@ SENDCOMMAND(ThisCommand := "")
 			SendInput, ^{w}
 		} else if (ThisCommand = "ClW") {
 			SendInput, !{F4}
+		} else if (ThisCommand = "FuS") {
+			SendInput, {F11}
+		} else if (ThisCommand = "gFS") {
+			SendInput, !{Enter}
+		} else if (ThisCommand = "PrS") {
+			SendInput, {PrintScreen}
+		} else if (ThisCommand = "aPS") {
+			SendInput, !{PrintScreen}
 		} else if (ThisCommand = "Pau") {
 			SendInput, {Media_Play_Pause}
 		} else if (ThisCommand = "Prv") {
@@ -211,7 +273,7 @@ SENDCOMMAND(ThisCommand := "")
 	ch_mode := mod(mode, 10)
 }
 
-HUD(ByRef SubTextT, ByRef SubTextB, index := 1, ch_mode := 1)
+HUD(ByRef SubTextT, ByRef SubTextB, index := 1, ch_mode := 1, ByRef SubTextI := "", ByRef SubTextO := "", current_button := 0)
 {
 	global all_characters
 	global LeftHanded
@@ -255,13 +317,70 @@ HUD(ByRef SubTextT, ByRef SubTextB, index := 1, ch_mode := 1)
 		option_index++
 		option9 := % all_characters%ch_mode%%option_index%
 	}
-	SubTextT = %SubTextT%| %option1% %option2% %option3% %option4% |
-	SubTextB = %SubTextB%| %option6% %option7% %option8% %option9% |
+	if (current_button) {
+		if (current_button = 1) {
+			SubTextT = %SubTextT%| %option1% %option2% %option3%|%option4%||
+			SubTextB = %SubTextB%| %option6% %option7% %option8%|%option9%||
+			if (LeftHanded) {
+				SubTextI := "|            |   ||"
+				SubTextO := "+------------+---++"
+			} else {
+				SubTextI := "||   |            |"
+				SubTextO := "++---+------------+"
+			}
+		}
+		else if (current_button = 2) {
+			SubTextT = %SubTextT%| %option1% %option2%|%option3%|%option4% |
+			SubTextB = %SubTextB%| %option6% %option7%|%option8%|%option9% |
+			if (LeftHanded) {
+				SubTextI := "|        |   |    |"
+				SubTextO := "+--------+---+----+"
+			} else {
+				SubTextI := "|    |   |        |"
+				SubTextO := "+----+---+--------+"
+			}
+
+		}
+		else if (current_button = 3) {
+			SubTextT = %SubTextT%| %option1%|%option2%|%option3% %option4% |
+			SubTextB = %SubTextB%| %option6%|%option7%|%option8% %option9% |
+			if (LeftHanded) {
+				SubTextI := "|    |   |        |"
+				SubTextO := "+----+---+--------+"
+			} else {
+				SubTextI := "|        |   |    |"
+				SubTextO := "+--------+---+----+"
+			}
+
+		}
+		else if (current_button = 4) {
+			SubTextT = %SubTextT%||%option1%|%option2% %option3% %option4% |
+			SubTextB = %SubTextB%||%option6%|%option7% %option8% %option9% |
+			if (LeftHanded) {
+				SubTextI := "||   |            |"
+				SubTextO := "++---+------------+"
+			} else {
+				SubTextI := "|            |   ||"
+				SubTextO := "+------------+---++"
+			}
+		}
+		else {
+			SubTextT = %SubTextT%| %option1% %option2% %option3% %option4% |
+			SubTextB = %SubTextB%| %option6% %option7% %option8% %option9% |
+		}
+	}
+	else {
+		SubTextT = %SubTextT%| %option1% %option2% %option3% %option4% |
+		SubTextB = %SubTextB%| %option6% %option7% %option8% %option9% |
+	}
+
 }
 
 { ; Variables
 	firstKeyDown :=
 	secondKeyDown :=
+	thirdKeyDown :=
+	fourthKeyDown :=
 	firstKeyUp :=
 	keysAreActive := 0
 	keysWereActive := 0
@@ -269,9 +388,10 @@ HUD(ByRef SubTextT, ByRef SubTextB, index := 1, ch_mode := 1)
 	ch_mode := mod(mode, 10)
 	modePRE := mode
 	lastSent :=
+	lastKeyRepeat := 1
 	Horizontal := 1
 	daynight := 0
-	LeftHanded := 1
+	LeftHanded := 1 ; 0 ;
 }
 
 Numpad0::
@@ -280,36 +400,33 @@ Numpad2::
 Numpad3::
 Numpad4::
 Numpad7::
+Numpad5::
+Numpad6::
+Numpad8::
+Numpad9::
 NumpadEnter::
 	;ToolTip, %A_PriorHotkey% %A_ThisHotkey% %A_TimeSincePriorHotkey% %keysAreActive% %lastSent%
 	;ToolTip, %keysAreActive%
-	if (keysAreActive = 0 && InStr(A_PriorHotkey, A_ThisHotkey) <> 0 && A_TimeSincePriorHotkey > 0 && (A_TimeSincePriorHotkey < 200 || keysWereActive = -1)) {
+	if (lastKeyRepeat && keysAreActive = 0 && InStr(A_PriorHotkey, A_ThisHotkey) <> 0 && A_TimeSincePriorHotkey > 0 && (A_TimeSincePriorHotkey < 200 || keysWereActive = -1)) {
 		SENDCOMMAND(lastSent)
 		keysWereActive := -1
-	}
-	else if (keysWereActive = 0) {
+	} else if (keysWereActive >= 0) {
 		{ ; Rebind
 			if (LeftHanded)
 			{
 				if (A_ThisHotkey = "Numpad0") {
 			    B_ThisHotkey := "Numpad1"
-			  }
-			  else if (A_ThisHotkey = "Numpad1" && Horizontal) {
+			  } else if (A_ThisHotkey = "Numpad1" && Horizontal) {
 			    B_ThisHotkey := "Numpad2"
-			  }
-			  else if (A_ThisHotkey = "Numpad1") {
+			  } else if (A_ThisHotkey = "Numpad1") {
 			    B_ThisHotkey := "Numpad4"
-			  }
-			  else if (A_ThisHotkey = "Numpad4" && Horizontal) {
+			  } else if (A_ThisHotkey = "Numpad4" && Horizontal) {
 			    B_ThisHotkey := "Numpad3"
-			  }
-			  else if (A_ThisHotkey = "Numpad7") {
+			  } else if (A_ThisHotkey = "Numpad7") {
 			    B_ThisHotkey := "Numpad4"
-			  }
-			  else if (A_ThisHotkey = "NumpadEnter") {
+			  } else if (A_ThisHotkey = "NumpadEnter") {
 			    B_ThisHotkey := "Numpad1"
-			  }
-			  else {
+			  } else {
 			    B_ThisHotkey := A_ThisHotkey
 			  }
 			}
@@ -317,136 +434,160 @@ NumpadEnter::
 			{
 				if (A_ThisHotkey = "Numpad0") {
 			    B_ThisHotkey := "Numpad4"
-			  }
-			  else if (A_ThisHotkey = "Numpad1" && Horizontal) {
+			  } else if (A_ThisHotkey = "Numpad1" && Horizontal) {
 			    B_ThisHotkey := "Numpad3"
-			  }
-			  else if (A_ThisHotkey = "Numpad4" && Horizontal) {
+			  } else if (A_ThisHotkey = "Numpad4" && Horizontal) {
 			    B_ThisHotkey := "Numpad2"
-			  }
-			  else if (A_ThisHotkey = "Numpad7") {
+			  } else if (A_ThisHotkey = "Numpad7") {
 			    B_ThisHotkey := "Numpad1"
-			  }
-			  else if (A_ThisHotkey = "NumpadEnter") {
+			  } else if (A_ThisHotkey = "NumpadEnter") {
 			    B_ThisHotkey := "Numpad4"
-			  }
-			  else {
+			  } else {
 			    B_ThisHotkey := A_ThisHotkey
 			  }
 			}
+			{
+				if (A_ThisHotkey = "Numpad5") {
+			    B_ThisHotkey := "Numpad1"
+			  } else if (A_ThisHotkey = "Numpad6" && Horizontal) {
+			    B_ThisHotkey := "Numpad2"
+			  } else if (A_ThisHotkey = "Numpad8") {
+			    B_ThisHotkey := "Numpad3"
+			  } else if (A_ThisHotkey = "Numpad9" && Horizontal) {
+			    B_ThisHotkey := "Numpad4"
+			  }
+			}
 		}
-	  if (keysAreActive = 0) {
-	    firstKeyDown := B_ThisHotkey
-	    keysAreActive++
-			{ ; HUD
-					SubTextT := ""
-					SubTextB := ""
-					HUD(SubTextT, SubTextB, SubStr(B_ThisHotkey, 7, 1), ch_mode)
-					SubText = %A_Space%
-											|+-----------------+|`n
-											|%SubTextT%|`n
-											||                 ||`n
-											|%SubTextB%|`n
-											|+-----------------+|
+		if (keysWereActive >= 0 && B_ThisHotkey <> firstKeyDown && B_ThisHotkey <> secondKeyDown && B_ThisHotkey <> thirdKeyDown && B_ThisHotkey <> fourthKeyDown)
+		{
+		  if (keysAreActive + keysWereActive = 0) {
+		    firstKeyDown := B_ThisHotkey
+		    keysAreActive++
+				{ ; HUD
+						SubTextT := ""
+						SubTextB := ""
+						SubTextI := "|                 |"
+						SubTextO := "+-----------------+"
+						HUD(SubTextT, SubTextB, SubStr(B_ThisHotkey, 7, 1), ch_mode, SubTextI, SubTextO, SubStr(B_ThisHotkey, 7, 1))
+						SubText = %A_Space%
+												|%SubTextO%|`n
+												|%SubTextT%|`n
+												|%SubTextI%|`n
+												|%SubTextB%|`n
+												|%SubTextO%|
 
-				mode_title := % character_mode_list%ch_mode%
-				If (mode > 10)
-				{
-					mode_title = %mode_title% Latch
-				}
-				If (daynight)
-					colour_text := "00FF00" ; Red FF0000 ; Green 008000 ; Lime 00FF00
-				Else
-					colour_text := "FF0000" ; Red FF0000 ; Green 008000 ; Lime 00FF00
-				weight_text := 400
-				Progress, 1:b zh0 fm32 fs28 w550 ct%colour_text% cwBlack
-					, %A_Space%%SubText% , % mode_title, HUDbackground1, Courier New
-			}
-	  }
-	  else if (keysAreActive = 1 && B_ThisHotkey <> firstKeyDown) {
-	    secondKeyDown := B_ThisHotkey
-	    keysAreActive++
-	  }
-	  else if (keysAreActive = 2 && B_ThisHotkey <> firstKeyDown && B_ThisHotkey <> secondKeyDown)
-	  {
-	    thirdKeyDown := B_ThisHotkey
-	    keysAreActive++
-			Progress, 1:Off
-			{ ; HUD
-				SubTextT := ""
-				SubTextB := ""
-				Loop, 4
-				{
-					if (LeftHanded) {
-						HUD(SubTextT, SubTextB, 5-A_Index, ch_mode)
-					} else  {
-						HUD(SubTextT, SubTextB, A_Index, ch_mode)
+					mode_title := % character_mode_list%ch_mode%
+					If (mode > 10)
+					{
+						mode_title = %mode_title% Latch
 					}
+					If (daynight)
+						colour_text := "00FF00" ; Red FF0000 ; Green 008000 ; Lime 00FF00
+					Else
+						colour_text := "FF0000" ; Red FF0000 ; Green 008000 ; Lime 00FF00
+					weight_text := 400
+					Progress, 1:b zh0 fm32 fs28 w550 ct%colour_text% cwBlack
+						, %A_Space%%SubText% , % mode_title, HUDbackground1, Courier New
 				}
-				SubText = %A_Space%
-										|+-----------------++-----------------++-----------------++-----------------+|`n
-										|%SubTextT%|`n
-										||                 ||                 ||                 ||                 ||`n
-										|%SubTextB%|`n
-										|+-----------------++-----------------++-----------------++-----------------+|
-
-				mode_title := % character_mode_list%ch_mode%
-				If (mode > 10)
-				{
-					mode_title = %mode_title% Latch
-				}
-				If (daynight)
-					colour_text := "00FF00" ; Red FF0000 ; Green 008000 ; Lime 00FF00
-				Else
-					colour_text := "FF0000" ; Red FF0000 ; Green 008000 ; Lime 00FF00
-				weight_text := 400
-				Progress, 1:b zh0 fm32 fs28 w1800 ct%colour_text% cwBlack
-					, %A_Space%%SubText% , % mode_title, HUDbackground1, Courier New
-			}
-	    ToolTip,
-	  }
-	  else if (keysAreActive = 3 && B_ThisHotkey <> firstKeyDown && B_ThisHotkey <> secondKeyDown && B_ThisHotkey <> thirdKeyDown)
-	  {
-	    mode := 1
-			ch_mode := mod(mode, 10)
-			modePRE := 1
-	    keysAreActive++
-			Progress, 1:Off
-			{ ; HUD
-				SubText := ""
-				Loop, 4
-				{
-					thisMode := A_Index + 1
+		  } else if (keysAreActive + keysWereActive = 1) {
+		    secondKeyDown := B_ThisHotkey
+		    keysAreActive++
+		  } else if (keysAreActive + keysWereActive = 2) {
+		    thirdKeyDown := B_ThisHotkey
+		    keysAreActive++
+				Progress, 1:Off
+				{ ; HUD
 					SubTextT := ""
 					SubTextB := ""
 					Loop, 4
 					{
 						if (LeftHanded) {
-							HUD(SubTextT, SubTextB, 5-A_Index, thisMode)
+							HUD(SubTextT, SubTextB, 5-A_Index, ch_mode)
 						} else  {
-							HUD(SubTextT, SubTextB, A_Index, thisMode)
+							HUD(SubTextT, SubTextB, A_Index, ch_mode)
 						}
 					}
-					mode_title := % character_mode_list%thisMode%
-					mode_title = %A_Space%%mode_title%`n
-					SubText = %SubText% %mode_title%
+					SubText = %A_Space%
 											|+-----------------++-----------------++-----------------++-----------------+|`n
 											|%SubTextT%|`n
 											||                 ||                 ||                 ||                 ||`n
 											|%SubTextB%|`n
-											|+-----------------++-----------------++-----------------++-----------------+|`n
+											|+-----------------++-----------------++-----------------++-----------------+|
 
-
+					mode_title := % character_mode_list%ch_mode%
+					If (mode > 10)
+					{
+						mode_title = %mode_title% Latch
+					}
+					If (daynight)
+						colour_text := "00FF00" ; Red FF0000 ; Green 008000 ; Lime 00FF00
+					Else
+						colour_text := "FF0000" ; Red FF0000 ; Green 008000 ; Lime 00FF00
+					weight_text := 400
+					Progress, 1:b zh0 fm32 fs28 w1800 ct%colour_text% cwBlack
+						, %A_Space%%SubText% , % mode_title, HUDbackground1, Courier New
 				}
-				If (daynight)
-					colour_text := "00FF00" ; Red FF0000 ; Green 008000 ; Lime 00FF00
-				Else
-					colour_text := "FF0000" ; Red FF0000 ; Green 008000 ; Lime 00FF00
-				weight_text := 400
-				Progress, 1:b zh0 fm32 fs28 w1800 ct%colour_text% cwBlack
-					, %A_Space%%SubText% , Kee4, HUDbackground1, Courier New
-			}
-	  }
+		    ToolTip,
+		  } else if (keysAreActive + keysWereActive = 3) {
+		    mode := 1
+				ch_mode := mod(mode, 10)
+				modePRE := 1
+				fourthKeyDown := B_ThisHotkey
+		    keysAreActive++
+				Progress, 1:Off
+				{ ; HUD
+					SubText := ""
+					Loop, 5
+					{
+						thisMode := A_Index + 1
+						SubTextT := ""
+						SubTextB := ""
+						Loop, 4
+						{
+							if (LeftHanded) {
+								HUD(SubTextT, SubTextB, 5-A_Index, thisMode)
+							} else  {
+								HUD(SubTextT, SubTextB, A_Index, thisMode)
+							}
+						}
+						mode_title := % character_mode_list%thisMode%
+						mode_title = %A_Space%%mode_title%`n
+						SubText = %SubText% %mode_title%
+												|+-----------------++-----------------++-----------------++-----------------+|`n
+												|%SubTextT%|`n
+												||                 ||                 ||                 ||                 ||`n
+												|%SubTextB%|`n
+												|+-----------------++-----------------++-----------------++-----------------+|`n
+
+
+					}
+					if (daynight)
+						colour_text := "00FF00" ; Red FF0000 ; Green 008000 ; Lime 00FF00
+					else
+						colour_text := "FF0000" ; Red FF0000 ; Green 008000 ; Lime 00FF00
+					Kee4Title := "Kee4"
+					if (LeftHanded)
+						Kee4Title = Left-Handed %Kee4Title%
+					else
+						Kee4Title = Right-Handed %Kee4Title%
+					if (lastKeyRepeat)
+						Kee4Title = %Kee4Title%, last key repeat ON
+					else
+						Kee4Title = %Kee4Title%, last key repeat OFF
+						weight_text := 400
+					Progress, 1:b zh0 fm32 fs21 w1400 ct%colour_text% cwBlack
+						, %A_Space%%SubText% , %Kee4Title%, HUDbackground1, Courier New
+				}
+				{ ; Release any held keys
+					KeyList := "Shift|Control|Alt|LWin|RWin|LControl|RControl|LShift|RShift|LAlt|RAlt"
+					Loop, Parse, KeyList, |
+					{
+					    If GetKeystate(A_Loopfield, "P")
+					        Send % "{" A_Loopfield " Up}"
+					}
+				}
+		  }
+		}
 	}
 return
 
@@ -456,84 +597,80 @@ Numpad2 Up::
 Numpad3 Up::
 Numpad4 Up::
 Numpad7 Up::
+Numpad5 Up::
+Numpad6 Up::
+Numpad8 Up::
+Numpad9 Up::
 NumpadEnter Up::
 	{ ; Rebind
 		if (LeftHanded)
 		{
 			if (A_ThisHotkey = "Numpad0 Up") {
 				B_ThisHotkey := "Numpad1 Up"
-			}
-			else if (A_ThisHotkey = "Numpad1 Up" && Horizontal) {
+			} else if (A_ThisHotkey = "Numpad1 Up" && Horizontal) {
 				B_ThisHotkey := "Numpad2 Up"
-			}
-			else if (A_ThisHotkey = "Numpad1 Up") {
+			} else if (A_ThisHotkey = "Numpad1 Up") {
 				B_ThisHotkey := "Numpad4 Up"
-			}
-			else if (A_ThisHotkey = "Numpad4 Up" && Horizontal) {
+			} else if (A_ThisHotkey = "Numpad4 Up" && Horizontal) {
 				B_ThisHotkey := "Numpad3 Up"
-			}
-			else if (A_ThisHotkey = "Numpad7 Up") {
+			} else if (A_ThisHotkey = "Numpad7 Up") {
 				B_ThisHotkey := "Numpad4 Up"
-			}
-			else if (A_ThisHotkey = "NumpadEnter Up") {
+			} else if (A_ThisHotkey = "NumpadEnter Up") {
 				B_ThisHotkey := "Numpad1 Up"
-			}
-			else {
+			} else {
 				B_ThisHotkey := A_ThisHotkey
 			}
 		}
 		else
 		{
-			if (A_ThisHotkey = "Numpad0 Up")
-			{
+			if (A_ThisHotkey = "Numpad0 Up") {
 		    B_ThisHotkey := "Numpad4 Up"
-		  }
-		  else if (A_ThisHotkey = "Numpad1 Up" && Horizontal)
-			{
+		  } else if (A_ThisHotkey = "Numpad1 Up" && Horizontal) {
 		    B_ThisHotkey := "Numpad3 Up"
-		  }
-		  else if (A_ThisHotkey = "Numpad4 Up" && Horizontal)
-			{
+		  } else if (A_ThisHotkey = "Numpad4 Up" && Horizontal) {
 		    B_ThisHotkey := "Numpad2 Up"
-		  }
-		  else if (A_ThisHotkey = "Numpad7 Up")
-			{
+		  } else if (A_ThisHotkey = "Numpad7 Up") {
 		    B_ThisHotkey := "Numpad1 Up"
-		  }
-		  else if (A_ThisHotkey = "NumpadEnter Up")
-			{
+		  } else if (A_ThisHotkey = "NumpadEnter Up") {
 		    B_ThisHotkey := "Numpad4 Up"
-		  }
-		  else
-			{
+		  } else {
 		    B_ThisHotkey := A_ThisHotkey
 		  }
+		}
+		{
+			if (A_ThisHotkey = "Numpad5 Up") {
+				B_ThisHotkey := "Numpad1 Up"
+			} else if (A_ThisHotkey = "Numpad6 Up" && Horizontal) {
+				B_ThisHotkey := "Numpad2 Up"
+			} else if (A_ThisHotkey = "Numpad8 Up") {
+				B_ThisHotkey := "Numpad3 Up"
+			} else if (A_ThisHotkey = "Numpad9 Up" && Horizontal) {
+				B_ThisHotkey := "Numpad4 Up"
+			}
 		}
 	}
   if (keysAreActive = 1)
   {
-    character_code := SubStr(firstKeyDown, 7, 1) * 10
-    if (keysWereActive = 0)
-    {
-      ;ToolTip, %firstKeyDown% %B_ThisHotkey%: `n%character_code%
-    }
-    else if (keysWereActive = 1)
-    {
-      if (SubStr(firstKeyDown, 7, 1) <> SubStr(B_ThisHotkey, 7, 1)) {
-        character_code += SubStr(secondKeyDown, 7, 1)
-      }
-      else {
-        character_code += SubStr(secondKeyDown, 7, 1) + 5
-      }
-
-      ;ToolTip, %firstKeyDown% %secondKeyDown% %firstKeyUp% %B_ThisHotkey%: `n%character_code%
-    }
-		lastSent := % all_characters%ch_mode%%character_code%
-		SENDCOMMAND(lastSent)
-
+		if (keysWereActive < 2){
+			character_code := SubStr(firstKeyDown, 7, 1) * 10
+	    if (keysWereActive = 1)
+	    {
+	      if (SubStr(firstKeyDown, 7, 1) <> SubStr(B_ThisHotkey, 7, 1)) {
+	        character_code += SubStr(secondKeyDown, 7, 1)
+	      }
+	      else {
+	        character_code += SubStr(secondKeyDown, 7, 1) + 5
+	      }
+	    }
+			lastSent := % all_characters%ch_mode%%character_code%
+			SENDCOMMAND(lastSent)
+		}
 		Progress, 1:Off
+    ToolTip,
 		firstKeyDown :=
 		secondKeyDown :=
+    thirdKeyDown :=
+		fourthKeyDown :=
 		firstKeyUp :=
 		keysAreActive := 0
 		keysWereActive := 0
@@ -546,17 +683,79 @@ NumpadEnter Up::
   }
   else if (keysAreActive > 2)
   {
-    firstKeyDown :=
-    secondKeyDown :=
-    thirdKeyDown :=
-    firstKeyUp :=
-    keysAreActive := 0
-    keysWereActive := 0
-		Progress, 1:Off
-    ;ToolTip,
+    keysAreActive--
+    keysWereActive++
   }
 	else if (keysWereActive = -1)
 	{
 		keysWereActive := 0
 	}
 return
+
+/*
+Numpad5::
+Numpad6::
+Numpad8::
+Numpad9::
+	if (keysWereActive = 0)
+	{
+		if (keysAreActive = 0) {
+			firstKeyDown := A_ThisHotkey
+			keysAreActive++
+			ToolTip, %A_ThisHotkey%
+		}
+		else if (keysAreActive = 1 && A_ThisHotkey <> firstKeyDown) {
+			secondKeyDown := A_ThisHotkey
+			keysAreActive++
+			ToolTip, %A_ThisHotkey%
+		}
+		else if (keysAreActive = 2 && A_ThisHotkey <> firstKeyDown && A_ThisHotkey <> secondKeyDown)
+		{
+			thirdKeyDown := A_ThisHotkey
+			keysAreActive++
+			ToolTip,
+		}
+	}
+return
+
+Numpad5 Up::
+Numpad6 Up::
+Numpad8 Up::
+Numpad9 Up::
+	if (keysAreActive = 1)
+	{
+		if (keysWereActive = 0)
+		{
+			ToolTip, %firstKeyDown% %A_ThisHotkey%
+			;: `n%character_code%
+		}
+		else if (keysWereActive = 1)
+		{
+			ToolTip, %firstKeyDown% %secondKeyDown% %firstKeyUp% %A_ThisHotkey%
+			;: `n%character_code%
+		}
+		firstKeyDown :=
+		secondKeyDown :=
+		thirdKeyDown :=
+		firstKeyUp :=
+		keysAreActive := 0
+		keysWereActive := 0
+	}
+	else if (keysAreActive = 2)
+	{
+		firstKeyUp := A_ThisHotkey
+		keysWereActive++
+		keysAreActive--
+	}
+	else if (keysAreActive > 2)
+	{
+		firstKeyDown :=
+		secondKeyDown :=
+		thirdKeyDown :=
+		firstKeyUp :=
+		keysAreActive := 0
+		keysWereActive := 0
+		ToolTip,
+	}
+return
+*/
