@@ -8,6 +8,7 @@ SendLevel, 100
 XInput_Init()
 Menu, tray, Icon, %A_ScriptDir%\wheel_green.ico, ,1
 ;JoystickNumber = 0
+JN := JoystickNumber
 Loop
 {
 	If (JoystickNumber <= 0)
@@ -29,15 +30,33 @@ Loop
 		}
 		If (JoystickNumber <= 0)
 		{
+			JoystickNumber := JN
 			Sleep, 2000
 			;Reload
 			;Return
 		}
 		Else
 		{
-			SoundBeep, 500, 100
-			SoundBeep, 700, 100
-			SoundBeep, 900, 200
+			;SoundBeep, 500, 100
+			;SoundBeep, 700, 100
+			;SoundBeep, 900, 200
+			{
+				RumbleDur *= 10
+				SoundFrequency := 500
+				Loop, 3
+				{
+					If Rumble_Mode = 1
+						XInput_SetState(JoystickNumber-1, 0, 512)
+					Else If Rumble_Mode = 2
+						XInput_SetState(JoystickNumber-1, 512, 0)
+					Else
+						XInput_SetState(JoystickNumber-1, 512, 512)
+					SoundBeep, SoundFrequency, 100
+					SoundFrequency += 200
+					XInput_SetState(JoystickNumber-1, 0, 0)
+					Sleep, 100
+				}
+			}
 			break
 		}
 	}
@@ -45,9 +64,26 @@ Loop
 	{
 		If (State := XInput_GetState(JoystickNumber-1))
 		{
-			SoundBeep, 500, 100
-			SoundBeep, 700, 100
-			SoundBeep, 900, 200
+			;SoundBeep, 500, 100
+			;SoundBeep, 700, 100
+			;SoundBeep, 900, 200
+			{
+				RumbleDur *= 10
+				SoundFrequency := 500
+				Loop, 3
+				{
+					If Rumble_Mode = 1
+						XInput_SetState(JoystickNumber-1, 0, 512)
+					Else If Rumble_Mode = 2
+						XInput_SetState(JoystickNumber-1, 512, 0)
+					Else
+						XInput_SetState(JoystickNumber-1, 512, 512)
+					SoundBeep, SoundFrequency, 100
+					SoundFrequency += 200
+					XInput_SetState(JoystickNumber-1, 0, 0)
+					Sleep, 100
+				}
+			}
 			break
 		}
 		Else
