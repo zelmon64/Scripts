@@ -5,16 +5,19 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 Menu, tray, Icon, %A_ScriptDir%\Kee4_2.ico, ,1
+;KeyHistory
 
 { ; Variables
 	firstKeyDown :=
 	secondKeyDown :=
 	thirdKeyDown :=
 	fourthKeyDown :=
+	opositeKeyDown :=
 	firstKeyUp :=
 	secondKeyUp :=
 	thirdKeyUp :=
 	fourthKeyUp :=
+	opositeKeyUp :=
 	keysAreActive := 0
 	keysWereActive := 0
 	mode := 1
@@ -25,6 +28,7 @@ Menu, tray, Icon, %A_ScriptDir%\Kee4_2.ico, ,1
 	Horizontal := 1
 	daynight := 1 ; 0
 	CableUp := 0 ; 1 ;
+	UseGamepad := 0 ; 1 ;
 }
 
 { ; Kee4 definitions
@@ -75,7 +79,7 @@ Menu, tray, Icon, %A_ScriptDir%\Kee4_2.ico, ,1
 		mode_characters =  %mode_characters% Up, Up,Mod,cRi,End,   , Up,PRE,csR,cEd,
 		mode_characters =  %mode_characters%Lft,Ent,Lft,Del,Cpy,   ,sUD,Lft,cDe,Cut,
 		mode_characters =  %mode_characters%Rit,Pst,BkS,Rit,SAl,   ,sPs,cBS,Rit,sCp,
-		mode_characters =  %mode_characters%Dwn,Hom,cLf,Ins,Dwn,   ,cHo,csL,Esc,Dwn,
+		mode_characters =  %mode_characters%Dwn,Hom,cLf,Ins,Dwn,   ,cHo,csL,ScL,Dwn,
 		ArrayIndex++
 		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
 	}
@@ -90,10 +94,10 @@ Menu, tray, Icon, %A_ScriptDir%\Kee4_2.ico, ,1
 	}
 	{ ; Mouse
 		mode_characters =  %A_Space%,,,,,,,,,
-		mode_characters =  %mode_characters%MLC,MLC,MLD,MX2,End,   ,MLC,MLU,Esc,sPD,
-		mode_characters =  %mode_characters%MRC,MRD,MRC,WDn,Cpy,   ,MRU,MRC,PDn,Pst,
+		mode_characters =  %mode_characters%MLC,MLC,MLD,MX1,End,   ,MLC,MLU,MX2,sPD,
+		mode_characters =  %mode_characters%MRC,MRD,MRC,WDn,Cpy,   ,MRU,MRC,PDn,Cut,
 		mode_characters =  %mode_characters%MMC,MMD,WUp,MMC,WRi,   ,MMU,PUp,MMC,SHF,
-		mode_characters =  %mode_characters%Mod,Hom,MX1,WLf,Mod,   ,sPU,ALT,CTR,Mod,
+		mode_characters =  %mode_characters%Mod,Hom,Pst,WLf,Mod,   ,sPU,ALT,CTR,Mod,
 		ArrayIndex++
 		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
 	}
@@ -107,8 +111,10 @@ SENDCOMMAND(ThisCommand := "")
 		global modePRE
 		global LeftHanded
 		global CableUp
+		global UseGamepad
 		global lastKeyRepeat
 	}
+	;ToolTip, %ThisCommand%
 	if (ThisCommand = "Mod") {
 		if (mode = 4) {
 			mode := 1
@@ -152,6 +158,7 @@ SENDCOMMAND(ThisCommand := "")
 		}
 		else if (mode = 5) {
 			mode := 7
+			modePRE := mode
 		}
 		else if (mode = 7) {
 			mode := 55
@@ -181,7 +188,11 @@ SENDCOMMAND(ThisCommand := "")
 		if (ThisCommand = "SHa") {
 			LeftHanded := !LeftHanded
 		} else if (ThisCommand = "TUD") {
-			CableUp := !CableUp
+			if (UseGamepad) {
+				UseGamepad := 0
+				CableUp := !CableUp
+			} else
+				CableUp := !CableUp
 		} else if (ThisCommand = "ARe") {
 			lastKeyRepeat := !lastKeyRepeat
 		} else if (ThisCommand = "Spc") {
@@ -234,6 +245,8 @@ SENDCOMMAND(ThisCommand := "")
 			SendInput, {Escape}
 		} else if (ThisCommand = "Ins") {
 			SendInput, {Insert}
+		} else if (ThisCommand = "ScL") {
+			SendInput, {ScrolLock}
 		} else if (ThisCommand = "UnD") {
 			SendInput, ^{z}
 		} else if (ThisCommand = "sUD") {
@@ -351,6 +364,9 @@ SENDCOMMAND(ThisCommand := "")
 				SendInput, {Alt Up}
 			else
 				SendInput, {Alt Down}
+		} else if InStr(ThisCommand, "}") {
+			StringReplace , ThisCommand, ThisCommand, %A_Space%,,All
+			Send, {%ThisCommand%}
 		} else if (ThisCommand <> "") {
 			Send, {%ThisCommand%}
 		} else {
@@ -472,6 +488,7 @@ KEYDOWN(thisKey, isLeftHand := 1)
 		global lastKeyRepeat
 		global lastSent
 		global CableUp
+		global UseGamepad
 	}
 	if (thisKey <> firstKeyDown && thisKey <> secondKeyDown && thisKey <> thirdKeyDown && thisKey <> fourthKeyDown)
 	{
@@ -535,7 +552,6 @@ KEYDOWN(thisKey, isLeftHand := 1)
 										|%SubTextI%|`n
 										|%SubTextB%|`n
 										|%SubTextO%|`n
-
 				mode_title := % character_mode_list%ch_mode%
 				If (mode > 10)
 				{
@@ -585,15 +601,15 @@ KEYDOWN(thisKey, isLeftHand := 1)
 											|%SubTextI%|`n
 											|%SubTextB%|`n
 											|%SubTextO%|`n
-
-
 				}
 				if (daynight)
 					colour_text := "00FF00" ; Red FF0000 ; Green 008000 ; Lime 00FF00
 				else
 					colour_text := "FF0000" ; Red FF0000 ; Green 008000 ; Lime 00FF00
 				Kee4Title := "Kee4"
-				if (isLeftHand)
+				if (UseGamepad || isLeftHand = 2)
+					Kee4Title = Gamepad %Kee4Title%
+				else if (isLeftHand)
 					Kee4Title = Left-Hand %Kee4Title%
 				else
 					Kee4Title = Right-Hand %Kee4Title%
@@ -650,6 +666,8 @@ KEYUP(thisKey)
 		global secondKeyUp
 		global thirdKeyUp
 		global fourthKeyUp
+		global opositeKeyDown
+		global opositeKeyUp
 		global keysAreActive
 		global keysWereActive
 		global character_mode_list
@@ -663,6 +681,8 @@ KEYUP(thisKey)
 		; ToolTip, %thisKey% %keysAreActive%`n%firstKeyUp% %secondKeyUp% %thirdKeyUp%
 		if (keysAreActive = 1)
 		{
+			Progress, 1:Off
+	    ;ToolTip,
 			if (keysWereActive < 2){
 				character_code := SubStr(firstKeyDown, 7, 1) * 10
 		    if (keysWereActive = 1)
@@ -677,8 +697,6 @@ KEYUP(thisKey)
 				lastSent := % all_characters%ch_mode%%character_code%
 				SENDCOMMAND(lastSent)
 			}
-			Progress, 1:Off
-	    ToolTip,
 			firstKeyDown :=
 			secondKeyDown :=
 	    thirdKeyDown :=
@@ -687,6 +705,8 @@ KEYUP(thisKey)
 			secondKeyUp :=
 			thirdKeyUp :=
 			fourthKeyUp :=
+			opositeKeyDown :=
+			opositeKeyUp :=
 			keysAreActive := 0
 			keysWereActive := 0
 	  }
@@ -723,6 +743,11 @@ Numpad3::
 Numpad6::
 Numpad9::
 NumpadMult::
+Numpad0::
+Numpad1::
+Numpad4::
+Numpad7::
+NumpadDot::
 	;ToolTip, %A_PriorHotkey% %A_ThisHotkey% %A_TimeSincePriorHotkey% %keysAreActive% %lastSent%
 	;ToolTip, %keysAreActive%
 	if (lastKeyRepeat && keysAreActive = 0 && InStr(A_PriorHotkey, A_ThisHotkey) <> 0 && A_TimeSincePriorHotkey > 0 && (A_TimeSincePriorHotkey < 130 || keysWereActive = -1) && keysWereActive <> -2) {
@@ -745,6 +770,9 @@ NumpadMult::
 		} else if InStr(lastSent, "<") {
 			SENDCOMMAND(">")
 			keysWereActive := -2
+		} else if InStr(lastSent, "TUD") {
+			UseGamepad := !UseGamepad
+			keysWereActive := -2
 		} else if (InStr(lastSent, "Mod") || InStr(lastSent, "Cap") || InStr(lastSent, "Num") || InStr(lastSent, "Nav") || InStr(lastSent, "Fnc")) {
 			SENDCOMMAND(lastSent)
 			keysWereActive := -2
@@ -756,8 +784,68 @@ NumpadMult::
 		}
 	} else if (keysWereActive >= 0) {
 		{ ; Rebind
-			{
-				if (CableUp)
+			if (UseGamepad) {
+				isLeftHand := 0
+				if (A_ThisHotkey = "Numpad5") {
+					B_ThisHotkey := "Numpad1"
+				} else if (A_ThisHotkey = "Numpad6") {
+					B_ThisHotkey := "Numpad2"
+				} else if (A_ThisHotkey = "Numpad8") {
+					B_ThisHotkey := "Numpad3"
+				} else if (A_ThisHotkey = "Numpad9") {
+					B_ThisHotkey := "Numpad4"
+				} else {
+					if firstKeyDown <>
+					{
+						if opositeKeyDown =
+						{
+							if InStr(firstKeyDown, "1") {
+								opositeKeyDown := "Numpad4"
+							} else if InStr(firstKeyDown, "2") {
+								opositeKeyDown := "Numpad3"
+							} else if InStr(firstKeyDown, "3") {
+								opositeKeyDown := "Numpad2"
+							} else if InStr(firstKeyDown, "4") {
+								opositeKeyDown := "Numpad1"
+							}
+						}
+						B_ThisHotkey = %opositeKeyDown%
+					} else
+						B_ThisHotkey :=
+				}
+			} else {
+				if (A_ThisHotkey = "Numpad0") {
+					isLeftHand := 2
+					B_ThisHotkey := "Numpad1"
+				} else if (A_ThisHotkey = "Numpad1") {
+					isLeftHand := 2
+					B_ThisHotkey := "Numpad2"
+				} else if (A_ThisHotkey = "Numpad4") {
+					isLeftHand := 2
+					B_ThisHotkey := "Numpad3"
+				} else if (A_ThisHotkey = "Numpad7") {
+					isLeftHand := 2
+					B_ThisHotkey := "Numpad4"
+				} else if (A_ThisHotkey = "NumpadDot") {
+					isLeftHand := 2
+					if firstKeyDown <>
+					{
+						if opositeKeyDown =
+						{
+							if InStr(firstKeyDown, "1") {
+								opositeKeyDown := "Numpad4"
+							} else if InStr(firstKeyDown, "2") {
+								opositeKeyDown := "Numpad3"
+							} else if InStr(firstKeyDown, "3") {
+								opositeKeyDown := "Numpad2"
+							} else if InStr(firstKeyDown, "4") {
+								opositeKeyDown := "Numpad1"
+							}
+						}
+						B_ThisHotkey = %opositeKeyDown%
+					} else
+						B_ThisHotkey :=
+				} else if (CableUp)
 				{
 					if (A_ThisHotkey = "Numpad2") {
 						isLeftHand := 1
@@ -815,7 +903,8 @@ NumpadMult::
 				}
 			}
 		}
-		KEYDOWN(B_ThisHotkey, isLeftHand)
+		if B_ThisHotkey <>
+			KEYDOWN(B_ThisHotkey, isLeftHand)
 	}
 return
 
@@ -827,9 +916,48 @@ Numpad8 Up::
 Numpad9 Up::
 NumpadMult Up::
 NumpadDiv Up::
+Numpad0 Up::
+Numpad1 Up::
+Numpad4 Up::
+Numpad7 Up::
+NumpadDot Up::
 	{ ; Rebind
-		{
-			if (CableUp)
+		if (UseGamepad) {
+			isLeftHand := 0
+			if (A_ThisHotkey = "Numpad5 Up") {
+				B_ThisHotkey := "Numpad1 Up"
+			} else if (A_ThisHotkey = "Numpad6 Up") {
+				B_ThisHotkey := "Numpad2 Up"
+			} else if (A_ThisHotkey = "Numpad8 Up") {
+				B_ThisHotkey := "Numpad3 Up"
+			} else if (A_ThisHotkey = "Numpad9 Up") {
+				B_ThisHotkey := "Numpad4 Up"
+			} else {
+				if opositeKeyDown <>
+					B_ThisHotkey = %opositeKeyDown% Up
+				else
+					B_ThisHotkey :=
+			}
+		} else {
+			if (A_ThisHotkey = "Numpad0 Up") {
+				isLeftHand := 2
+				B_ThisHotkey := "Numpad1 Up"
+			} else if (A_ThisHotkey = "Numpad1 Up") {
+				isLeftHand := 2
+				B_ThisHotkey := "Numpad2 Up"
+			} else if (A_ThisHotkey = "Numpad4 Up") {
+				isLeftHand := 2
+				B_ThisHotkey := "Numpad3 Up"
+			} else if (A_ThisHotkey = "Numpad7 Up") {
+				isLeftHand := 2
+				B_ThisHotkey := "Numpad4 Up"
+			} else if (A_ThisHotkey = "NumpadDot Up") {
+				isLeftHand := 2
+				if opositeKeyDown <>
+					B_ThisHotkey = %opositeKeyDown% Up
+				else
+					B_ThisHotkey :=
+			} else if (CableUp)
 			{
 				if (A_ThisHotkey = "NumpadMult Up" || A_ThisHotkey = "NumpadDiv Up") {
 					B_ThisHotkey := "Numpad1 Up"
@@ -855,5 +983,6 @@ NumpadDiv Up::
 			}
 		}
 	}
-	KEYUP(B_ThisHotkey)
+	if B_ThisHotkey <>
+		KEYUP(B_ThisHotkey)
 return
