@@ -24,8 +24,11 @@ IconOff := A_ScriptDir . "\Kee4_2y.ico"
 *MButton::
 *XButton1::
 *Escape::
-	if (!InStr("MLC", lastSent) && lastKeyRepeat && keysAreActive = 0 && InStr(A_PriorHotkey, A_ThisHotkey) && A_TimeSincePriorHotkey > 0 && (A_TimeSincePriorHotkey < 130 || keysWereActive = -1) && keysWereActive <> -2) {
-		REPEATKEY(lastSent)
+	if (!InStr("MLC", lastSent) && lastKeyRepeat && keysAreActive = 0 && A_TimeSincePriorHotkey > 0 && (A_TimeSincePriorHotkey < 130 || keysWereActive = -1) && keysWereActive <> -2 && lastSent) {
+		B_PriorHotkey := REBINDKEY(A_PriorHotkey)
+		B_ThisHotkey := REBINDKEY(A_ThisHotkey)
+		if InStr(B_PriorHotkey, B_ThisHotkey)
+			REPEATKEY(lastSent, B_ThisHotkey)
 	} else if (keysWereActive >= 0) {
 		B_ThisHotkey := REBINDKEY(A_ThisHotkey)
 		if B_ThisHotkey <>

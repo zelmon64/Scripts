@@ -35,11 +35,26 @@ WinHide % "ahk_id " DllCall("GetConsoleWindow", "ptr")
 	lastSent :=
 	SentensBuffer :=
 	WordBuffer :=
+	ShiftDown :=
+	ControlDown :=
+	AltDown :=
+	WinDown :=
+	MouseMDown :=
 	MouseGetPos, MouseLastPosX, MouseLastPosY
 	keysAreActive := 0
 	keysWereActive := 0
 	HIDmode := 0
 	HIDopacity := 0
+	if MouseMoveMin =
+		MouseMoveMin := 5 ; 1 ;
+	if MouseMoveX =
+		MouseMoveX := 2 ; 1 ;
+	if MouseMoveY =
+		MouseMoveY := 2 ; 1 ;
+	if MouseWheelX =
+		MouseWheelX := 1
+	if MouseWheelY =
+		MouseWheelY := 1
 	if MouseAutoDetect =
 		MouseAutoDetect := 1 ; 0 ;
 	if lastKeyRepeat =
@@ -85,7 +100,7 @@ WinHide % "ahk_id " DllCall("GetConsoleWindow", "ptr")
 	}
 	{ ; Numbers
 		mode_characters =   %A_Space%,,,,,,,,,
-		mode_characters =  %mode_characters% . , . , 1 , 3 , 9 ,   , . , * , \ , - ,
+		mode_characters =  %mode_characters%Spc,Spc, 1 , 3 , 9 ,   ,Spc, * , \ , - ,
 		mode_characters =  %mode_characters% = , 2 , = , 5 , 7 ,   , + , = , `` , & ,
 		mode_characters =  %mode_characters% @ , 4 , 6 , @ , ^ ,   , / , ~ , @ , # ,
 		mode_characters =  %mode_characters%Mod, 0 , 8 , _ ,Mod,   , `% , | , $ ,Mod,
@@ -94,40 +109,60 @@ WinHide % "ahk_id " DllCall("GetConsoleWindow", "ptr")
 	}
 	{ ; Symbols / Mode Select
 		mode_characters =   %A_Space%,,,,,,,,,
-		mode_characters =  %mode_characters%Cap,Cap,Tab, . , Comma,   ,Cap,sTb, : ,%A_Space%; ,
-		mode_characters =  %mode_characters%Num,Ent,Num,Del, [ ,   ,cEn,Num,ReD, < ,
-		mode_characters =  %mode_characters%Fnc, ? ,BkS,Fnc, ( ,   , ! ,UnD,Fnc, { ,
+		mode_characters =  %mode_characters%Cap,Cap, . ,SHF,scl,   ,Cap,cma,CTR,ALT,
+		mode_characters =  %mode_characters%Num,Ent,Num,Del, [ ,   ,Tab,Num,ReD, < ,
+		mode_characters =  %mode_characters%Fnc, ! ,BkS,Fnc, ( ,   , : ,UnD,Fnc, { ,
 		mode_characters =  %mode_characters%Nav, ' , ] , ) ,Nav,   , " , > , } ,Nav,
 		ArrayIndex++
 		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
-		all_characters%ArrayIndex%14 := " , "
+		all_characters%ArrayIndex%17 := " , "
+		all_characters%ArrayIndex%14 := " `; "
+		if (MouseMoveControl) {
+			all_characters%ArrayIndex%40 := "Mou"
+			all_characters%ArrayIndex%44 := "Mou"
+			all_characters%ArrayIndex%49 := "Mou"
+		}
 	}
 	{ ; Navigation
 		mode_characters =  %A_Space%,,,,,,,,,
-		mode_characters =  %mode_characters% Up, Up,Mod,cRi,End,   , Up,PRE,csR,cEd,
-		mode_characters =  %mode_characters%Lft,Ent,Lft,Del,Cpy,   ,sUD,Lft,cDe,Cut,
-		mode_characters =  %mode_characters%Rit,Pst,BkS,Rit,SAl,   ,sPs,cBS,Rit,sCp,
-		mode_characters =  %mode_characters%Dwn,Hom,cLf,Ins,Dwn,   ,cHo,csL,ScL,Dwn,
+		mode_characters =  %mode_characters% Up, Up,Mod,SHF,End,   , Up,PRE,CTR,ALT,
+		mode_characters =  %mode_characters%Lft,Ent,Lft,Del,Cpy,   ,Tab,Lft,ClT,Pst,
+		mode_characters =  %mode_characters%Rit, F5,BkS,Rit,SAl,   , F6,ClW,Rit,WIN,
+		mode_characters =  %mode_characters%Dwn,Hom,MOU,Ins,Dwn,   ,   ,   ,ScL,Dwn,
 		ArrayIndex++
 		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
 	}
 	{ ; Functions
 		mode_characters =  %A_Space%,,,,,,,,,
 		mode_characters =  %mode_characters%Pau,Pau,Nxt,Fnd,Mnu,   ,Pau,Esc,Rpl,Sav,
-		mode_characters =  %mode_characters%VUp,Prv,VUp,ChW,Mg+,   ,gFS,VUp,ClW,TAp,
-		mode_characters =  %mode_characters%VDn, F3,ChT,VDn,ARe,   ,sF3,ClT,VDn,FuS,
-		mode_characters =  %mode_characters%Mod,aPS,Mg!,TAs,Mod,   ,ScS,TUD,TAc,Mod,
+		mode_characters =  %mode_characters%VUp,Prv,VUp,ScS,Hga,   , F2,VUp,ClW,Kka,
+		mode_characters =  %mode_characters%VDn, F3,ARe,VDn,TAS,   ,F11,TUD,VDn,TAC,
+		mode_characters =  %mode_characters%Mod,PrS,Jap,TAP,Mod,   ,ALT,SHF,CTR,Mod,
 		ArrayIndex++
 		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
 	}
 	{ ; Mouse
 		mode_characters =  %A_Space%,,,,,,,,,
-		mode_characters =  %mode_characters%MLC,MLC,MLD,MX1,End,   ,MLC,MLU,MX2,sPD,
-		mode_characters =  %mode_characters%MMC,MMD,MMC,WDn,Cpy,   ,MMU,MMC,PDn,Cut,
-		mode_characters =  %mode_characters%MRC,MRD,WUp,MRC,WRi,   ,MRU,PUp,MRC,SHF,
-		mode_characters =  %mode_characters%Mod,Hom,Pst,WLf,Mod,   ,sPU,ALT,CTR,Mod,
+		mode_characters =  %mode_characters%MLC,MLC,MLD,MX1,End,   ,MLC,MLU,MX2,PRE,
+		mode_characters =  %mode_characters%MMC,MMD,MMC,WDn,Cpy,   ,MMU,MMC,PDn,Pst,
+		mode_characters =  %mode_characters%MRC,MRD,WUp,MRC,WRi,   ,MRU,PUp,MRC,Mg!,
+		mode_characters =  %mode_characters%Mod,Hom,NAV,WLf,Mod,   ,ALT,SHF,CTR,Mod,
 		ArrayIndex++
 		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
+		if (MouseMoveControl) {
+			all_characters%ArrayIndex%10 := "MPU"
+			all_characters%ArrayIndex%11 := "MPU"
+			all_characters%ArrayIndex%16 := "MPU"
+			all_characters%ArrayIndex%20 := "MPL"
+			all_characters%ArrayIndex%22 := "MPL"
+			all_characters%ArrayIndex%27 := "MPL"
+			all_characters%ArrayIndex%30 := "MPR"
+			all_characters%ArrayIndex%33 := "MPR"
+			all_characters%ArrayIndex%38 := "MPR"
+			all_characters%ArrayIndex%40 := "MPD"
+			all_characters%ArrayIndex%44 := "MPD"
+			all_characters%ArrayIndex%49 := "MPD"
+		}
 	}
 }
 
@@ -278,6 +313,18 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 		global WordList
 		global WordBuffer
 		global lastKeyRepeat
+		global MouseMDown
+		global ShiftDown
+		global ControlDown
+		global AltDown
+		global WinDown
+		global MouseMoveX
+		global MouseMoveY
+		global MouseMoveMin
+		global MouseWheelX
+		global MouseWheelY
+		global keysWereActive
+		global MouseMoveControl
 	}
 	;ToolTip, %ThisCommand%
 	if (ThisCommand = "Mod") {
@@ -316,23 +363,113 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 		else {
 			mode := 33
 		}
-	} else if (ThisCommand = "Nav") {
-		if (mode = 77) {
-			mode := modeDEFAULT
-			modePRE := mode
+	} else if InStr(ThisCommand, "Nav", true) {
+		if (true) { ;MouseMoveControl
+			if (keysWereActive < 0) {
+				if (mode = 4) {
+					mode := modeDEFAULT
+					modePRE := mode
+				} else if (mode = 44) {
+					mode := 4
+					modePRE := mode
+				} else if (mode = 7) {
+					mode := 44
+					modePRE := 5
+				} else if (mode = 5) {
+					mode := 7
+				} else {
+					mode := 5
+				}
+			} else {
+				mode := 5
+			}
+		} else {
+			if (mode = 77) {
+				mode := modeDEFAULT
+				modePRE := mode
+			} else if (mode = 5) {
+				mode := 7
+				modePRE := mode
+			} else if (mode = 7) {
+				mode := 55
+			} else if (mode = 55) {
+				mode := 77
+			} else {
+				mode := 5
+			}
 		}
-		else if (mode = 5) {
-			mode := 7
-			modePRE := mode
+	} else if InStr(ThisCommand, "Mou", true) {
+		if (true) { ;MouseMoveControl
+			if (keysWereActive < 0) {
+				if (mode = 4) {
+					mode := modeDEFAULT
+					modePRE := mode
+				} else if (mode = 44) {
+					mode := 4
+					modePRE := mode
+				} else if (mode = 5) {
+					mode := 44
+					modePRE := 7
+				} else if (mode = 7) {
+					mode := 5
+				} else {
+					mode := 7
+				}
+			} else {
+				mode := 7
+			}
+		} else {
+			if (mode = 77) {
+				mode := modeDEFAULT
+				modePRE := mode
+			} else if (mode = 5) {
+				mode := 7
+				modePRE := mode
+			} else if (mode = 7) {
+				mode := 55
+			} else if (mode = 55) {
+				mode := 77
+			} else {
+				mode := 5
+			}
 		}
-		else if (mode = 7) {
-			mode := 55
-		}
-		else if (mode = 77) {
-			mode := 77
-		}
-		else {
-			mode := 5
+	} else if (InStr(ThisCommand, "NAV", true) || InStr(ThisCommand, "MOU", true)) {
+		if (true) { ;MouseMoveControl
+			if (keysWereActive < 0) {
+				if (mode = 44) {
+					mode := 4
+					modePRE := mode
+				} else if (mode = 7) {
+					mode := 44
+					modePRE := 5
+				} else if (mode = 5) {
+					mode := 44
+					modePRE := 7
+				} else {
+					mode := modeDEFAULT
+					modePRE := mode
+				}
+			} else {
+				if (mode = 5) {
+					mode := 7
+				} else {
+					mode := 5
+				}
+			}
+		} else {
+			if (mode = 77) {
+				mode := modeDEFAULT
+				modePRE := mode
+			} else if (mode = 5) {
+				mode := 7
+				modePRE := mode
+			} else if (mode = 7) {
+				mode := 55
+			} else if (mode = 55) {
+				mode := 77
+			} else {
+				mode := 5
+			}
 		}
 	} else if (ThisCommand = "Fnc") {
 		if (mode = 6 || modePRE = 6) {
@@ -347,7 +484,12 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 			mode := 66
 		}
 	} else if (ThisCommand = "PRE") {
-		mode := modePRE
+		if (modePRE = 7) || (modePRE = 5) {
+			mode := modeDEFAULT
+			modePRE := mode
+		} else {
+			mode := modePRE
+		}
 	} else
 	{
 		ForceNewWord := 1
@@ -365,22 +507,12 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 			SendInput, {BackSpace}
 			ADDCHARACTERS(-1, predict)
 			ForceNewWord := 0
-		} else if (ThisCommand = "cBS") {
-			SendInput, ^{BackSpace}
 		} else if (ThisCommand = "Del") {
 			SendInput, {Delete}
-		} else if (ThisCommand = "cDe") {
-			SendInput, ^{Delete}
 		} else if (ThisCommand = "Ent") {
 			SendInput, {Enter}
 		} else if (ThisCommand = "Tab") {
 			SendInput, {Tab}
-		} else if (ThisCommand = "sEn") {
-			SendInput, +{Enter}
-		} else if (ThisCommand = "cEn") {
-			SendInput, ^{Enter}
-		} else if (ThisCommand = "sTb") {
-			SendInput, +{Tab}
 		} else if (ThisCommand = "Rit") {
 			SendInput, {Right}
 		} else if (ThisCommand = "Lft") {
@@ -389,26 +521,10 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 			SendInput, {Up}
 		} else if (ThisCommand = "Dwn") {
 			SendInput, {Down}
-		} else if (ThisCommand = "cRi") {
-			SendInput, ^{Right}
-		} else if (ThisCommand = "cLf") {
-			SendInput, ^{Left}
-		} else if (ThisCommand = "cUp") {
-			SendInput, ^{Up}
-		} else if (ThisCommand = "cDn") {
-			SendInput, ^{Down}
-		} else if (ThisCommand = "csR") {
-			SendInput, ^+{Right}
-		} else if (ThisCommand = "csL") {
-			SendInput, ^+{Left}
 		} else if (ThisCommand = "Hom") {
 			SendInput, {Home}
 		} else if (ThisCommand = "End") {
 			SendInput, {End}
-		} else if (ThisCommand = "cHo") {
-			SendInput, ^{Home}
-		} else if (ThisCommand = "cEd") {
-			SendInput, ^{End}
 		} else if (ThisCommand = "Esc") {
 			SendInput, {Escape}
 		} else if (ThisCommand = "Ins") {
@@ -417,8 +533,6 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 			SendInput, {ScrolLock}
 		} else if (ThisCommand = "UnD") {
 			SendInput, ^{z}
-		} else if (ThisCommand = "sUD") {
-			SendInput, ^+{z}
 		} else if (ThisCommand = "ReD") {
 			SendInput, ^{y}
 		} else if (ThisCommand = "SAl") {
@@ -437,10 +551,6 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 			SendInput, ^{f}
 		} else if (ThisCommand = "Rpl") {
 			SendInput, ^{h}
-		} else if (ThisCommand = "F3") {
-			SendInput, {F3}
-		} else if (ThisCommand = "sF3") {
-			SendInput, +{F3}
 		} else if (ThisCommand = "Sav") {
 			SendInput, ^{s}
 		} else if (ThisCommand = "Mnu") {
@@ -463,6 +573,8 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 			SendInput, ^{w}
 		} else if (ThisCommand = "ClW") {
 			SendInput, !{F4}
+		} else if (ThisCommand = "#X") {
+			SendInput, #{x}
 		} else if (ThisCommand = "FuS") {
 			SendInput, {F11}
 		} else if (ThisCommand = "gFS") {
@@ -471,6 +583,12 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 			SendInput, {PrintScreen}
 		} else if (ThisCommand = "aPS") {
 			SendInput, !{PrintScreen}
+		} else if (ThisCommand = "Jap") {
+			SendInput, {Alt Down}{``}{Alt Up}
+		} else if (ThisCommand = "Hga") {
+			SendInput, {Control Down}{CapsLock}{Control Up}
+		} else if (ThisCommand = "Kka") {
+			SendInput, {Alt Down}{CapsLock}{Alt Up}
 		} else if (ThisCommand = "ScS") {
 			Run, C:\Windows\System32\scrnsave.scr /s
 		} else if (ThisCommand = "Pau") {
@@ -483,11 +601,11 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 			SendInput, {Volume_Up}
 		} else if (ThisCommand = "VDn") {
 			SendInput, {Volume_Down}
-		} else if (ThisCommand = "TAs") {
+		} else if (ThisCommand = "TAS") {
 			SendInput, !{c}
-		} else if (ThisCommand = "TAp") {
+		} else if (ThisCommand = "TAP") {
 			SendInput, !{z}
-		} else if (ThisCommand = "TAc") {
+		} else if (ThisCommand = "TAC") {
 			SendInput, !{x}
 		} else if (ThisCommand = "MLC") {
 			MouseClick, Left,,, 1, 0
@@ -505,37 +623,64 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 			MouseClick, Middle,,, 1, 0
 		} else if (ThisCommand = "MMU") {
 			MouseClick, Middle,,, 1, 0, U
+			MouseMDown := 0
 		} else if (ThisCommand = "MMD") {
 			MouseClick, Middle,,, 1, 0, D
+			MouseMDown := 1
 		} else if (ThisCommand = "MX1") {
 			MouseClick, X1,,, 1, 0
 		} else if (ThisCommand = "MX2") {
 			MouseClick, X2,,, 1, 0
+		} else if (ThisCommand = "MPU") {
+			if (keysWereActive >= 0)
+				MouseMoveY := MouseMoveMin
+			MouseMove, 0, -MouseMoveY, 0, R
+		} else if (ThisCommand = "MPD") {
+			if (keysWereActive >= 0)
+				MouseMoveY := MouseMoveMin
+			MouseMove, 0, MouseMoveY, 0, R
+		} else if (ThisCommand = "MPL") {
+			if (keysWereActive >= 0)
+				MouseMoveX := MouseMoveMin
+			MouseMove, -MouseMoveX, 0, 0, R
+		} else if (ThisCommand = "MPR") {
+			if (keysWereActive >= 0)
+				MouseMoveX := MouseMoveMin
+			MouseMove, MouseMoveX, 0, 0, R
 		} else if (ThisCommand = "WUp") {
-			SendInput, {WheelUp}
+			if (keysWereActive >= 0)
+				MouseWheelY := 1
+			SendInput, {WheelUp %MouseWheelY%}
+			if (keysWereActive >= 0)
+				MouseWheelY--
 		} else if (ThisCommand = "WDn") {
-			SendInput, {WheelDown}
+			if (keysWereActive >= 0)
+				MouseWheelY := 1
+			SendInput, {WheelDown %MouseWheelY%}
+			if (keysWereActive >= 0)
+				MouseWheelY--
 		} else if (ThisCommand = "WLf") {
-			SendInput, {WheelLeft}
+			if (keysWereActive >= 0)
+				MouseWheelX := 1
+			SendInput, {WheelLeft %MouseWheelX%}
+			if (keysWereActive >= 0)
+				MouseWheelX--
 		} else if (ThisCommand = "WRi") {
-			SendInput, {WheelRight}
+			if (keysWereActive >= 0)
+				MouseWheelX := 1
+			SendInput, {WheelRight %MouseWheelX%}
+			if (keysWereActive >= 0)
+				MouseWheelX--
 		} else if (ThisCommand = "SHF") {
-			if GetKeystate("Shift")
-				SendInput, {Shift Up}
-			else
-				SendInput, {Shift Down}
+			TOGGLEMODKEY("Shift")
 		} else if (ThisCommand = "CTR") {
-			if GetKeystate("Control")
-				SendInput, {Control Up}
-			else
-				SendInput, {Control Down}
+			TOGGLEMODKEY("Control")
 		} else if (ThisCommand = "ALT") {
-			if GetKeystate("Alt")
-				SendInput, {Alt Up}
-			else
-				SendInput, {Alt Down}
+			TOGGLEMODKEY("Alt")
+		} else if (ThisCommand = "WIN") {
+			TOGGLEMODKEY("LWin")
 		} else if InStr(ThisCommand, "}") {
-			StringReplace , ThisCommand, ThisCommand, %A_Space%,,All
+			ThisCommand := StrReplace(ThisCommand, A_Space)
 			Send, {%ThisCommand%}
 		} else if (ThisCommand <> "") {
 			ThisCommand := StrReplace(ThisCommand, A_Space)
@@ -555,10 +700,33 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 			mode := modeDEFAULT
 		}
 		if (mode > 10) {
-			mode := modePRE
+			if (modePRE = 7) || (modePRE = 5) {
+				modeTMP := mode
+				mode := modePRE
+				modePRE := modeTMP
+			} else {
+				mode := modePRE
+			}
 		}
 		if (ForceNewWord) {
 			CLEARCHARACTERS()
+		}
+		if !InStr("SHF CTR ALT WIN", ThisCommand) {
+			if (ShiftDown = 1) {
+				RELEASEKEYS("Shift")
+				;ShiftDown := 0
+				;SoundBeep, 700, 100
+				;SoundBeep, 500, 100
+			}
+			if (ControlDown = 1) {
+				RELEASEKEYS("Control")
+			}
+			if (AltDown = 1) {
+				RELEASEKEYS("Alt")
+			}
+			if (WinDown = 1) {
+				RELEASEKEYS("Win")
+			}
 		}
 	}
 	ch_mode := mod(mode, 10)
@@ -572,18 +740,102 @@ CLEARCHARACTERS()
 	SentensBuffer :=
 	WordBuffer :=
 	WordList :=
-	ToolTip,
+	; ToolTip,
 	Gui, ListBoxGui: Destroy
 }
 
-RELEASEKEYS()
+RELEASEKEYS(KeyList := "")
 { ; Release any held keys
-	KeyList := "Shift|Control|Alt|LWin|RWin|LControl|RControl|LShift|RShift|LAlt|RAlt|LButton|RButton|MButton|XButton1|XButton2"
+	{ ; global
+		global ShiftDown
+		global ControlDown
+		global AltDown
+		global WinDown
+		global MouseMDown
+	}
+
+	SomeWhereDown := 0
+	if (KeyList = "") {
+		KeyList := "Shift|Control|Alt|LWin|RWin|LControl|RControl|LShift|RShift|LAlt|RAlt|CapsLock|LButton|RButton|MButton|XButton1|XButton2"
+		if MouseMDown {
+			MouseClick, Middle,,, 1, 0, U
+			MouseMDown := 0
+		}
+	} else if InStr(KeyList, "Shift") {
+		if ShiftDown {
+			Send, {Shift Up}
+			ShiftDown := 0
+			SomeWhereDown := 1
+		}
+		KeyList := KeyList . "|LShift|RShift"
+	} else if InStr(KeyList, "Control") {
+		if ControlDown {
+			Send, {Control Up}
+			ControlDown := 0
+			SomeWhereDown := 1
+		}
+		KeyList := KeyList . "|LControl|RControl"
+	} else if InStr(KeyList, "Alt") {
+		if AltDown {
+			Send, {Alt Up}
+			AltDown := 0
+			SomeWhereDown := 1
+		}
+		KeyList := KeyList . "|LAlt|RAlt"
+	} else if InStr(KeyList, "Win") {
+		if WinDown {
+			Send, {LWin Up}
+			WinDown := 0
+			SomeWhereDown := 1
+		}
+		KeyList := "LWin|RWin"
+	}
 	Loop, Parse, KeyList, |
 	{
-			If GetKeystate(A_Loopfield)
-					Send % "{" A_Loopfield " Up}"
+		if GetKeystate(A_Loopfield) {
+			/*
+			If InStr(A_Loopfield, "Button") {
+				If InStr(A_Loopfield, "L") {
+					MouseClick, Left,,, 1, 0, U
+				} Else If InStr(A_Loopfield, "R") {
+					MouseClick, Right,,, 1, 0, U
+				} Else If InStr(A_Loopfield, "M") {
+					MouseClick, Middle,,, 1, 0, U
+				} Else If InStr(A_Loopfield, "1") {
+					MouseClick, X1,,, 1, 0, U
+				} Else If InStr(A_Loopfield, "2") {
+					MouseClick, X2,,, 1, 0, U
+				}
+			} Else {
+			*/
+				Send % "{" A_Loopfield " Up}"
+				SomeWhereDown := 1
+			;}
+		}
 	}
+	Return SomeWhereDown
+}
+
+TOGGLEMODKEY(ModKey := "")
+{
+	global ShiftDown
+	global ControlDown
+	global AltDown
+	global WinDown
+	if (ModKey = "")
+		Return
+	if !RELEASEKEYS(ModKey) {
+			Send % "{" ModKey " Down}"
+			if InStr(ModKey, "Shift") {
+				ShiftDown := 1
+			} else if InStr(ModKey, "Control") {
+				ControlDown := 1
+			} else if InStr(ModKey, "Alt") {
+				AltDown := 1
+			} else if InStr(ModKey, "Win") {
+				WinDown := 1
+			}
+		}
 }
 
 ADDCHARACTERS(Character := "", predict := 0)
@@ -1076,7 +1328,7 @@ KEYUP(thisKey)
 	}
 }
 
-REPEATKEY(lastSent := "")
+REPEATKEY(ByRef lastSent := "", ThisHotkey := "")
 {
 	{ ; Global Variables
 		global keysWereActive
@@ -1085,13 +1337,34 @@ REPEATKEY(lastSent := "")
 		global modePRE
 		global ch_mode
 		global UsePresage
+		global ShiftDown
+		global ControlDown
+		global AltDown
+		global WinDown
+		global MouseMoveX
+		global MouseMoveY
+		global MouseWheelX
+		global MouseWheelY
 	}
 	if (lastSent = "Spc") {
 		SENDCOMMAND("BkS")
 		SENDCOMMAND(".")
-		SENDCOMMAND("Spc")
-		mode := 22
-		ch_mode := 2
+		if (ch_mode <> 3) {
+			SENDCOMMAND("Spc")
+			mode := 22
+			ch_mode := 2
+		}
+		lastSent :=
+		keysWereActive := -2
+	} else if InStr(lastSent, ";") {
+		SENDCOMMAND("BkS")
+		SENDCOMMAND(":")
+		lastSent :=
+		keysWereActive := -2
+	} else if (lastSent = "!") {
+		SENDCOMMAND("BkS")
+		SENDCOMMAND("?")
+		lastSent :=
 		keysWereActive := -2
 	} else if InStr(lastSent, "(") {
 		SENDCOMMAND(")")
@@ -1112,28 +1385,79 @@ REPEATKEY(lastSent := "")
 	} else if InStr(lastSent, "Pau") {
 		SendInput, {Volume_Mute}
 		keysWereActive := -2
+	} else if InStr(lastSent, "Jap") {
+		SendInput, {Alt Down}{Shift}{Alt Up}
+		keysWereActive := -2
+	} else if InStr(lastSent, "Mg!") {
+		keysWereActive := -2
+		lastSent := "Mg+"
+		SENDCOMMAND(lastSent)
+	} else if InStr(lastSent, "Cpy") {
+		keysWereActive := -2
+		lastSent :=
+		SENDCOMMAND("Cut")
+	} else if InStr(lastSent, "Pst") {
+		keysWereActive := -2
+		lastSent :=
+		SENDCOMMAND("UnD")
+		SENDCOMMAND("Cpy")
+		SENDCOMMAND("ReD")
 	} else if (InStr(lastSent, "Mod") || InStr(lastSent, "Cap") || InStr(lastSent, "Num") || InStr(lastSent, "Nav") || InStr(lastSent, "Fnc")) {
+		keysWereActive := -2
+		SENDCOMMAND(lastSent)
+	} else if InStr(lastSent, "SHF") {
+		if (ShiftDown = 1)
+			ShiftDown := 2
+		keysWereActive := -2
+	} else if InStr(lastSent, "CTR") {
+		if (ControlDown = 1)
+			ControlDown := 2
+		keysWereActive := -2
+	} else if InStr(lastSent, "ALT") {
+		if (AltDown = 1)
+			AltDown := 2
+		keysWereActive := -2
+	} else if InStr(lastSent, "WIN") {
+		if (WinDown = 1)
+			WinDown := 2
+		keysWereActive := -2
+	} else if (SubStr(lastSent, 1, 1) . SubStr(lastSent, 3, 1) = "MD" && InStr("LRM", SubStr(lastSent, 2, 1))) {
+		;lastSent := StrReplace(lastSent, "D", "U")
+		lastSent := SubStr(lastSent, 1, 1) . SubStr(lastSent, 2, 1) . "U"
+		;ToolTip, % lastSent
 		SENDCOMMAND(lastSent)
 		keysWereActive := -2
-	} else if (InStr(lastSent, "SHF") || InStr(lastSent, "CTR") || InStr(lastSent, "ALT")) {
+	} else if (SubStr(lastSent, 1, 1) . SubStr(lastSent, 3, 1) = "MU" && InStr("LRM", SubStr(lastSent, 2, 1))) {
+		;ToolTip, % ThisHotkey
+		if ((InStr("L", SubStr(lastSent, 2, 1)) && InStr(ThisHotkey, "1"))
+			|| (InStr("M", SubStr(lastSent, 2, 1)) && InStr(ThisHotkey, "2"))
+			|| (InStr("R", SubStr(lastSent, 2, 1)) && InStr(ThisHotkey, "3"))) {
+			;lastSent := StrReplace(lastSent, "U", "C")
+			lastSent := SubStr(lastSent, 1, 1) . SubStr(lastSent, 2, 1) . "C"
+			SENDCOMMAND(lastSent)
+		} else {
+			;SENDCOMMAND(StrReplace(lastSent, "U", "D"))
+			SENDCOMMAND(SubStr(lastSent, 1, 1) . SubStr(lastSent, 2, 1) . "D")
+			lastSent :=
+		}
 		keysWereActive := -2
-	/*
-	} else if (InStr("0123456789", StrReplace(lastSent, A_Space)) && WordList && UsePresage) {
-		;SendInput, {BackSpace}
-		ListOfWords := StrSplit(WordList, ",", "( ')`n`r")
-		OneWord := ListOfWords[2]
-		SelecetedNumber := StrReplace(lastSent, A_Space)
-		SelectedWord := SubStr(StrSplit(WordList, ",", "( ')`n`r")[SelecetedNumber], StrLen(WordBuffer) + 1) . A_Space
-		ToolTip, SelectedWord: `"%SelectedWord%`" was selected.
-		;SENDCOMMAND(SelectedWord, true)
-		SendInput, {BackSpace}%SelectedWord%
-		ADDCHARACTERS(SelectedWord, true)
-		;ADDCHARACTERS(SelectedWord)
+	} else if (SubStr(lastSent, 1, 1) . SubStr(lastSent, 3, 1) = "MC" && InStr("LRM", SubStr(lastSent, 2, 1))) {
+		SENDCOMMAND(lastSent)
 		keysWereActive := -2
-		*/
 	} else {
-		SENDCOMMAND(lastSent)
+		if (keysWereActive = 0) {
+			if ((lastSent = "MPU") || (lastSent = "MPD")) {
+				MouseMoveY += MouseMoveY
+			} else if ((lastSent = "MPL") || (lastSent = "MPR")) {
+				MouseMoveX += MouseMoveX
+			} else if ((lastSent = "WUp") || (lastSent = "WDn")) {
+				MouseWheelY++
+			} else if ((lastSent = "WLf") || (lastSent = "WRi")) {
+				MouseWheelX++
+			}
+		}
 		keysWereActive := -1
+		SENDCOMMAND(lastSent)
 	}
 }
 
@@ -1188,19 +1512,19 @@ REBINDKEY(ThisHotkey := "")
 			ch_mode := mode
 			modePRE := mode
 		}
-		if InStr(ThisHotkey, "Numpad0") {
+		if (InStr(ThisHotkey, "Numpad0") || InStr(ThisHotkey, "NumpadIns")) {
 			isLeftHand := 2
 			B_ThisHotkey := "Numpad1"
-		} else if InStr(ThisHotkey, "Numpad1") {
+		} else if (InStr(ThisHotkey, "Numpad1") || InStr(ThisHotkey, "NumpadEnd")) {
 			isLeftHand := 2
 			B_ThisHotkey := "Numpad2"
-		} else if InStr(ThisHotkey, "Numpad4") {
+		} else if (InStr(ThisHotkey, "Numpad4") || InStr(ThisHotkey, "NumpadLeft")) {
 			isLeftHand := 2
 			B_ThisHotkey := "Numpad3"
-		} else if InStr(ThisHotkey, "Numpad7") {
+		} else if (InStr(ThisHotkey, "Numpad7") || InStr(ThisHotkey, "NumpadHome")) {
 			isLeftHand := 2
 			B_ThisHotkey := "Numpad4"
-		} else if InStr(ThisHotkey, "NumpadDot") {
+		} else if (InStr(ThisHotkey, "NumpadDot") || InStr(ThisHotkey, "NumpadDel")) {
 			isLeftHand := 2
 			if firstKeyDown <>
 			{
@@ -1233,13 +1557,13 @@ REBINDKEY(ThisHotkey := "")
 			B_ThisHotkey := "Numpad4"
 		} else if (CableUp)
 		{
-			if InStr(ThisHotkey, "Numpad2") {
+			if (InStr(ThisHotkey, "Numpad2") || InStr(ThisHotkey, "NumpadDown")) {
 				isLeftHand := 1
 				B_ThisHotkey := "Numpad4"
-			} else if InStr(ThisHotkey, "Numpad5") {
+			} else if (InStr(ThisHotkey, "Numpad5") || InStr(ThisHotkey, "NumpadClear")) {
 				isLeftHand := 1
 				B_ThisHotkey := "Numpad3"
-			} else if InStr(ThisHotkey, "Numpad8") {
+			} else if (InStr(ThisHotkey, "Numpad8") || InStr(ThisHotkey, "NumpadUp")) {
 				isLeftHand := 1
 				B_ThisHotkey := "Numpad2"
 			} else if InStr(ThisHotkey, "NumpadDiv") {
@@ -1248,26 +1572,26 @@ REBINDKEY(ThisHotkey := "")
 			} else if InStr(ThisHotkey, "NumpadMult") {
 				isLeftHand := 0
 				B_ThisHotkey := "Numpad1"
-			} else if InStr(ThisHotkey, "Numpad9") {
+			} else if (InStr(ThisHotkey, "Numpad9") || InStr(ThisHotkey, "NumpadPgUp")) {
 				isLeftHand := 0
 				B_ThisHotkey := "Numpad2"
-			} else if InStr(ThisHotkey, "Numpad6") {
+			} else if (InStr(ThisHotkey, "Numpad6") || InStr(ThisHotkey, "NumpadRight")) {
 				isLeftHand := 0
 				B_ThisHotkey := "Numpad3"
-			} else if InStr(ThisHotkey, "Numpad3") {
+			} else if (InStr(ThisHotkey, "Numpad3") || InStr(ThisHotkey, "NumpadPgDn")) {
 				isLeftHand := 0
 				B_ThisHotkey := "Numpad4"
 			}
 		}
 		else
 		{
-			if InStr(ThisHotkey, "Numpad2") {
+			if (InStr(ThisHotkey, "Numpad2") || InStr(ThisHotkey, "NumpadDown")) {
 				isLeftHand := 0
 				B_ThisHotkey := "Numpad1"
-			} else if InStr(ThisHotkey, "Numpad5") {
+			} else if (InStr(ThisHotkey, "Numpad5") || InStr(ThisHotkey, "NumpadClear")) {
 				isLeftHand := 0
 				B_ThisHotkey := "Numpad2"
-			} else if InStr(ThisHotkey, "Numpad8") {
+			} else if (InStr(ThisHotkey, "Numpad8") || InStr(ThisHotkey, "NumpadUp")) {
 				isLeftHand := 0
 				B_ThisHotkey := "Numpad3"
 			} else if InStr(ThisHotkey, "NumpadDiv") {
@@ -1276,18 +1600,18 @@ REBINDKEY(ThisHotkey := "")
 			} else if InStr(ThisHotkey, "NumpadMult") {
 				isLeftHand := 1
 				B_ThisHotkey := "Numpad4"
-			} else if InStr(ThisHotkey, "Numpad9") {
+			} else if (InStr(ThisHotkey, "Numpad9") || InStr(ThisHotkey, "NumpadPgUp")) {
 				isLeftHand := 1
 				B_ThisHotkey := "Numpad3"
-			} else if InStr(ThisHotkey, "Numpad6") {
+			} else if (InStr(ThisHotkey, "Numpad6") || InStr(ThisHotkey, "NumpadRight")) {
 				isLeftHand := 1
 				B_ThisHotkey := "Numpad2"
-			} else if InStr(ThisHotkey, "Numpad3") {
+			} else if (InStr(ThisHotkey, "Numpad3") || InStr(ThisHotkey, "NumpadPgDn")) {
 				isLeftHand := 1
 				B_ThisHotkey := "Numpad1"
 			}
 		}
-	} if InStr(ThisHotkey, "Up") {
+	} if InStr(ThisHotkey, " Up") {
 		B_ThisHotkey := B_ThisHotkey . " Up"
 	}
 	Return B_ThisHotkey
