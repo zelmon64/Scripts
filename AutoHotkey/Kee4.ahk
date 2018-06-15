@@ -45,12 +45,16 @@ WinHide % "ahk_id " DllCall("GetConsoleWindow", "ptr")
 	keysWereActive := 0
 	HIDmode := 0
 	HIDopacity := 0
+	if RepeatMin =
+		RepeatMin := 1 ; 5 ;
+	if RepeatRate =
+		RepeatRate := RepeatMin ; 1 ;
 	if MouseMoveMin =
 		MouseMoveMin := 5 ; 1 ;
 	if MouseMoveX =
-		MouseMoveX := 2 ; 1 ;
+		MouseMoveX := 0 ; 2 ; 1 ;
 	if MouseMoveY =
-		MouseMoveY := 2 ; 1 ;
+		MouseMoveY := 0 ; 2 ; 1 ;
 	if MouseWheelX =
 		MouseWheelX := 1
 	if MouseWheelY =
@@ -325,6 +329,8 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 		global MouseWheelY
 		global keysWereActive
 		global MouseMoveControl
+		global RepeatRate
+		global RepeatMin
 	}
 	;ToolTip, %ThisCommand%
 	if (ThisCommand = "Mod") {
@@ -514,13 +520,29 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 		} else if (ThisCommand = "Tab") {
 			SendInput, {Tab}
 		} else if (ThisCommand = "Rit") {
-			SendInput, {Right}
+			if (keysWereActive >= 0)
+				RepeatRate := RepeatMin
+			SendInput, {Right %RepeatRate%}
+			if (keysWereActive >= 0)
+				RepeatRate--
 		} else if (ThisCommand = "Lft") {
-			SendInput, {Left}
-		} else if (ThisCommand = "Up") {
-			SendInput, {Up}
+			if (keysWereActive >= 0)
+				RepeatRate := RepeatMin
+			SendInput, {Left %RepeatRate%}
+			if (keysWereActive >= 0)
+				RepeatRate--
+		} else if (ThisCommand = " Up") {
+			if (keysWereActive >= 0)
+				RepeatRate := RepeatMin
+			SendInput, {Up %RepeatRate%}
+			if (keysWereActive >= 0)
+				RepeatRate--
 		} else if (ThisCommand = "Dwn") {
-			SendInput, {Down}
+			if (keysWereActive >= 0)
+				RepeatRate := RepeatMin
+			SendInput, {Down %RepeatRate%}
+			if (keysWereActive >= 0)
+				RepeatRate--
 		} else if (ThisCommand = "Hom") {
 			SendInput, {Home}
 		} else if (ThisCommand = "End") {
@@ -632,21 +654,37 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 		} else if (ThisCommand = "MX2") {
 			MouseClick, X2,,, 1, 0
 		} else if (ThisCommand = "MPU") {
+			if (keysWereActive >= 0 || MouseMoveY = 0)
+				MouseMoveY := -MouseMoveMin
 			if (keysWereActive >= 0)
-				MouseMoveY := MouseMoveMin
-			MouseMove, 0, -MouseMoveY, 0, R
+				MouseMoveX := 0
+			MouseMove, MouseMoveX, MouseMoveY, 0, R
+			if (keysWereActive >= 0)
+				MouseMoveY := 0
 		} else if (ThisCommand = "MPD") {
-			if (keysWereActive >= 0)
+			if (keysWereActive >= 0 || MouseMoveY = 0)
 				MouseMoveY := MouseMoveMin
-			MouseMove, 0, MouseMoveY, 0, R
+			if (keysWereActive >= 0)
+				MouseMoveX := 0
+			MouseMove, MouseMoveX, MouseMoveY, 0, R
+			if (keysWereActive >= 0)
+				MouseMoveY := 0
 		} else if (ThisCommand = "MPL") {
+			if (keysWereActive >= 0 || MouseMoveX = 0)
+				MouseMoveX := -MouseMoveMin
 			if (keysWereActive >= 0)
-				MouseMoveX := MouseMoveMin
-			MouseMove, -MouseMoveX, 0, 0, R
+				MouseMoveY := 0
+			MouseMove, MouseMoveX, MouseMoveY, 0, R
+			if (keysWereActive >= 0)
+				MouseMoveX := 0
 		} else if (ThisCommand = "MPR") {
-			if (keysWereActive >= 0)
+			if (keysWereActive >= 0 || MouseMoveX = 0)
 				MouseMoveX := MouseMoveMin
-			MouseMove, MouseMoveX, 0, 0, R
+			if (keysWereActive >= 0)
+				MouseMoveY := 0
+			MouseMove, MouseMoveX, MouseMoveY, 0, R
+			if (keysWereActive >= 0)
+				MouseMoveX := 0
 		} else if (ThisCommand = "WUp") {
 			if (keysWereActive >= 0)
 				MouseWheelY := 1
@@ -954,6 +992,7 @@ PRESAGE(SentensBuffer := "")
 HUD(ByRef SubTextT, ByRef SubTextB, index := 1, ch_mode := 1, ByRef SubTextI := "", ByRef SubTextO := "", isLeftHand := 1)
 {
 	global all_characters
+	SubTextOtmp = %SubTextO%+-----------------+
 	LeftHanded := isLeftHand = 1
 	{
 		option_index := index * 10
@@ -977,51 +1016,51 @@ HUD(ByRef SubTextT, ByRef SubTextB, index := 1, ch_mode := 1, ByRef SubTextI := 
 	{
 		if (index = 1) {
 			if (LeftHanded) {
-				SubTextT = %SubTextT%| %option4% %option3% %option2%/%option1%/|
-				SubTextB = %SubTextB%| %option9% %option8% %option7%/%option6%/|
-				SubTextI = %SubTextI%|            \   \|
-				SubTextO = %SubTextO%+-----------------+
+				SubTextT = %SubTextT%| %option4% %option3% %option2% %option1% |
+				SubTextB = %SubTextB%| %option9% %option8% %option7% %option6% |
+				SubTextI = %SubTextI%|              %index%  |
+				SubTextO = %SubTextO%+--------------%index%--+
 			} else {
-				SubTextT = %SubTextT%|\%option1%\%option2% %option3% %option4% |
-				SubTextB = %SubTextB%|\%option6%\%option7% %option8% %option9% |
-				SubTextI = %SubTextI%|/   /            |
-				SubTextO = %SubTextO%+-----------------+
+				SubTextT = %SubTextT%| %option1% %option2% %option3% %option4% |
+				SubTextB = %SubTextB%| %option6% %option7% %option8% %option9% |
+				SubTextI = %SubTextI%|  %index%              |
+				SubTextO = %SubTextO%+--%index%--------------+
 			}
 		} else if (index = 2) {
 			if (LeftHanded) {
-				SubTextT = %SubTextT%| %option4% %option3%/%option2%/%option1% |
-				SubTextB = %SubTextB%| %option9% %option8%/%option7%/%option6% |
-				SubTextI = %SubTextI%|        \   \    |
-				SubTextO = %SubTextO%+-----------------+
+				SubTextT = %SubTextT%| %option4% %option3% %option2% %option1% |
+				SubTextB = %SubTextB%| %option9% %option8% %option7% %option6% |
+				SubTextI = %SubTextI%|          %index%      |
+				SubTextO = %SubTextO%+----------%index%------+
 			} else {
-				SubTextT = %SubTextT%| %option1%\%option2%\%option3% %option4% |
-				SubTextB = %SubTextB%| %option6%\%option7%\%option8% %option9% |
-				SubTextI = %SubTextI%|    /   /        |
-				SubTextO = %SubTextO%+-----------------+
+				SubTextT = %SubTextT%| %option1% %option2% %option3% %option4% |
+				SubTextB = %SubTextB%| %option6% %option7% %option8% %option9% |
+				SubTextI = %SubTextI%|      %index%          |
+				SubTextO = %SubTextO%+------%index%----------+
 			}
 		} else if (index = 3) {
 			if (LeftHanded) {
-				SubTextT = %SubTextT%| %option4%\%option3%\%option2% %option1% |
-				SubTextB = %SubTextB%| %option9%\%option8%\%option7% %option6% |
-				SubTextI = %SubTextI%|    /   /        |
-				SubTextO = %SubTextO%+-----------------+
+				SubTextT = %SubTextT%| %option4% %option3% %option2% %option1% |
+				SubTextB = %SubTextB%| %option9% %option8% %option7% %option6% |
+				SubTextI = %SubTextI%|      %index%          |
+				SubTextO = %SubTextO%+------%index%----------+
 			} else {
-				SubTextT = %SubTextT%| %option1% %option2%/%option3%/%option4% |
-				SubTextB = %SubTextB%| %option6% %option7%/%option8%/%option9% |
-				SubTextI = %SubTextI%|        \   \    |
-				SubTextO = %SubTextO%+-----------------+
+				SubTextT = %SubTextT%| %option1% %option2% %option3% %option4% |
+				SubTextB = %SubTextB%| %option6% %option7% %option8% %option9% |
+				SubTextI = %SubTextI%|          %index%      |
+				SubTextO = %SubTextO%+----------%index%------+
 			}
 		} else if (index = 4) {
 			if (LeftHanded) {
-				SubTextT = %SubTextT%|\%option4%\%option3% %option2% %option1% |
-				SubTextB = %SubTextB%|\%option9%\%option8% %option7% %option6% |
-				SubTextI = %SubTextI%|/   /            |
-				SubTextO = %SubTextO%+-----------------+
+				SubTextT = %SubTextT%| %option4% %option3% %option2% %option1% |
+				SubTextB = %SubTextB%| %option9% %option8% %option7% %option6% |
+				SubTextI = %SubTextI%|  %index%              |
+				SubTextO = %SubTextO%+--%index%--------------+
 			} else {
-				SubTextT = %SubTextT%| %option1% %option2% %option3%/%option4%/|
-				SubTextB = %SubTextB%| %option6% %option7% %option8%/%option9%/|
-				SubTextI = %SubTextI%|            \   \|
-				SubTextO = %SubTextO%+-----------------+
+				SubTextT = %SubTextT%| %option1% %option2% %option3% %option4% |
+				SubTextB = %SubTextB%| %option6% %option7% %option8% %option9% |
+				SubTextI = %SubTextI%|              %index%  |
+				SubTextO = %SubTextO%+--------------%index%--+
 			}
 		} else {
 			if (LeftHanded) {
@@ -1037,6 +1076,7 @@ HUD(ByRef SubTextT, ByRef SubTextB, index := 1, ch_mode := 1, ByRef SubTextI := 
 			}
 		}
 	}
+	SubTextO := SubTextOtmp
 }
 
 KEYDOWN(thisKey, isLeftHand := 1)
@@ -1298,8 +1338,8 @@ KEYUP(thisKey)
 			secondKeyUp :=
 			thirdKeyUp :=
 			fourthKeyUp :=
+			;opositeKeyUp := opositeKeyDown
 			opositeKeyDown :=
-			opositeKeyUp :=
 			keysAreActive := 0
 			keysWereActive := 0
 	  }
@@ -1345,6 +1385,7 @@ REPEATKEY(ByRef lastSent := "", ThisHotkey := "")
 		global MouseMoveY
 		global MouseWheelX
 		global MouseWheelY
+		global RepeatRate
 	}
 	if (lastSent = "Spc") {
 		SENDCOMMAND("BkS")
@@ -1454,6 +1495,8 @@ REPEATKEY(ByRef lastSent := "", ThisHotkey := "")
 				MouseWheelY++
 			} else if ((lastSent = "WLf") || (lastSent = "WRi")) {
 				MouseWheelX++
+			} else if ((lastSent = " Up") || (lastSent = "Dwn") || (lastSent = "Lft") || (lastSent = "Rit")) {
+				RepeatRate++
 			}
 		}
 		keysWereActive := -1
@@ -1473,6 +1516,9 @@ REBINDKEY(ThisHotkey := "")
 		global modePRE
 		global ch_mode
 		global CableUp
+		global firstKeyDown
+		global opositeKeyDown
+		global opositeKeyUp
 	}
 	if (UseGamepad) {
 		isLeftHand := 0
@@ -1540,9 +1586,22 @@ REBINDKEY(ThisHotkey := "")
 						opositeKeyDown := "Numpad1"
 					}
 				}
-				B_ThisHotkey = %opositeKeyDown%
-			} else
-				B_ThisHotkey :=
+				B_ThisHotkey := opositeKeyDown
+				if InStr(ThisHotkey, " Up") {
+					opositeKeyUp := opositeKeyDown
+					;opositeKeyDown :=
+				}
+			} else if InStr(ThisHotkey, " Up") {
+				opositeKeyUp := opositeKeyDown
+				;opositeKeyDown :=
+				B_ThisHotkey := opositeKeyUp
+			} else if (InStr(A_PriorHotkey, A_ThisHotkey) && A_TimeSincePriorHotkey < 130) {
+				B_ThisHotkey := opositeKeyUp
+			} else {
+				opositeKeyDown := "Numpad1"
+				B_ThisHotkey := opositeKeyDown
+				;ToolTip, % opositeKeyDown
+			}
 		} else if InStr(ThisHotkey, "LButton") {
 			isLeftHand := 3
 			B_ThisHotkey := "Numpad1"
@@ -1553,6 +1612,18 @@ REBINDKEY(ThisHotkey := "")
 			isLeftHand := 3
 			B_ThisHotkey := "Numpad2"
 		} else if (InStr(ThisHotkey, "XButton1") || InStr(ThisHotkey, "Escape")) {
+			isLeftHand := 3
+			B_ThisHotkey := "Numpad4"
+		} else if (InStr(ThisHotkey, "*a") || InStr(ThisHotkey, "*u")) {
+			isLeftHand := 3
+			B_ThisHotkey := "Numpad1"
+		} else if (InStr(ThisHotkey, "*b") || InStr(ThisHotkey, "*l")) {
+			isLeftHand := 3
+			B_ThisHotkey := "Numpad2"
+		} else if (InStr(ThisHotkey, "*h") || InStr(ThisHotkey, "*r")) {
+			isLeftHand := 3
+			B_ThisHotkey := "Numpad3"
+		} else if (InStr(ThisHotkey, "*g") || InStr(ThisHotkey, "*d")) {
 			isLeftHand := 3
 			B_ThisHotkey := "Numpad4"
 		} else if (CableUp)
