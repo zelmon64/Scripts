@@ -12,18 +12,27 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 	ch_mode := mode
 	modePRE := mode
 	lastKeyRepeat := 1
-	MouseAutoDetect := 0 ; 1 ;
+	MouseAutoDetect := 1 ; 0 ;
+	MouseMoveControl := !MouseAutoDetect ; 1 ; 0 ;
 	daynight := 1 ; 0 ;
 	CableUp := 0 ; 1 ;
 	UseGamepad := 0 ; 1 ;
 	UsePresage := 0 ; 1 ;
-	MouseMoveControl := 1 ; 0 ;
+	LeftOnly := 1 ; 0 ;
 }
 
 IconOn := A_ScriptDir . "\Kee4_2.ico"
 IconOff := A_ScriptDir . "\Kee4_2r.ico"
 #Include %A_ScriptDir%\Kee4.ahk
 
+#If LeftOnly
+*Numpad1::
+*Numpad4::
+*Numpad7::
+*NumpadEnd::
+*NumpadLeft::
+*NumpadHome::
+#If
 *Numpad2::
 *Numpad5::
 *Numpad8::
@@ -50,10 +59,19 @@ IconOff := A_ScriptDir . "\Kee4_2r.ico"
 	}
 Return
 
+#If !LeftOnly
 *NumpadAdd::
 	Gosub, Fre
 Return
 
+#If LeftOnly
+*Numpad1 Up::
+*Numpad4 Up::
+*Numpad7 Up::
+*NumpadEnd Up::
+*NumpadLeft Up::
+*NumpadHome Up::
+#If
 *Numpad2 Up::
 *Numpad3 Up::
 *Numpad5 Up::

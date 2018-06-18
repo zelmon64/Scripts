@@ -24,7 +24,7 @@ IconOff := A_ScriptDir . "\Kee4_2y.ico"
 *RButton::
 *MButton::
 *XButton1::
-*Escape::
+*Browser_Back::
 	Key := SubStr(A_ThisHotkey, 2)
 	Repeating[Key] := 1
 	{
@@ -64,7 +64,7 @@ Return
 *RButton Up::
 *MButton Up::
 *XButton1 Up::
-*Escape Up::
+*Browser_Back Up::
 	Key := SubStr(A_ThisHotkey, 2, -3)
 	Repeating[Key] := 0
 	B_ThisHotkey := REBINDKEY(A_ThisHotkey)

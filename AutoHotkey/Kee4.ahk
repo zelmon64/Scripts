@@ -11,6 +11,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ;Menu, tray, Icon, %A_ScriptDir%\Kee4_2.ico, ,1
 StringCaseSense, On
 ;#InstallMouseHook
+;#InstallKeybdHook
 ;KeyHistory
 DllCall("AllocConsole")
 FileAppend Presage next word prediction and word completion..., CONOUT$
@@ -129,28 +130,28 @@ WinHide % "ahk_id " DllCall("GetConsoleWindow", "ptr")
 	}
 	{ ; Navigation
 		mode_characters =  %A_Space%,,,,,,,,,
-		mode_characters =  %mode_characters% Up, Up,Mod,SHF,End,   , Up,PRE,CTR,ALT,
+		mode_characters =  %mode_characters% Up, Up,VMu,SHF,End,   , Up,Esc,CTR,ALT,
 		mode_characters =  %mode_characters%Lft,Ent,Lft,Del,Cpy,   ,Tab,Lft,ClT,Pst,
-		mode_characters =  %mode_characters%Rit, F5,BkS,Rit,SAl,   , F6,ClW,Rit,WIN,
-		mode_characters =  %mode_characters%Dwn,Hom,MOU,Ins,Dwn,   ,   ,   ,ScL,Dwn,
+		mode_characters =  %mode_characters%Rit,Pau,BkS,Rit,VDn,   ,Spc,ClW,Rit,Prv,
+		mode_characters =  %mode_characters%Dwn,Hom,MOU,VUp,Dwn,   ,WIN,PRE,Nxt,Dwn,
 		ArrayIndex++
 		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
 	}
 	{ ; Functions
 		mode_characters =  %A_Space%,,,,,,,,,
 		mode_characters =  %mode_characters%Pau,Pau,Nxt,Fnd,Mnu,   ,Pau,Esc,Rpl,Sav,
-		mode_characters =  %mode_characters%VUp,Prv,VUp,ScS,Hga,   , F2,VUp,ClW,Kka,
-		mode_characters =  %mode_characters%VDn, F3,ARe,VDn,TAS,   ,F11,TUD,VDn,TAC,
-		mode_characters =  %mode_characters%Mod,PrS,Jap,TAP,Mod,   ,ALT,SHF,CTR,Mod,
+		mode_characters =  %mode_characters%VUp,Prv,VUp,ScS,Hga,   ,SAl,VUp,ClW,Kka,
+		mode_characters =  %mode_characters%VDn, F3,ARe,VDn, F5,   , F2,TUD,VDn, F6,
+		mode_characters =  %mode_characters%Mod,PrS,Jap,F11,Mod,   ,Ins,ScL,F12,Mod,
 		ArrayIndex++
 		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
 	}
 	{ ; Mouse
 		mode_characters =  %A_Space%,,,,,,,,,
-		mode_characters =  %mode_characters%MLC,MLC,MLD,MX1,End,   ,MLC,MLU,MX2,PRE,
+		mode_characters =  %mode_characters%MLC,MLC,MLD,MX1,End,   ,MLC,MLU,MX2,WRi,
 		mode_characters =  %mode_characters%MMC,MMD,MMC,WDn,Cpy,   ,MMU,MMC,PDn,Pst,
-		mode_characters =  %mode_characters%MRC,MRD,WUp,MRC,WRi,   ,MRU,PUp,MRC,Mg!,
-		mode_characters =  %mode_characters%Mod,Hom,NAV,WLf,Mod,   ,ALT,SHF,CTR,Mod,
+		mode_characters =  %mode_characters%MRC,MRD,WUp,MRC,TAS,   ,MRU,PUp,MRC,Mg!,
+		mode_characters =  %mode_characters%Mod,Hom,NAV,TAP,Mod,   ,WLf,PRE,Mg+,Mod,
 		ArrayIndex++
 		StringSplit, all_characters%ArrayIndex%, mode_characters, `,
 		if (MouseMoveControl) {
@@ -331,6 +332,10 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 		global MouseMoveControl
 		global RepeatRate
 		global RepeatMin
+		global LeftOnly
+		global MouseAutoDetect
+		global MouseMoveControl
+		global all_characters
 	}
 	;ToolTip, %ThisCommand%
 	if (ThisCommand = "Mod") {
@@ -502,7 +507,52 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 		if (ThisCommand = "SHa") {
 			LeftHanded := !LeftHanded
 		} else if (ThisCommand = "TUD") {
-			CableUp := !CableUp
+			if (LeftOnly) {
+				MouseAutoDetect := !MouseAutoDetect
+				MouseMoveControl := !MouseAutoDetect
+				if (MouseMoveControl) {
+					ArrayIndex := 4
+					all_characters%ArrayIndex%40 := "Mou"
+					all_characters%ArrayIndex%44 := "Mou"
+					all_characters%ArrayIndex%49 := "Mou"
+					if false {
+						ArrayIndex := 7
+						all_characters%ArrayIndex%10 := "MPU"
+						all_characters%ArrayIndex%11 := "MPU"
+						all_characters%ArrayIndex%16 := "MPU"
+						all_characters%ArrayIndex%20 := "MPL"
+						all_characters%ArrayIndex%22 := "MPL"
+						all_characters%ArrayIndex%27 := "MPL"
+						all_characters%ArrayIndex%30 := "MPR"
+						all_characters%ArrayIndex%33 := "MPR"
+						all_characters%ArrayIndex%38 := "MPR"
+						all_characters%ArrayIndex%40 := "MPD"
+						all_characters%ArrayIndex%44 := "MPD"
+						all_characters%ArrayIndex%49 := "MPD"
+					}
+				} else {
+					ArrayIndex := 4
+					all_characters%ArrayIndex%40 := "Nav"
+					all_characters%ArrayIndex%44 := "Nav"
+					all_characters%ArrayIndex%49 := "Nav"
+					if false {
+						ArrayIndex := 7
+						all_characters%ArrayIndex%10 := "MLC"
+						all_characters%ArrayIndex%11 := "MLC"
+						all_characters%ArrayIndex%16 := "MLC"
+						all_characters%ArrayIndex%20 := "MMC"
+						all_characters%ArrayIndex%22 := "MMC"
+						all_characters%ArrayIndex%27 := "MMC"
+						all_characters%ArrayIndex%30 := "MRC"
+						all_characters%ArrayIndex%33 := "MRC"
+						all_characters%ArrayIndex%38 := "MRC"
+						all_characters%ArrayIndex%40 := "Mod"
+						all_characters%ArrayIndex%44 := "Mod"
+						all_characters%ArrayIndex%49 := "Mod"
+					}
+				}
+			} else
+				CableUp := !CableUp
 		} else if (ThisCommand = "ARe") {
 			lastKeyRepeat := !lastKeyRepeat
 		} else if (ThisCommand = "Spc") {
@@ -623,6 +673,8 @@ SENDCOMMAND(ThisCommand := "", predict := 0)
 			SendInput, {Volume_Up}
 		} else if (ThisCommand = "VDn") {
 			SendInput, {Volume_Down}
+		} else if (ThisCommand = "VMu") {
+			SendInput, {Volume_Mute}
 		} else if (ThisCommand = "TAS") {
 			SendInput, !{c}
 		} else if (ThisCommand = "TAP") {
@@ -1433,6 +1485,18 @@ REPEATKEY(ByRef lastSent := "", ThisHotkey := "")
 		keysWereActive := -2
 		lastSent := "Mg+"
 		SENDCOMMAND(lastSent)
+	} else if InStr(lastSent, "Mg+") {
+		keysWereActive := -2
+		lastSent := "Mg-"
+		SENDCOMMAND(lastSent)
+		SENDCOMMAND(lastSent)
+	} else if InStr(lastSent, "Mg-") {
+		keysWereActive := -2
+		SENDCOMMAND(lastSent)
+	} else if InStr(lastSent, "TAS") {
+		keysWereActive := -2
+		lastSent :=
+		SENDCOMMAND("TAC")
 	} else if InStr(lastSent, "Cpy") {
 		keysWereActive := -2
 		lastSent :=
@@ -1519,6 +1583,7 @@ REBINDKEY(ThisHotkey := "")
 		global firstKeyDown
 		global opositeKeyDown
 		global opositeKeyUp
+		global LeftOnly
 	}
 	if (UseGamepad) {
 		isLeftHand := 0
@@ -1558,7 +1623,28 @@ REBINDKEY(ThisHotkey := "")
 			ch_mode := mode
 			modePRE := mode
 		}
-		if (InStr(ThisHotkey, "Numpad0") || InStr(ThisHotkey, "NumpadIns")) {
+		if (LeftOnly)
+		{
+			if (InStr(ThisHotkey, "Numpad2") || InStr(ThisHotkey, "NumpadDown")
+				|| InStr(ThisHotkey, "Numpad3") || InStr(ThisHotkey, "NumpadPgDn")
+				|| InStr(ThisHotkey, "Numpad1") || InStr(ThisHotkey, "NumpadEnd")) {
+				isLeftHand := 1
+				B_ThisHotkey := "Numpad1"
+			} else if (InStr(ThisHotkey, "Numpad5") || InStr(ThisHotkey, "NumpadClear")
+				|| InStr(ThisHotkey, "Numpad6") || InStr(ThisHotkey, "NumpadRight")
+				|| InStr(ThisHotkey, "Numpad4") || InStr(ThisHotkey, "NumpadLeft")) {
+				isLeftHand := 1
+				B_ThisHotkey := "Numpad2"
+			} else if (InStr(ThisHotkey, "Numpad8") || InStr(ThisHotkey, "NumpadUp")
+				|| InStr(ThisHotkey, "Numpad9") || InStr(ThisHotkey, "NumpadPgUp")
+				|| InStr(ThisHotkey, "Numpad7") || InStr(ThisHotkey, "NumpadHome")) {
+				isLeftHand := 1
+				B_ThisHotkey := "Numpad3"
+			} else if (InStr(ThisHotkey, "NumpadDiv") || InStr(ThisHotkey, "NumpadMult")) {
+				isLeftHand := 1
+				B_ThisHotkey := "Numpad4"
+			}
+		} else if (InStr(ThisHotkey, "Numpad0") || InStr(ThisHotkey, "NumpadIns")) {
 			isLeftHand := 2
 			B_ThisHotkey := "Numpad1"
 		} else if (InStr(ThisHotkey, "Numpad1") || InStr(ThisHotkey, "NumpadEnd")) {
@@ -1611,7 +1697,7 @@ REBINDKEY(ThisHotkey := "")
 		} else if InStr(ThisHotkey, "MButton") {
 			isLeftHand := 3
 			B_ThisHotkey := "Numpad2"
-		} else if (InStr(ThisHotkey, "XButton1") || InStr(ThisHotkey, "Escape")) {
+		} else if (InStr(ThisHotkey, "XButton1") || InStr(ThisHotkey, "Browser_Back")) {
 			isLeftHand := 3
 			B_ThisHotkey := "Numpad4"
 		} else if (InStr(ThisHotkey, "*a") || InStr(ThisHotkey, "*u")) {
